@@ -40,6 +40,7 @@ public class Sale extends Timestamped {
     public Sale(String status, int quantity, Book book, User user) {
         this.status = status;
         this.quantity = quantity;
+        this.total = quantity * book.getPrice();
         this.book = book;
         this.user = user;
     }

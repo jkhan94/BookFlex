@@ -8,6 +8,7 @@ import com.sparta.bookflex.domain.reveiw.entity.Review;
 import com.sparta.bookflex.domain.sale.entity.Sale;
 import com.sparta.bookflex.domain.wish.entity.WishBook;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,6 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Book extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +33,7 @@ public class Book extends Timestamped {
     @Column(nullable = false)
     private String author;
 
-    @Column
+    @Column(nullable = false)
     private int price;
 
     @Column(nullable = false)
@@ -49,11 +49,14 @@ public class Book extends Timestamped {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
+    @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<BasketBook> basketBookList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<WishBook> wishBookList = new ArrayList<>();
+
     @OneToMany(mappedBy = "book")
     private List<Review> reviewList = new ArrayList<>();
-
-    @OneToMany(mappedBy ="book", fetch=FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Basket> basketList = new ArrayList<>();
 
     @OneToMany(mappedBy = "book")
     private List<Sale> saleList = new ArrayList<>();
@@ -73,7 +76,6 @@ public class Book extends Timestamped {
         this.status = status;
         this.category = category;
         this.photoImage = photoImage;
-
     }
 
 }
