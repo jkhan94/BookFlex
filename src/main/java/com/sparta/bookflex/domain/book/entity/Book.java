@@ -15,8 +15,8 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Book extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,11 +60,19 @@ public class Book extends Timestamped {
     private List<Wish> wishList = new ArrayList<>();
 
     @OneToOne(fetch=FetchType.LAZY, cascade = CascadeType.REMOVE,  orphanRemoval = true)
-    @JoinColumn(name="photoimage_id")
+    @JoinColumn(name="photo_image_id")
     private PhotoImage photoImage;
 
     @Builder
-    public Book(String bookName, String publisher, String author, int price, int stock, String bookDescription, String status, Category category, PhotoImage photoImage) {
+    public Book(String bookName,
+                String publisher,
+                String author,
+                int price,
+                int stock,
+                String bookDescription,
+                String status,
+                Category category,
+                PhotoImage photoImage) {
         this.bookName = bookName;
         this.publisher = publisher;
         this.author = author;
@@ -74,7 +82,6 @@ public class Book extends Timestamped {
         this.status=status;
         this.category = category;
         this.photoImage = photoImage;
-
     }
 
 }
