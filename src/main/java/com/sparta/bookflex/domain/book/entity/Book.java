@@ -33,7 +33,7 @@ public class Book extends Timestamped {
     @Column(nullable = false)
     private String author;
 
-    @Column
+    @Column(nullable = false)
     private int price;
 
     @Column(nullable = false)
