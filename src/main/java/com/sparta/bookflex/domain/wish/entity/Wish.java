@@ -1,11 +1,13 @@
 package com.sparta.bookflex.domain.wish.entity;
 
-import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter

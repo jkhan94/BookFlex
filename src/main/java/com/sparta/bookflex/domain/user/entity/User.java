@@ -50,6 +50,9 @@ public class User extends Timestamped {
     @Column
     private String grade;
 
+    @Column(nullable = false)
+    private String state;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Wish wish;
 
