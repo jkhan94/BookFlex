@@ -4,7 +4,9 @@ import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
@@ -28,11 +30,19 @@ public class Review extends Timestamped {
     private String star;
 
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="book_id")
+    @JoinColumn(name = "book_id")
     private Book book;
 
+    @Builder
+    public Review(String title, String content, String star, User user, Book book) {
+        this.title = title;
+        this.content = content;
+        this.star = star;
+        this.user = user;
+        this.book = book;
+    }
 }
