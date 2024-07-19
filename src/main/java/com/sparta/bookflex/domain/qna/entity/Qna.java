@@ -4,7 +4,9 @@ import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
@@ -38,10 +40,11 @@ public class Qna extends Timestamped {
     Book book;
 
     @Builder
-    public Qna(String email, String qnaType, String inquiry, String reply){
+    public Qna(String email, String qnaType, String inquiry, String reply, User user) {
         this.email = email;
         this.qnaType = qnaType;
         this.inquiry = inquiry;
         this.reply = reply;
+        this.user = user;
     }
 }

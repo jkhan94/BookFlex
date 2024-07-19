@@ -24,7 +24,13 @@ public class PhotoImage extends Timestamped {
     @Column(nullable = false)
     private int fileSize;
 
-    @OneToOne(mappedBy="photoImage", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Book book;
+    @Column(nullable = false)
+    private Long bookId;
 
+    public PhotoImage(String fineName, String filePath, int fileSize, Book book) {
+        this.fineName = fineName;
+        this.filePath = filePath;
+        this.fileSize = fileSize;
+        this.bookId = book.getId();
+    }
 }

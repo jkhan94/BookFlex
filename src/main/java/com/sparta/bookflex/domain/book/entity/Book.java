@@ -1,14 +1,16 @@
 package com.sparta.bookflex.domain.book.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
-import com.sparta.bookflex.domain.basket.entity.Basket;
+import com.sparta.bookflex.domain.basket.entity.BasketBook;
 import com.sparta.bookflex.domain.category.entity.Category;
-import com.sparta.bookflex.domain.order.entity.Order;
 import com.sparta.bookflex.domain.photoimage.entity.PhotoImage;
 import com.sparta.bookflex.domain.reveiw.entity.Review;
-import com.sparta.bookflex.domain.wish.entity.Wish;
+import com.sparta.bookflex.domain.sale.entity.Sale;
+import com.sparta.bookflex.domain.wish.entity.WishBook;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,27 +42,24 @@ public class Book extends Timestamped {
     @Column(nullable = false)
     private String bookDescription;
 
-    @Column(nullable =false)
+    @Column(nullable = false)
     private String status;
 
     @ManyToOne
-    @JoinColumn(name="category_id", nullable = false)
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @OneToMany(mappedBy = "book", fetch=FetchType.LAZY)
+    @OneToMany(mappedBy = "book")
     private List<Review> reviewList = new ArrayList<>();
 
     @OneToMany(mappedBy ="book", fetch=FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Basket> basketList = new ArrayList<>();
 
     @OneToMany(mappedBy = "book")
-    private List<Order> orderList = new ArrayList<>();
+    private List<Sale> saleList = new ArrayList<>();
 
-    @OneToMany(mappedBy ="book")
-    private List<Wish> wishList = new ArrayList<>();
-
-    @OneToOne(fetch=FetchType.LAZY, cascade = CascadeType.REMOVE,  orphanRemoval = true)
-    @JoinColumn(name="photoimage_id")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @JoinColumn(name = "photoimage_id")
     private PhotoImage photoImage;
 
     @Builder
@@ -69,9 +68,9 @@ public class Book extends Timestamped {
         this.publisher = publisher;
         this.author = author;
         this.price = price;
-        this.stock= stock;
-        this.bookDescription=bookDescription;
-        this.status=status;
+        this.stock = stock;
+        this.bookDescription = bookDescription;
+        this.status = status;
         this.category = category;
         this.photoImage = photoImage;
 

@@ -1,18 +1,18 @@
-package com.sparta.bookflex.domain.order.entity;
+package com.sparta.bookflex.domain.sale.entity;
 
 
 import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Order extends Timestamped {
+@NoArgsConstructor
+public class Sale extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
@@ -21,8 +21,11 @@ public class Order extends Timestamped {
     @Column(name = "status")
     private String status;
 
-    @Column(name = "quantity",nullable = false)
+    @Column(name = "quantity", nullable = false)
     private int quantity;
+
+    @Column(name = "total", nullable = false)
+    private int total;
 
     @ManyToOne
     @JoinColumn(name = "book_id")
@@ -32,8 +35,9 @@ public class Order extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
+
     @Builder
-    public Order(String status, int quantity, Book book, User user) {
+    public Sale(String status, int quantity, Book book, User user) {
         this.status = status;
         this.quantity = quantity;
         this.book = book;
