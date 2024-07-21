@@ -3,6 +3,8 @@ package com.sparta.bookflex.domain.user.entity;
 import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.basket.entity.Basket;
 import com.sparta.bookflex.domain.qna.entity.Qna;
+import com.sparta.bookflex.domain.user.enums.UserGrade;
+import com.sparta.bookflex.domain.user.enums.UserState;
 import com.sparta.bookflex.domain.wish.entity.Wish;
 import com.sparta.bookflex.domain.order.entity.Order;
 import com.sparta.bookflex.domain.reveiw.entity.Review;
@@ -48,8 +50,13 @@ public class User extends Timestamped {
     @Column
     private LocalDateTime birthDay;
 
-    @Column
-    private String grade;
+    @Column(nullable = false)
+    @Enumerated
+    private UserGrade grade;
+
+    @Column(nullable = false)
+    @Enumerated
+    private UserState state;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Wish wish;
