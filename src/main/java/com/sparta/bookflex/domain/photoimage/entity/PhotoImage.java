@@ -3,13 +3,12 @@ package com.sparta.bookflex.domain.photoimage.entity;
 import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.book.entity.Book;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class PhotoImage extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +23,13 @@ public class PhotoImage extends Timestamped {
     @Column(nullable = false)
     private int fileSize;
 
-    @OneToOne(mappedBy="photoImage", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Book book;
+    @Column(nullable = false)
+    private Long bookId;
 
+    public PhotoImage(String fineName, String filePath, int fileSize, Book book) {
+        this.fineName = fineName;
+        this.filePath = filePath;
+        this.fileSize = fileSize;
+        this.bookId = book.getId();
+    }
 }

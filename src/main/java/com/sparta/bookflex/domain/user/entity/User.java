@@ -8,9 +8,12 @@ import com.sparta.bookflex.domain.user.enums.UserState;
 import com.sparta.bookflex.domain.wish.entity.Wish;
 import com.sparta.bookflex.domain.order.entity.Order;
 import com.sparta.bookflex.domain.reveiw.entity.Review;
+import com.sparta.bookflex.domain.sale.entity.Sale;
+import com.sparta.bookflex.domain.wish.entity.Wish;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -70,7 +73,7 @@ public class User extends Timestamped {
     private List<Qna> qnaList;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Order> orderList;
+    private List<Sale> saleList;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviewList;
