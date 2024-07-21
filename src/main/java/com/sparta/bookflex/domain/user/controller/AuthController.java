@@ -3,6 +3,7 @@ package com.sparta.bookflex.domain.user.controller;
 import com.sparta.bookflex.common.config.JwtConfig;
 import com.sparta.bookflex.common.dto.CommonDto;
 import com.sparta.bookflex.common.jwt.JwtProvider;
+import com.sparta.bookflex.common.security.UserDetailsImpl;
 import com.sparta.bookflex.domain.user.dto.LoginReqDto;
 import com.sparta.bookflex.domain.user.dto.SignUpReqDto;
 import com.sparta.bookflex.domain.user.service.AuthService;
@@ -11,10 +12,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,6 +38,27 @@ public class AuthController {
         response.addHeader(JwtConfig.REFRESH_TOKEN_HEADER,tokens.get(1));
 
         CommonDto resDto = new CommonDto(HttpStatus.OK.value(), "로그인이 완료되었습니다 !", null);
+        return ResponseEntity.ok().body(resDto);
+    }
+
+    @PutMapping("/signout")
+    public ResponseEntity<CommonDto<Void>> signOut(UserDetailsImpl userDetails, HttpServletResponse response){
+
+        authService.signOut(userDetails.getUser());
+        response.setHeader(JwtConfig.ACCESS_TOKEN_HEADER, "");
+        response.setHeader(JwtConfig.REFRESH_TOKEN_HEADER, "");
+
+        CommonDto resDto = new CommonDto(HttpStatus.OK.value(), "회원탈퇴가 완료되었습니다!", null);
+        return ResponseEntity.ok().body(resDto);
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<CommonDto<Void>> logout(UserDetailsImpl userDetails, HttpServletResponse response){
+        authService.logout(userDetails.getUser());
+        response.setHeader(JwtConfig.ACCESS_TOKEN_HEADER, "");
+        response.setHeader(JwtConfig.REFRESH_TOKEN_HEADER, "");
+
+        CommonDto resDto = new CommonDto(HttpStatus.OK.value(), "로그아웃이 완료되었습니다!", null);
         return ResponseEntity.ok().body(resDto);
     }
 }

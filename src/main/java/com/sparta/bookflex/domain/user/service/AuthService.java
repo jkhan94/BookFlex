@@ -76,4 +76,17 @@ public class AuthService {
 
         return tokenList;
     }
+
+    @Transactional
+    public void signOut(User user) {
+
+        user.updateRefreshToken("");
+        user.deleteUser();
+    }
+
+    @Transactional
+    public void logout(User user) {
+
+        user.updateRefreshToken("");
+    }
 }

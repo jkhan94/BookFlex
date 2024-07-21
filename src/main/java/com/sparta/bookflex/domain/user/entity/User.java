@@ -92,4 +92,8 @@ public class User extends Timestamped {
     public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
+
+    public void deleteUser(){
+        this.state = UserState.DELETE;
+    }
 }
