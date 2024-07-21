@@ -89,4 +89,23 @@ public class AuthService {
 
         user.updateRefreshToken("");
     }
+
+    public String refreshToken(User user, String refreshToken) {
+
+        User curUser = findByUserName(user.getName());
+
+        if(!curUser.getRefreshToken().equals(refreshToken)){
+            throw new IllegalArgumentException("해당 유저와 다른 refresh Token 입니다");
+        }
+
+        String newAccessToken = jwtProvider.createToken(curUser, JwtConfig.accessTokenTime);
+
+        return newAccessToken;
+    }
+
+    public User findByUserName(String username) {
+        return userRepository.findByUserName(username).orElseThrow(
+            ()-> new IllegalArgumentException("존재하지 않는 유저입니다")
+        );
+    }
 }

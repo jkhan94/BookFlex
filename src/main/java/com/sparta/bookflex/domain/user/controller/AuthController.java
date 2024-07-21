@@ -7,6 +7,7 @@ import com.sparta.bookflex.common.security.UserDetailsImpl;
 import com.sparta.bookflex.domain.user.dto.LoginReqDto;
 import com.sparta.bookflex.domain.user.dto.SignUpReqDto;
 import com.sparta.bookflex.domain.user.service.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -59,6 +60,16 @@ public class AuthController {
         response.setHeader(JwtConfig.REFRESH_TOKEN_HEADER, "");
 
         CommonDto resDto = new CommonDto(HttpStatus.OK.value(), "로그아웃이 완료되었습니다!", null);
+        return ResponseEntity.ok().body(resDto);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<CommonDto<Void>> refreshToken(UserDetailsImpl userDetails, HttpServletResponse response, HttpServletRequest request)
+    {
+        String accessToken = authService.refreshToken(userDetails.getUser(), request.getHeader(JwtConfig.AUTHORIZATION_HEADER));
+        response.setHeader(JwtConfig.ACCESS_TOKEN_HEADER, accessToken);
+
+        CommonDto resDto = new CommonDto(HttpStatus.OK.value(), "토큰재발급이 완료되었습니다!", null);
         return ResponseEntity.ok().body(resDto);
     }
 }
