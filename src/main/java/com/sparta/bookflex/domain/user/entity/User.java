@@ -17,7 +17,6 @@ import java.util.List;
 
 @Getter
 @Entity
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends Timestamped {
@@ -42,7 +41,7 @@ public class User extends Timestamped {
     private String address;
 
     @Column(nullable = false)
-    private int phoneNumber;
+    private String phoneNumber;
 
     @Column
     private String nickname;
@@ -58,6 +57,9 @@ public class User extends Timestamped {
     @Enumerated
     private UserState state;
 
+    @Column
+    private String refreshToken;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Wish wish;
 
@@ -72,4 +74,22 @@ public class User extends Timestamped {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviewList;
+
+    @Builder
+    public User(String username, String password, String email, String name, String nickname, String phoneNumber, String address, LocalDateTime birthDay, UserGrade grade, UserState state) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.name = name;
+        this.nickname = nickname;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.birthDay = birthDay;
+        this.grade = grade;
+        this.state = state;
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 }
