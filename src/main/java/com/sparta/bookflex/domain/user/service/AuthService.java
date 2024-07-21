@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +46,7 @@ public class AuthService {
             .birthDay(signupReqDto.getBirthday())
             .email(signupReqDto.getEmail())
             .name(signupReqDto.getName())
-            .password(signupReqDto.getPassword())
+            .password(passwordEncoder.encode(signupReqDto.getPassword()))
             .build();
 
         userRepository.save(user);
@@ -64,11 +63,11 @@ public class AuthService {
         );
 
         User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
-
         String accessToken = jwtProvider.createToken(user, JwtConfig.accessTokenTime);
         String refreshToken = jwtProvider.createToken(user, JwtConfig.refreshTokenTime);
 
-        user.updateRefreshToken(refreshToken);
+        User curUser = findByUserName(user.getUsername());
+        curUser.updateRefreshToken(refreshToken);
 
         List<String> tokenList = new ArrayList<>();
         tokenList.add(accessToken);
@@ -80,19 +79,21 @@ public class AuthService {
     @Transactional
     public void signOut(User user) {
 
-        user.updateRefreshToken("");
-        user.deleteUser();
+        User curUser = findByUserName(user.getUsername());
+        curUser.updateState(UserState.WITHDRAW);
+        curUser.updateRefreshToken("");
     }
 
     @Transactional
     public void logout(User user) {
 
-        user.updateRefreshToken("");
+        User curUser = findByUserName(user.getUsername());
+        curUser.updateRefreshToken("");
     }
 
     public String refreshToken(User user, String refreshToken) {
 
-        User curUser = findByUserName(user.getName());
+        User curUser = findByUserName(user.getUsername());
 
         if(!curUser.getRefreshToken().equals(refreshToken)){
             throw new IllegalArgumentException("해당 유저와 다른 refresh Token 입니다");

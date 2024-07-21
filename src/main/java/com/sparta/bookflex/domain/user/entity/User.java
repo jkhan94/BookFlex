@@ -11,6 +11,7 @@ import com.sparta.bookflex.domain.wish.entity.Wish;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -46,17 +47,17 @@ public class User extends Timestamped {
     private String nickname;
 
     @Column
-    private LocalDateTime birthDay;
+    private LocalDate birthDay;
 
     @Column(nullable = false)
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private UserGrade grade;
 
     @Column(nullable = false)
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private UserState state;
 
-    @Column
+    @Column()
     private String refreshToken;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -75,7 +76,7 @@ public class User extends Timestamped {
     private List<Review> reviewList;
 
     @Builder
-    public User(String username, String password, String email, String name, String nickname, String phoneNumber, String address, LocalDateTime birthDay, UserGrade grade, UserState state) {
+    public User(String username, String password, String email, String name, String nickname, String phoneNumber, String address, LocalDate birthDay, UserGrade grade, UserState state) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -92,7 +93,7 @@ public class User extends Timestamped {
         this.refreshToken = refreshToken;
     }
 
-    public void deleteUser(){
-        this.state = UserState.DELETE;
+    public void updateState(UserState state){
+        this.state = state;
     }
 }

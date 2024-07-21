@@ -12,11 +12,11 @@ import java.util.Base64;
 @Configuration
 public class JwtConfig {
 
-    @Value("${jwt.secret.key}")
+    @Value("${jwt.secret-key}")
     private String SECRET_KEY;
-    @Value("${jwt.access.time}")
+    @Value("${jwt.access-time}")
     private Long ACCESS_TOKEN_TIME;
-    @Value("${jwt.refresh.time}")
+    @Value("${jwt.refresh-time}")
     private Long REFRESH_TOKEN_TIME;
 
     public static final String AUTHORIZATION_HEADER = "authorization";

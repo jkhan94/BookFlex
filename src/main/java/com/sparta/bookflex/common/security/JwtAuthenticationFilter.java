@@ -51,8 +51,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         Claims userInfo = jwtProvider.getUserInfoFromToken(token);
         String userState = userInfo.get(JwtConfig.USER_STATE_KEY, String.class);
 
-        if(userState.equals(UserState.DELETE.getStateString())) {
-            log.info("유저가 DELETE 상태");
+        if(userState.equals(UserState.WITHDRAW.getStateString())) {
+            log.info("유저가 탈퇴한 상태");
             throw new AccessDeniedException("해당 유저는 탈퇴상태입니다");
         }
 

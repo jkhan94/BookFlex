@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,53 +24,47 @@ import java.util.List;
 public class AuthController {
 
     private final AuthService authService;
-    private final JwtProvider jwtProvider;
 
     @PostMapping("/signup")
-    public ResponseEntity<CommonDto<Void>> signUp(@Valid @RequestBody SignUpReqDto signupReqDto) {
+    public ResponseEntity<Void> signUp(@Valid @RequestBody SignUpReqDto signupReqDto) {
         authService.signUp(signupReqDto);
-        CommonDto resDto = new CommonDto(HttpStatus.OK.value(), "회원가입이 완료되었습니다!", null);
-        return ResponseEntity.ok().body(resDto);
+        return ResponseEntity.ok().body(null);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<CommonDto<Void>> login(@Valid @RequestBody LoginReqDto loginReqDto, HttpServletResponse response) {
+    public ResponseEntity<Void> login(@Valid @RequestBody LoginReqDto loginReqDto, HttpServletResponse response) {
         List<String> tokens = authService.login(loginReqDto);
         response.addHeader(JwtConfig.ACCESS_TOKEN_HEADER, tokens.get(0));
         response.addHeader(JwtConfig.REFRESH_TOKEN_HEADER,tokens.get(1));
 
-        CommonDto resDto = new CommonDto(HttpStatus.OK.value(), "로그인이 완료되었습니다 !", null);
-        return ResponseEntity.ok().body(resDto);
+        return ResponseEntity.ok().body(null);
     }
 
     @PutMapping("/signout")
-    public ResponseEntity<CommonDto<Void>> signOut(UserDetailsImpl userDetails, HttpServletResponse response){
+    public ResponseEntity<Void> signOut(@AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletResponse response){
 
         authService.signOut(userDetails.getUser());
         response.setHeader(JwtConfig.ACCESS_TOKEN_HEADER, "");
         response.setHeader(JwtConfig.REFRESH_TOKEN_HEADER, "");
 
-        CommonDto resDto = new CommonDto(HttpStatus.OK.value(), "회원탈퇴가 완료되었습니다!", null);
-        return ResponseEntity.ok().body(resDto);
+        return ResponseEntity.ok().body(null);
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<CommonDto<Void>> logout(UserDetailsImpl userDetails, HttpServletResponse response){
+    public ResponseEntity<Void> logout(@AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletResponse response){
         authService.logout(userDetails.getUser());
         response.setHeader(JwtConfig.ACCESS_TOKEN_HEADER, "");
         response.setHeader(JwtConfig.REFRESH_TOKEN_HEADER, "");
 
-        CommonDto resDto = new CommonDto(HttpStatus.OK.value(), "로그아웃이 완료되었습니다!", null);
-        return ResponseEntity.ok().body(resDto);
+        return ResponseEntity.ok().body(null);
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<CommonDto<Void>> refreshToken(UserDetailsImpl userDetails, HttpServletResponse response, HttpServletRequest request)
+    public ResponseEntity<Void> refreshToken(@AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletResponse response, HttpServletRequest request)
     {
         String accessToken = authService.refreshToken(userDetails.getUser(), request.getHeader(JwtConfig.AUTHORIZATION_HEADER));
         response.setHeader(JwtConfig.ACCESS_TOKEN_HEADER, accessToken);
 
-        CommonDto resDto = new CommonDto(HttpStatus.OK.value(), "토큰재발급이 완료되었습니다!", null);
-        return ResponseEntity.ok().body(resDto);
+        return ResponseEntity.ok().body(null);
     }
 }
