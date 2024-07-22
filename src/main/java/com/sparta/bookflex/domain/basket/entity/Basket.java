@@ -1,6 +1,7 @@
 package com.sparta.bookflex.domain.basket.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
+import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -22,17 +23,22 @@ public class Basket extends Timestamped {
     @Column(nullable = false)
     private int quantity;
 
-    @OneToMany(mappedBy = "basket", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<BasketBook> basketBookList = new ArrayList<>();
-
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "book_id")
+    private Book book;
+
     @Builder
-    public Basket(int quantity, User user) {
+    public Basket(int quantity, User user,Book book) {
         this.quantity = quantity;
         this.user = user;
+        this.book = book;
     }
 
+    public void updateQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 }
