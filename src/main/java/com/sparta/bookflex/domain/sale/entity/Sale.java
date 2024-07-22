@@ -3,6 +3,7 @@ package com.sparta.bookflex.domain.sale.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.book.entity.Book;
+import com.sparta.bookflex.domain.sale.Enum.SaleState;
 import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -19,8 +20,12 @@ public class Sale extends Timestamped {
     @Column(name = "sale_id")
     private Long id;
 
+    @Column(name = "sale_date")
+    private String saleDate;
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String status;
+    private SaleState status;
 
     @Column(name = "quantity", nullable = false)
     private int quantity;
@@ -38,12 +43,12 @@ public class Sale extends Timestamped {
 
 
     @Builder
-    public Sale(String status, int quantity, Book book, User user) {
+    public Sale(SaleState status, int quantity, Book book, User user) {
         this.status = status;
         this.quantity = quantity;
-        this.total = quantity * book.getPrice();
         this.book = book;
         this.user = user;
+        this.total = quantity * (book != null ? book.getPrice() : 0);
     }
 }
 
