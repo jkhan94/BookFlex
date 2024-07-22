@@ -131,4 +131,10 @@ public class CategoryService {
         }
     }
 
+
+    public Category getCategoryByCategoryName(String categoryName) {
+        return categoryRepository.findByCategoryName(categoryName)
+                .orElseThrow(()-> new BusinessException(CATEGORY_NOT_FOUND));
+    }
+
 }
