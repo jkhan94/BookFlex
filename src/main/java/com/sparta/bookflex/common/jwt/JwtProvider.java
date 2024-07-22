@@ -25,15 +25,15 @@ public class JwtProvider {
         UserRole auth = user.getAuth();
 
         return JwtConfig.BEARER_PREFIX +
-            Jwts.builder()
-                .setSubject(username)
-                .setExpiration(new Date(date.getTime() + tokenTime))
-                .claim(JwtConfig.USER_STATE_KEY, state)
-                .claim(JwtConfig.USER_GRADE_KEY, grade)
-                .claim(JwtConfig.USER_AUTH_KEY, auth)
-                .setIssuedAt(date)
-                .signWith(JwtConfig.key, JwtConfig.signatureAlgorithm)
-                .compact();
+                Jwts.builder()
+                        .setSubject(username)
+                        .setExpiration(new Date(date.getTime() + tokenTime))
+                        .claim(JwtConfig.USER_STATE_KEY, state)
+                        .claim(JwtConfig.USER_GRADE_KEY, grade)
+                        .claim(JwtConfig.USER_AUTH_KEY, auth)
+                        .setIssuedAt(date)
+                        .signWith(JwtConfig.key, JwtConfig.signatureAlgorithm)
+                        .compact();
     }
 
     public String getJwtFromHeader(HttpServletRequest request, String headerKey){
