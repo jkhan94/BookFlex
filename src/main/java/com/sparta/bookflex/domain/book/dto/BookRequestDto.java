@@ -19,9 +19,9 @@ public class BookRequestDto {
    private int stock;
    private String bookDescription;
    private String status;
-   private Category category;
+   private String category;
 
-    public Book toEntity(PhotoImage photoImage) {
+    public Book toEntity(PhotoImage photoImage, Category category) {
         return Book.builder()
                 .bookName(this.bookName)
                 .publisher(this.publisher)
@@ -30,7 +30,7 @@ public class BookRequestDto {
                 .stock(this.stock)
                 .bookDescription(this.bookDescription)
                 .status(this.status)
-                .category(this.category)
+                .category(category)
                 .photoImage(photoImage)
                 .build();
     }

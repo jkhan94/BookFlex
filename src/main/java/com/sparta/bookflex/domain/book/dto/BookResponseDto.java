@@ -17,7 +17,6 @@ public class BookResponseDto {
     private String bookName;
     private String publisher;
     private String author;
-
     private int price;
     private int stock;
     private String bookDescription;
@@ -31,11 +30,12 @@ public class BookResponseDto {
     public BookResponseDto(Long bookId,
                            String bookName,
                            String author,
+                           String publisher,
                            int price,
                            int stock,
                            String bookDescription,
                            String status,
-                           Category category,
+                           String categoryName,
                            String photoImagePath,
                            LocalDateTime createdAt,
                            LocalDateTime modifiedAt) {
@@ -48,7 +48,7 @@ public class BookResponseDto {
         this.stock = stock;
         this.bookDescription = bookDescription;
         this.status = status;
-        this.categoryName = category.getCategoryName();
+        this.categoryName = categoryName;
         this.photoImagePath = photoImagePath;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
