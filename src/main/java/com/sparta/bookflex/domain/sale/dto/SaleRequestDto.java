@@ -1,9 +1,11 @@
 package com.sparta.bookflex.domain.sale.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-public class SaleCreateReqDto {
+@NoArgsConstructor
+public class SaleRequestDto {
     private long bookId;
     private int quantity;
 }

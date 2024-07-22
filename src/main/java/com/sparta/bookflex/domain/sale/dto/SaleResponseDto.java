@@ -1,13 +1,12 @@
 package com.sparta.bookflex.domain.sale.dto;
 
-import com.sparta.bookflex.domain.photoimage.entity.PhotoImage;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
-public class SaleResDto {
+public class SaleResponseDto {
 
     private Long saleId;
     //private PhotoImage photoImage;
@@ -19,7 +18,7 @@ public class SaleResDto {
     private LocalDateTime createdAt;
 
     @Builder
-    public SaleResDto(Long saleId, String bookName, int price, int quantity, String status, LocalDateTime createdAt) {
+    public SaleResponseDto(Long saleId, String bookName, int price, int quantity, String status, LocalDateTime createdAt) {
         this.saleId = saleId;
         this.bookName = bookName;
         this.price = price;
