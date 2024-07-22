@@ -41,6 +41,10 @@ public class Sale extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    private OrderBook orderBook;
+
 
     @Builder
     public Sale(SaleState status, int quantity, Book book, User user) {
