@@ -8,7 +8,6 @@ import lombok.*;
 
 @Getter
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Qna extends Timestamped {
 
@@ -31,10 +30,6 @@ public class Qna extends Timestamped {
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
-
-    @ManyToOne
-    @JoinColumn(name = "book_id")
-    Book book;
 
     @Builder
     public Qna(String email, String qnaType, String inquiry, String reply, User user) {
