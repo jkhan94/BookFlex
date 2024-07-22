@@ -6,7 +6,7 @@ import com.sparta.bookflex.domain.category.entity.Category;
 import com.sparta.bookflex.domain.photoimage.entity.PhotoImage;
 import com.sparta.bookflex.domain.reveiw.entity.Review;
 import com.sparta.bookflex.domain.sale.entity.Sale;
-import com.sparta.bookflex.domain.wish.entity.WishBook;
+import com.sparta.bookflex.domain.wish.entity.Wish;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -53,7 +53,7 @@ public class Book extends Timestamped {
     private List<BasketBook> basketBookList = new ArrayList<>();
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<WishBook> wishBookList = new ArrayList<>();
+    private List<Wish> wishList = new ArrayList<>();
 
     @OneToMany(mappedBy = "book")
     private List<Review> reviewList = new ArrayList<>();

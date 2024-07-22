@@ -1,5 +1,6 @@
 package com.sparta.bookflex.domain.wish.entity;
 
+import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -17,16 +18,17 @@ public class Wish {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "wish", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<WishBook> wishBookList = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "book_id", nullable = false)
+    private Book book;
 
     @Builder
-    public Wish(User user) {
+    public Wish(User user, Book book) {
         this.user = user;
+        this.book = book;
     }
-
 }
