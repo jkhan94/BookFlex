@@ -47,6 +47,7 @@ public class AuthService {
             .email(signupReqDto.getEmail())
             .name(signupReqDto.getName())
             .password(passwordEncoder.encode(signupReqDto.getPassword()))
+            .auth(signupReqDto.getAuthType())
             .build();
 
         userRepository.save(user);
