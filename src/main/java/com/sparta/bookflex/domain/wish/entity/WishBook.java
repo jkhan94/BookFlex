@@ -2,7 +2,6 @@ package com.sparta.bookflex.domain.wish.entity;
 
 import com.sparta.bookflex.domain.book.entity.Book;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,16 +14,11 @@ public class WishBook {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "wish_id")
+    @JoinColumn(name="wish_id")
     private Wish wish;
 
     @ManyToOne
-    @JoinColumn(name = "book_id")
+    @JoinColumn(name="book_id")
     private Book book;
 
-    @Builder
-    public WishBook(Wish wish, Book book) {
-        this.wish = wish;
-        this.book = book;
-    }
 }
