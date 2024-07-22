@@ -2,6 +2,7 @@ package com.sparta.bookflex.domain.category.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.book.entity.Book;
+import com.sparta.bookflex.domain.category.dto.CategoryRequestDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,5 +28,15 @@ public class Category extends Timestamped {
     @Builder
     public Category(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    @Builder
+    public Category(String categoryName, List<Book> bookList) {
+        this.categoryName = categoryName;
+        this.bookList = bookList;
+    }
+
+    public void update(CategoryRequestDto requestDto) {
+        this.categoryName = requestDto.getCategoryName();
     }
 }

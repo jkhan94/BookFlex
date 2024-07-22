@@ -1,5 +1,6 @@
 package com.sparta.bookflex.domain.book.dto;
 
+import com.sparta.bookflex.domain.photoimage.entity.PhotoImage;
 import com.sparta.bookflex.domain.category.entity.Category;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +17,7 @@ public class BookResponseDto {
     private String bookName;
     private String publisher;
     private String author;
+
     private int price;
     private int stock;
     private String bookDescription;
@@ -41,6 +43,7 @@ public class BookResponseDto {
         this.bookId = bookId;
         this.bookName = bookName;
         this.author = author;
+        this.publisher = publisher;
         this.price = price;
         this.stock = stock;
         this.bookDescription = bookDescription;
