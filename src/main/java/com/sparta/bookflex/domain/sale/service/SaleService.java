@@ -1,7 +1,7 @@
 package com.sparta.bookflex.domain.sale.service;
 
 import com.sparta.bookflex.domain.book.entity.Book;
-import com.sparta.bookflex.domain.book.repository.bookRepository;
+import com.sparta.bookflex.domain.book.repository.BookRepository;
 import com.sparta.bookflex.domain.sale.dto.SaleCreateReqDto;
 import com.sparta.bookflex.domain.sale.dto.SaleResDto;
 import com.sparta.bookflex.domain.sale.entity.Sale;
@@ -14,13 +14,13 @@ import org.springframework.stereotype.Service;
 public class SaleService {
     private final SaleRepository saleRepository;
     private final UserRepository userRepository;
-    private final bookRepository bookRepository2;
+    private final BookRepository bookRepository;
 
     public SaleService(SaleRepository saleRepository,
                        UserRepository userRepository,
-                       bookRepository bookRepository) {
+                       BookRepository bookRepository) {
         this.userRepository = userRepository;
-        this.bookRepository2 = bookRepository;
+        this.bookRepository = bookRepository;
         this.saleRepository = saleRepository;
     }
 
@@ -68,7 +68,7 @@ public class SaleService {
     }
 
     private Book getBook(Long bookId) {
-        return bookRepository2.findById(bookId).orElseThrow(
+        return bookRepository.findById(bookId).orElseThrow(
                 () -> new IllegalArgumentException("책이 없습니다."));
     }
 
@@ -82,7 +82,7 @@ public class SaleService {
     }
 
     private Boolean existBook(Long bookId) {
-        return bookRepository2.existsById(bookId);
+        return bookRepository.existsById(bookId);
     }
 
     private Boolean existUser(Long userId) {
