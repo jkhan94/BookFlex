@@ -1,6 +1,7 @@
 package com.sparta.bookflex.domain.sale.controller;
 
 import com.sparta.bookflex.common.dto.CommonDto;
+import com.sparta.bookflex.common.security.UserDetailsImpl;
 import com.sparta.bookflex.domain.sale.dto.SaleCreateReqDto;
 import com.sparta.bookflex.domain.sale.dto.SaleResDto;
 import com.sparta.bookflex.domain.sale.service.SaleService;
