@@ -5,6 +5,7 @@ import com.sparta.bookflex.domain.basket.entity.Basket;
 import com.sparta.bookflex.domain.qna.entity.Qna;
 import com.sparta.bookflex.domain.reveiw.entity.Review;
 import com.sparta.bookflex.domain.sale.entity.Sale;
+import com.sparta.bookflex.domain.user.enums.UserAuth;
 import com.sparta.bookflex.domain.user.enums.UserGrade;
 import com.sparta.bookflex.domain.user.enums.UserState;
 import com.sparta.bookflex.domain.wish.entity.Wish;
@@ -12,7 +13,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -57,14 +58,18 @@ public class User extends Timestamped {
     @Enumerated(EnumType.STRING)
     private UserState state;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserAuth auth;
+
     @Column()
     private String refreshToken;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Wish wish;
+    @OneToMany(mappedBy = "wish", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Wish> wishList = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Basket basket;
+    @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Basket> basketList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Qna> qnaList;
