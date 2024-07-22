@@ -52,15 +52,18 @@ public class CategoryService {
 
         Page<BookResponseDto> bookPage = categoryRepository.findAllBooks(categoryId, pageable).map(
                 book -> BookResponseDto.builder()
+                        .bookId((book.getId()))
                         .bookName(book.getBookName())
-                        .publisher(book.getPublisher())
                         .author(book.getAuthor())
+                        .publisher(book.getPublisher())
                         .price(book.getPrice())
                         .stock(book.getStock())
                         .bookDescription(book.getBookDescription())
                         .status(book.getStatus())
                         .categoryName(book.getCategory().getCategoryName())
-                        .photoImage(book.getPhotoImage())
+                        .photoImagePath(book.getPhotoImage().getFilePath())
+                        .createdAt(book.getCreatedAt())
+                        .modifiedAt(book.getModifiedAt())
                         .build()
         );
         List<BookResponseDto> bookList = bookPage.getContent();
