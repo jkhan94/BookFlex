@@ -25,7 +25,7 @@ public class Basket extends Timestamped {
     @OneToMany(mappedBy = "basket", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<BasketBook> basketBookList = new ArrayList<>();
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
