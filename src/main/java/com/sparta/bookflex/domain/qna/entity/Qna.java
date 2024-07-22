@@ -8,7 +8,6 @@ import lombok.*;
 
 @Getter
 @Entity
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Qna extends Timestamped {
@@ -38,10 +37,11 @@ public class Qna extends Timestamped {
     Book book;
 
     @Builder
-    public Qna(String email, String qnaType, String inquiry, String reply){
+    public Qna(String email, String qnaType, String inquiry, String reply, User user) {
         this.email = email;
         this.qnaType = qnaType;
         this.inquiry = inquiry;
         this.reply = reply;
+        this.user = user;
     }
 }
