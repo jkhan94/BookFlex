@@ -46,10 +46,10 @@ public class BookService {
     }
 
     @Transactional
-    public BookResponseDto getBook(BookRequestDto bookRequestDto) {
+    public BookResponseDto getBookById(Long bookId) {
 
         Book book = bookRepository
-                .findByBookName(bookRequestDto.getBookName())
+                .findById(bookId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.BOOK_NOT_FOUND));
 
         return book.toResponseDto();
@@ -91,4 +91,15 @@ public class BookService {
 
         return bookName;
     }
+
+    public boolean isExistBook (Long bookId) {
+        Book book = bookRepository.findById(bookId).orElseThrow(()-> new BusinessException(ErrorCode.BOOK_NOT_FOUND));
+        return true;
+    }
+
+    public Book getBookByBookId (Long bookId) {
+        Book book = bookRepository.findById(bookId).orElseThrow(()-> new BusinessException(ErrorCode.BOOK_NOT_FOUND));
+        return book;
+    }
+
 }
