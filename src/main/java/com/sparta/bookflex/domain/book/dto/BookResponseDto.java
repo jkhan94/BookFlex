@@ -14,12 +14,13 @@ import java.time.LocalDateTime;
 public class BookResponseDto {
     private Long bookId;
     private String bookName;
+    private String publisher;
     private String author;
     private int price;
     private int stock;
     private String bookDescription;
     private String status;
-    private String category;
+    private String categoryName;
     private String photoImagePath;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
@@ -44,7 +45,7 @@ public class BookResponseDto {
         this.stock = stock;
         this.bookDescription = bookDescription;
         this.status = status;
-        this.category=category.getCategoryName();
+        this.categoryName = category.getCategoryName();
         this.photoImagePath = photoImagePath;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
