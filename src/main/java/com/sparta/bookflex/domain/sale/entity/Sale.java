@@ -11,11 +11,12 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@Table(name = "sale")
 @NoArgsConstructor
 public class Sale extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id")
+    @Column(name = "sale_id")
     private Long id;
 
     @Column(name = "status")
