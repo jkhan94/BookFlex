@@ -2,85 +2,94 @@ package com.sparta.bookflex.domain.wish.service;
 
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.repository.BookRepository;
+import com.sparta.bookflex.domain.book.service.BookService;
 import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.repository.UserRepository;
+import com.sparta.bookflex.domain.user.service.AuthService;
 import com.sparta.bookflex.domain.wish.dto.WishResDto;
 import com.sparta.bookflex.domain.wish.entity.Wish;
 import com.sparta.bookflex.domain.wish.repository.WishRepository;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class WishService {
 
     private final WishRepository wishRepository;
-    private final UserRepository userRepository;
-    private final BookRepository bookRepository;
+    private final BookService bookService;
+    private final AuthService authService;
 
-    public WishService(WishRepository wishRepository, UserRepository userRepository, BookRepository bookRepository) {
+
+    @Autowired
+    public WishService(WishRepository wishRepository, BookService bookService, AuthService authService) {
         this.wishRepository = wishRepository;
-        this.userRepository = userRepository;
-        this.bookRepository = bookRepository;
+        this.bookService = bookService;
+        this.authService = authService;
     }
-
-    private User getUser(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("사용자가 존재하지 않습니다."));
+    private User getUser(String username) {
+        return authService.findByUserName(username);
     }
 
     private Book getBook(Long bookId) {
-        return bookRepository.findById(bookId).orElseThrow(() -> new IllegalArgumentException("책이 존재하지 않습니다."));
+        return bookService.getBookByBookId(bookId);
     }
 
-    private Boolean isBookExist(Long bookId) {
-        return bookRepository.existsById(bookId);
+    private boolean isBookExist(Long bookId) {
+        return bookService.getBookByBookId(bookId) != null;
     }
 
-    private Boolean isUserExist(Long userId) {
-        return userRepository.existsById(userId);
+    private boolean isUserExist(String username) {
+        return authService.findByUserName(username) != null;
+
     }
 
-    private Boolean isWishExist(Long wishId) {
+    private boolean isWishExist(Long wishId) {
         return wishRepository.existsById(wishId);
     }
 
-    public void createWish(Long bookId,Long userId) {
-        User user = getUser(userId);
+    public void createWish(Long bookId,User user) {
+
+        User selectedUser = getUser(user.getUsername());
         Book book = getBook(bookId);
 
+        if (wishRepository.existsByUserAndBook(selectedUser, book)) {
+            throw new IllegalArgumentException("이미 해당 책을 위시리스트에 추가했습니다.");
+        }
+
+
         Wish wish = Wish.builder()
-                .user(user)
+                .user(selectedUser)
                 .book(book)
                 .build();
         wishRepository.save(wish);
     }
 
-    public List<WishResDto> getWishList(Long userId) {
-        if(Boolean.FALSE.equals(isUserExist(userId))) {
+    public Page<WishResDto> getWishList(User user, Pageable pageable) {
+        if(!isUserExist(user.getUsername())) {
             throw new IllegalArgumentException("사용자가 존재하지 않습니다.");
         }
 
-        if(Boolean.FALSE.equals(isWishExist(userId))) {
-            throw new IllegalArgumentException("위시리스트가 존재하지 않습니다.");
-        }
-        List<Wish> wishList = wishRepository.findAllByUserId(userId);
-        List<WishResDto> wishResDtoList = new ArrayList<>();
-
-        for(Wish wish : wishList) {
-            Book book = wish.getBook();
-            wishResDtoList.add(WishResDto.builder()
-                    .wishId(wish.getId())
-                    .bookName(book.getBookName())
-                    .build()
-            );
-        }
-        return wishResDtoList;
+        Page<Wish> wishPage = wishRepository.findAllByUserId(user.getId(), pageable);
+        List<WishResDto> wishResDtoList = wishPage.getContent().stream()
+                .map(wish -> WishResDto.builder()
+                        .wishId(wish.getId())
+                        .bookName(wish.getBook().getBookName())
+                        .build())
+                .collect(Collectors.toList());
+        return new PageImpl<>(wishResDtoList, pageable, wishPage.getTotalElements());
 
     }
 
-    public void deleteWish(Long wishId, Long userId) {
-        if(Boolean.FALSE.equals(isUserExist(userId))) {
+    public void deleteWish(Long wishId, User user) {
+        if(Boolean.FALSE.equals(isUserExist(user.getUsername()))) {
             throw new IllegalArgumentException("사용자가 존재하지 않습니다.");
         }
         if(Boolean.FALSE.equals(isWishExist(wishId))) {
