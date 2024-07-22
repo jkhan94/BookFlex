@@ -42,4 +42,5 @@ public class SignUpReqDto {
 
     @NotNull(message = "role 값이 필수로 들어있어야 합니다.")
     private UserRole authType;
+
 }

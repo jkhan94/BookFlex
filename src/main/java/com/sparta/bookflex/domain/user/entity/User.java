@@ -81,7 +81,7 @@ public class User extends Timestamped {
     private List<Review> reviewList;
 
     @Builder
-    public User(String username, String password, String email, String name, String nickname, String phoneNumber, String address, LocalDate birthDay, UserGrade grade, UserState state) {
+    public User(String username, String password, String email, String name, String nickname, String phoneNumber, String address, LocalDate birthDay, UserGrade grade, UserState state, UserRole auth) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -91,7 +91,8 @@ public class User extends Timestamped {
         this.address = address;
         this.birthDay = birthDay;
         this.grade = grade;
-//        this.state = state;
+        this.state = state;
+        this.auth = auth;
     }
 
     public void updateRefreshToken(String refreshToken) {
