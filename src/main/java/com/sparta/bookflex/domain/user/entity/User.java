@@ -65,10 +65,10 @@ public class User extends Timestamped {
     @Column()
     private String refreshToken;
 
-    @OneToMany(mappedBy = "wish", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Wish> wishList = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Wish> wishList;
 
-    @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Basket> basketList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
