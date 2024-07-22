@@ -79,6 +79,6 @@ public class User extends Timestamped {
         this.nickname = nickname;
         this.birthDay = birthDay;
         this.grade = grade;
-        this.state = state;
+//        this.state = state;
     }
 }

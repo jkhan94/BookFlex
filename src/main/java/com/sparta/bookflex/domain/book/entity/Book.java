@@ -2,6 +2,8 @@ package com.sparta.bookflex.domain.book.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.basket.entity.BasketBook;
+import com.sparta.bookflex.domain.book.dto.BookRequestDto;
+import com.sparta.bookflex.domain.book.dto.BookResponseDto;
 import com.sparta.bookflex.domain.category.entity.Category;
 import com.sparta.bookflex.domain.photoimage.entity.PhotoImage;
 import com.sparta.bookflex.domain.reveiw.entity.Review;
@@ -33,7 +35,7 @@ public class Book extends Timestamped {
     @Column(nullable = false)
     private String author;
 
-    @Column(nullable = false)
+    @Column
     private int price;
 
     @Column(nullable = false)
@@ -76,8 +78,36 @@ public class Book extends Timestamped {
         this.status = status;
         this.category = category;
         this.photoImage = photoImage;
+
     }
 
+    public BookResponseDto toResponseDto() {
+        return BookResponseDto.builder()
+                .bookId(this.id)
+                .bookName(this.bookName)
+                .author(this.author)
+                .price(this.price)
+                .stock(this.stock)
+                .bookDescription(this.bookDescription)
+                .status(this.status)
+                .photoImagePath(this.photoImage.getFilePath())
+                .createdAt(this.createdAt)
+                .modifiedAt(this.modifiedAt)
+                .build();
+    }
+
+    public void update(BookRequestDto bookRequestDto) {
+        this.bookName = bookRequestDto.getBookName();
+        this.author = bookRequestDto.getAuthor();
+        this.price = bookRequestDto.getPrice();
+        this.stock = bookRequestDto.getStock();
+        this.bookDescription = bookRequestDto.getBookDescription();
+        this.status = bookRequestDto.getStatus();
+    }
+
+    public void decreaseStock (int number) {
+        this.stock-=number;
+    }
 }
 
 

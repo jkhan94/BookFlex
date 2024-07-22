@@ -21,8 +21,8 @@ public class Category extends Timestamped {
     @Column(nullable = false)
     private String categoryName;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Book> bookList;
+//    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Book> bookList;
 
     @Builder
     public Category(String categoryName) {
