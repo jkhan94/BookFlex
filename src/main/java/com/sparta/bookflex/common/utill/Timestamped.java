@@ -15,8 +15,8 @@ import lombok.Getter;
 @EntityListeners(AuditingEntityListener.class)
 public class Timestamped {
 	@CreatedDate
-	private LocalDateTime createdAt;
+    protected LocalDateTime createdAt;
 
 	@LastModifiedDate
-	private LocalDateTime modifiedAt;
+    protected LocalDateTime modifiedAt;
 }
