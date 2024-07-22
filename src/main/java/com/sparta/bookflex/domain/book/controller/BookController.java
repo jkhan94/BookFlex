@@ -29,12 +29,20 @@ public class BookController {
     }
 
     @GetMapping("/{productId}")
-    public CommonDto<BookResponseDto> getBook(@RequestBody BookRequestDto bookRequestDto) {
+    public CommonDto<BookResponseDto> getBookById(@PathVariable(value="productId") Long bookId) {
 
-        BookResponseDto bookResponseDto = bookService.getBook(bookRequestDto);
+        BookResponseDto bookResponseDto = bookService.getBookById(bookId);
 
         return new CommonDto<>(HttpStatus.OK.value(), "상품 조회에 성공하였습니다.", bookResponseDto);
     }
+
+//    @GetMapping("")
+//    public CommonDto<List<BookResponseDto>> getBookByBookName(@RequestParam(name="bookName") Long bookId) {
+//
+//        BookResponseDto bookResponseDto = bookService.getBookById(bookId);
+//
+//        return new CommonDto<>(HttpStatus.OK.value(), "상품 조회에 성공하였습니다.", bookResponseDto);
+//    }
 
     //페이징 적용 전
     @GetMapping
