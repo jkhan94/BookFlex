@@ -5,7 +5,7 @@ import com.sparta.bookflex.domain.basket.entity.Basket;
 import com.sparta.bookflex.domain.qna.entity.Qna;
 import com.sparta.bookflex.domain.reveiw.entity.Review;
 import com.sparta.bookflex.domain.sale.entity.Sale;
-import com.sparta.bookflex.domain.user.enums.UserAuth;
+import com.sparta.bookflex.domain.user.enums.UserRole;
 import com.sparta.bookflex.domain.user.enums.UserGrade;
 import com.sparta.bookflex.domain.user.enums.UserState;
 import com.sparta.bookflex.domain.wish.entity.Wish;
@@ -60,7 +60,7 @@ public class User extends Timestamped {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private UserAuth auth;
+    private UserRole auth;
 
     @Column()
     private String refreshToken;

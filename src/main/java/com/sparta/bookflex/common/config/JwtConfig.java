@@ -26,6 +26,7 @@ public class JwtConfig {
     public static final String BLOCKED_USER = "blockedUser";
     public static final String USER_STATE_KEY = "state";
     public static final String USER_GRADE_KEY = "grade";
+    public static final String USER_AUTH_KEY = "auth";
     public static final String BEARER_PREFIX = "Bearer ";
 
     public static Key key;
