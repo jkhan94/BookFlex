@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.sparta.bookflex.common.exception.ErrorCode.USER_NOT_AUTHENTICATED;
+import static com.sparta.bookflex.common.exception.ErrorCode.USER_NOT_AUTHORIZED;
 
 @RestController
 @RequiredArgsConstructor
@@ -87,7 +87,7 @@ public class CategoryController {
     private void checkUser(UserDetailsImpl userDetails) {
         User user = authService.findByUserName(userDetails.getUser().getUsername());
         if (user.getAuth() != UserRole.ADMIN) {
-            throw new BusinessException(USER_NOT_AUTHENTICATED);
+            throw new BusinessException(USER_NOT_AUTHORIZED);
         }
     }
 }
