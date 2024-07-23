@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -42,7 +43,9 @@ public class BookService {
 
         photoImage.updateBookId(book.getId());
 
-        return book.toResponseDto();
+        String photoImageUrl = photoImageService.getPhotoImageUrl(book.getPhotoImage().getFilePath());
+
+        return book.toResponseDto(photoImageUrl);
     }
 
     @Transactional
@@ -52,7 +55,9 @@ public class BookService {
                 .findById(bookId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.BOOK_NOT_FOUND));
 
-        return book.toResponseDto();
+        String photoImageUrl = photoImageService.getPhotoImageUrl(book.getPhotoImage().getFilePath());
+
+        return book.toResponseDto(photoImageUrl);
     }
 
     @Transactional
@@ -61,7 +66,14 @@ public class BookService {
         List<Book> bookList = bookRepository
                 .findByBookName(bookName);
 
-        return bookList.stream().map(Book::toResponseDto).toList();
+        List<BookResponseDto> bookResponseDtoList = new ArrayList<>();
+
+        for (Book book : bookList) {
+            String photoImageUrl = photoImageService.getPhotoImageUrl(book.getPhotoImage().getFilePath());
+            bookResponseDtoList.add(book.toResponseDto(photoImageUrl));
+        }
+
+        return bookResponseDtoList;
     }
 
     @Transactional
@@ -69,7 +81,14 @@ public class BookService {
 
         List<Book> bookList = bookRepository.findAll();
 
-        return bookList.stream().map(Book::toResponseDto).toList();
+        List<BookResponseDto> bookResponseDtoList = new ArrayList<>();
+
+        for (Book book : bookList) {
+            String photoImageUrl = photoImageService.getPhotoImageUrl(book.getPhotoImage().getFilePath());
+            bookResponseDtoList.add(book.toResponseDto(photoImageUrl));
+        }
+
+        return bookResponseDtoList;
     }
 
     @Transactional
@@ -84,7 +103,9 @@ public class BookService {
 
         book.update(bookRequestDto);
 
-        return book.toResponseDto();
+        String photoImageUrl = photoImageService.getPhotoImageUrl(book.getPhotoImage().getFilePath());
+
+        return book.toResponseDto(photoImageUrl);
     }
 
     public String deleteBook(Long bookId) {
@@ -101,13 +122,13 @@ public class BookService {
         return bookName;
     }
 
-    public boolean isExistBook (Long bookId) {
-        Book book = bookRepository.findById(bookId).orElseThrow(()-> new BusinessException(ErrorCode.BOOK_NOT_FOUND));
+    public boolean isExistBook(Long bookId) {
+        Book book = bookRepository.findById(bookId).orElseThrow(() -> new BusinessException(ErrorCode.BOOK_NOT_FOUND));
         return true;
     }
 
-    public Book getBookByBookId (Long bookId) {
-        Book book = bookRepository.findById(bookId).orElseThrow(()-> new BusinessException(ErrorCode.BOOK_NOT_FOUND));
+    public Book getBookByBookId(Long bookId) {
+        Book book = bookRepository.findById(bookId).orElseThrow(() -> new BusinessException(ErrorCode.BOOK_NOT_FOUND));
         return book;
     }
 
