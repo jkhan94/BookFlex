@@ -1,9 +1,13 @@
 package com.sparta.bookflex.domain.basket.controller;
 
 import com.sparta.bookflex.common.dto.CommonDto;
+import com.sparta.bookflex.common.security.UserDetailsImpl;
 import com.sparta.bookflex.domain.basket.dto.BasketCreateReqDto;
 import com.sparta.bookflex.domain.basket.dto.BasketResDto;
 import com.sparta.bookflex.domain.basket.service.BasketService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,16 +20,17 @@ import java.util.List;
 public class BasketController {
     private final BasketService basketService;
 
+    @Autowired
     public BasketController(BasketService basketService) {
         this.basketService = basketService;
     }
 
     @PostMapping
     public ResponseEntity<CommonDto<Void>> createBasket(
-            @RequestBody BasketCreateReqDto basketCreateDto.
-         @AuthenticationPrincipal UserDetailsimpl userDetails) {
+            @RequestBody BasketCreateReqDto basketCreateDto,
+        @AuthenticationPrincipal UserDetailsImpl userDetails){
 
-        basketService.createBasket(basketCreateDto, userId);
+        basketService.createBasket(basketCreateDto, userDetails.getUser());
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new CommonDto<>(HttpStatus.CREATED.value(), "장바구니에 추가되었습니다.", null));
@@ -33,35 +38,39 @@ public class BasketController {
     }
 
     @GetMapping("/{bookId}")
-    public ResponseEntity<CommonDto<List<BasketResDto>>> getBasket(
-        @PathVariable Long bookId
-        //,@AuthenticationPrincipal UserDetailsimpl userDetails
-    ){
-        Long userId = 1L;
-        List<BasketResDto> basketResDto = basketService.getBaskets(userId);
+    public ResponseEntity<?> getBasket(
+        @PathVariable Long bookId,
+        @AuthenticationPrincipal UserDetailsImpl userDetails){
+        BasketResDto basketResDto = basketService.getBasket(userDetails.getUser(),bookId);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonDto<>(HttpStatus.OK.value(), "장바구니를 조회했습니다.", basketResDto));
     }
 
-    @PutMapping("/{basketId")
+    @GetMapping("")
+    public ResponseEntity<?> getBaskets(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            Pageable pageable){
+        Page<BasketResDto> basketResDto = basketService.getBaskets(userDetails.getUser(), pageable);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonDto<>(HttpStatus.OK.value(), "장바구니를 조회했습니다.", basketResDto));
+    }
+
+    @PutMapping("/{basketId}")
     public ResponseEntity<CommonDto<BasketResDto>> updateBasket(
         @PathVariable Long basketId,
-        @RequestParam int quantity
-        ///,@AuthenticationPrincipal UserDetailsimpl userDetails
-    ){
-        Long userId = 1L;
-        BasketResDto basketResDto =  basketService.updateBasket(basketId, quantity, userId);
+        @RequestParam int quantity,
+        @AuthenticationPrincipal UserDetailsImpl userDetails){
+        BasketResDto basketResDto =  basketService.updateBasket(basketId, quantity, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonDto<>(HttpStatus.OK.value(), "장바구니의 상품 수량을 수정했습니다.",basketResDto));
     }
 
     @DeleteMapping("/{basketId}")
     public ResponseEntity<CommonDto<Void>> deleteBasket(
-        @PathVariable Long basketId
-        //,@AuthenticationPrincipal UserDetailsimpl userDetails
+        @PathVariable Long basketId,
+        @AuthenticationPrincipal UserDetailsImpl userDetails
     ){
-        Long userId = 1L;
-        basketService.deleteBasket(basketId, userId);
+        basketService.deleteBasket(basketId, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .body(new CommonDto<>(HttpStatus.NO_CONTENT.value(), "장바구니을 삭제했습니다.", null));
     }

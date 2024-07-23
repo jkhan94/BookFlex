@@ -38,4 +38,7 @@ public class Basket extends Timestamped {
         this.book = book;
     }
 
+    public void updateQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 }
