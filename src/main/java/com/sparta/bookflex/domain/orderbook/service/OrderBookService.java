@@ -2,10 +2,13 @@ package com.sparta.bookflex.domain.orderbook.service;
 
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.service.BookService;
+import com.sparta.bookflex.domain.orderbook.dto.OrderResponsDto;
+import com.sparta.bookflex.domain.orderbook.dto.OrderStatusRequestDto;
 import com.sparta.bookflex.domain.orderbook.entity.OrderBook;
 import com.sparta.bookflex.domain.orderbook.repository.OrderBookRepository;
 import com.sparta.bookflex.domain.sale.Enum.SaleState;
-import com.sparta.bookflex.domain.sale.dto.OrderRequestDto;
+import com.sparta.bookflex.domain.orderbook.dto.OrderRequestDto;
+import com.sparta.bookflex.domain.sale.dto.SaleResponseDto;
 import com.sparta.bookflex.domain.sale.entity.Sale;
 import com.sparta.bookflex.domain.sale.repository.SaleRepository;
 import com.sparta.bookflex.domain.user.entity.User;
@@ -38,6 +41,13 @@ public class OrderBookService {
     private Book getBook(Long bookId) {
         return bookService.getBookByBookId(bookId);
     }
+
+    private OrderBook getOrderBook(Long orderId) {
+        return orderBookRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("주문 내역이 없습니다."));
+
+    }
+
     @Transactional
     public OrderBook createOrder(OrderRequestDto orderRequestDto, User user) {
         int total = 0;
@@ -75,4 +85,34 @@ public class OrderBookService {
     }
 
 
+    public OrderResponsDto updateOrderStatus(Long orderId, User user, OrderStatusRequestDto statusUpdate) {
+        OrderBook orderBook = getOrderBook(orderId);
+
+        SaleState status = statusUpdate.getStatus();
+        if (orderBook.getStatus().equals(status)) {
+            throw new IllegalArgumentException("변경 전과 후가 동일한 상태입니다.");
+        }
+
+        orderBook.updateStatus(status);
+        List<SaleResponseDto> saleResponseDtos = new ArrayList<>();
+        for (Sale sale : orderBook.getSaleList()) {
+            sale.updateStatus(status);
+            saleResponseDtos.add(SaleResponseDto.builder()
+                    .status(sale.getStatus().toString())
+                    .bookName(sale.getBook().getBookName())
+                    .price(sale.getBook().getPrice())
+                    .quantity(sale.getQuantity())
+                    .total(sale.getQuantity() * sale.getBook().getPrice())
+                    .createdAt(sale.getCreatedAt())
+                    .build());
+        }
+
+        return OrderResponsDto.builder()
+                .orderId(orderId)
+                .status(status.toString())
+                .total(orderBook.getTotal())
+                .sales(saleResponseDtos)
+                .build();
+
+    }
 }

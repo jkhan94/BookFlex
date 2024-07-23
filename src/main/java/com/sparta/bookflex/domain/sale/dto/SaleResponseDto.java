@@ -1,5 +1,6 @@
 package com.sparta.bookflex.domain.sale.dto;
 
+import com.sparta.bookflex.domain.sale.Enum.SaleState;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,8 +15,21 @@ public class SaleResponseDto {
     private int price;
     //private Boolean isReviewed;
     private int quantity;
+    private int total;
     private String status;
     private LocalDateTime createdAt;
+
+    @Builder
+    public SaleResponseDto(Long saleId, String bookName, int price, int quantity, String status, LocalDateTime createdAt, int total) {
+        this.saleId = saleId;
+        this.bookName = bookName;
+        this.price = price;
+        this.quantity = quantity;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.total = total;
+    }
+
 
     @Builder
     public SaleResponseDto(Long saleId, String bookName, int price, int quantity, String status, LocalDateTime createdAt) {
@@ -26,5 +40,4 @@ public class SaleResponseDto {
         this.status = status;
         this.createdAt = createdAt;
     }
-
 }

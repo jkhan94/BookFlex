@@ -44,4 +44,8 @@ public class OrderBook extends Timestamped {
     public void updateSaleList(List<Sale> sales) {
         this.saleList = sales;
     }
+
+    public void updateStatus(SaleState status) {
+        this.status = status;
+    }
 }

@@ -61,6 +61,10 @@ public class Sale extends Timestamped {
     public void updateOrderBook(OrderBook orderBook) {
         this.orderBook = orderBook;
     }
+
+    public void updateStatus(SaleState status) {
+        this.status = status;
+    }
 }
 
 

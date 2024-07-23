@@ -1,4 +1,4 @@
-package com.sparta.bookflex.domain.sale.dto;
+package com.sparta.bookflex.domain.orderbook.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

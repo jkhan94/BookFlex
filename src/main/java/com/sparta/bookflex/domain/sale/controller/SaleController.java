@@ -2,7 +2,7 @@ package com.sparta.bookflex.domain.sale.controller;
 
 import com.sparta.bookflex.common.dto.CommonDto;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
-import com.sparta.bookflex.domain.sale.dto.OrderRequestDto;
+import com.sparta.bookflex.domain.orderbook.dto.OrderRequestDto;
 import com.sparta.bookflex.domain.sale.dto.SaleRequestDto;
 import com.sparta.bookflex.domain.sale.dto.SaleResponseDto;
 import com.sparta.bookflex.domain.sale.service.SaleService;
@@ -34,7 +34,7 @@ public class SaleController {
                 .body(new CommonDto<>(HttpStatus.CREATED.value(), "주문이 완료되었습니다.", null));
     }
 
-    @PostMapping("/orderplace")
+  /*  @PostMapping("/orderplace")
     public ResponseEntity<CommonDto<Void>> createMultipleSales(
             @RequestBody OrderRequestDto orderRequestDto,
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -43,7 +43,7 @@ public class SaleController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new CommonDto<>(HttpStatus.CREATED.value(), "주문이 완료되었습니다.", null));
-    }
+    }*/
 
     @GetMapping("/{saleId}")
     public ResponseEntity<CommonDto<SaleResponseDto>> getSale(

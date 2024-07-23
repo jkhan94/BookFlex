@@ -3,7 +3,7 @@ package com.sparta.bookflex.domain.sale.service;
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.service.BookService;
 import com.sparta.bookflex.domain.sale.Enum.SaleState;
-import com.sparta.bookflex.domain.sale.dto.OrderRequestDto;
+import com.sparta.bookflex.domain.orderbook.dto.OrderRequestDto;
 import com.sparta.bookflex.domain.sale.dto.SaleRequestDto;
 import com.sparta.bookflex.domain.sale.dto.SaleResponseDto;
 import com.sparta.bookflex.domain.sale.entity.Sale;
