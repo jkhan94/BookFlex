@@ -22,10 +22,9 @@ public class BasketController {
 
     @PostMapping
     public ResponseEntity<CommonDto<Void>> createBasket(
-            @RequestBody BasketCreateReqDto basketCreateDto
-        //, @AuthenticationPrincipal UserDetailsimpl userDetails
-            ) {
-        Long userId = 1L;
+            @RequestBody BasketCreateReqDto basketCreateDto.
+         @AuthenticationPrincipal UserDetailsimpl userDetails) {
+
         basketService.createBasket(basketCreateDto, userId);
 
         return ResponseEntity.status(HttpStatus.CREATED)

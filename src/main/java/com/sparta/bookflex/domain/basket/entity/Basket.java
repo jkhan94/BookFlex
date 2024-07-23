@@ -32,13 +32,10 @@ public class Basket extends Timestamped {
     private Book book;
 
     @Builder
-    public Basket(int quantity, User user,Book book) {
+    public Basket(int quantity, User user, Book book) {
         this.quantity = quantity;
         this.user = user;
         this.book = book;
     }
 
-    public void updateQuantity(int quantity) {
-        this.quantity = quantity;
-    }
 }
