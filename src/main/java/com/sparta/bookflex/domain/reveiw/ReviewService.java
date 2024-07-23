@@ -7,6 +7,7 @@ import com.sparta.bookflex.domain.book.service.BookService;
 import com.sparta.bookflex.domain.reveiw.entity.Review;
 import com.sparta.bookflex.domain.reveiw.repository.ReviewRepository;
 import com.sparta.bookflex.domain.sale.entity.Sale;
+import com.sparta.bookflex.domain.sale.repository.SaleRepository;
 import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.enums.UserRole;
 import com.sparta.bookflex.domain.user.service.AuthService;
@@ -23,12 +24,17 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final AuthService authService;
     private final BookService bookService;
-    private final SaleService saleService;
+//    private final SaleService saleService;
+    private final SaleRepository saleRepository;
 
+    /*
+    레포지토리 접근 부분 추후 수정 필요
+     */
     @Transactional
     public ReviewResponseDto createReview(User user, Long saleId, ReviewRequestDto reviewRequestDto) {
         User selectedUser = getUser(user.getUsername());
-        Sale selectedSale = saleService.getSale(saleId);
+//        Sale selectedSale = saleService.getSale(saleId);
+        Sale selectedSale = saleRepository.findById(saleId).orElseThrow(()->new IllegalArgumentException());
         Book selectedBook = bookService.getBookByBookId(selectedSale.getBook().getId());
 
         Review createdReview = reviewRequestDto.toEntity(selectedUser, selectedBook);
