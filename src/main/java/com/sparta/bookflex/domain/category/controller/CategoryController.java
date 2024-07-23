@@ -33,15 +33,11 @@ public class CategoryController {
     public ResponseEntity<CategoryResponseDto> createCategory(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                               @RequestBody @Valid CategoryRequestDto requestDto) {
 
-        User user = authService.findByUserName(userDetails.getUser().getUsername());
-        if (user.getAuth() != UserRole.ADMIN) {
-            throw new BusinessException(USER_NOT_AUTHENTICATED);
-        }
+        checkUser(userDetails);
 
         CategoryResponseDto responseDto = categoryService.createCategory(requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
-
 
     @GetMapping("/{categoryId}")
     @Envelop("카테고리 조회에 성공하였습니다.")
@@ -70,10 +66,7 @@ public class CategoryController {
                                                               @PathVariable long categoryId,
                                                               @RequestBody @Valid CategoryRequestDto requestDto) {
 
-        User user = authService.findByUserName(userDetails.getUser().getUsername());
-        if (user.getAuth() != UserRole.ADMIN) {
-            throw new BusinessException(USER_NOT_AUTHENTICATED);
-        }
+        checkUser(userDetails);
 
         CategoryResponseDto responseDto = categoryService.updateCategory(categoryId, requestDto);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
@@ -85,12 +78,16 @@ public class CategoryController {
     public ResponseEntity deleteCategory(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                          @PathVariable long categoryId) {
 
+        checkUser(userDetails);
+
+        categoryService.deleteCategory(categoryId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    private void checkUser(UserDetailsImpl userDetails) {
         User user = authService.findByUserName(userDetails.getUser().getUsername());
         if (user.getAuth() != UserRole.ADMIN) {
             throw new BusinessException(USER_NOT_AUTHENTICATED);
         }
-
-        categoryService.deleteCategory(categoryId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
