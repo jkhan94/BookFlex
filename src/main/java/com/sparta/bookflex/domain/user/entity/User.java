@@ -5,6 +5,8 @@ import com.sparta.bookflex.domain.basket.entity.Basket;
 import com.sparta.bookflex.domain.qna.entity.Qna;
 import com.sparta.bookflex.domain.reveiw.entity.Review;
 import com.sparta.bookflex.domain.sale.entity.Sale;
+import com.sparta.bookflex.domain.user.dto.ProfileReqDto;
+import com.sparta.bookflex.domain.user.dto.ProfileResDto;
 import com.sparta.bookflex.domain.user.enums.UserRole;
 import com.sparta.bookflex.domain.user.enums.UserGrade;
 import com.sparta.bookflex.domain.user.enums.UserState;
@@ -95,11 +97,32 @@ public class User extends Timestamped {
         this.auth = auth;
     }
 
+    public static ProfileResDto of(User user) {
+        return ProfileResDto.builder()
+            .username(user.getUsername())
+            .email(user.getEmail())
+            .address(user.getAddress())
+            .phoneNumber(user.getPhoneNumber())
+            .nickname(user.getNickname())
+            .grade(user.getGrade())
+            .createdAt(user.getCreatedAt())
+            .build();
+    }
+
     public void updateRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
     }
 
-    public void updateState(UserState state){
+    public void updateState(UserState state) {
         this.state = state;
+    }
+
+    public void updateProfile(String password, String nickname, String phoneNumber, String address) {
+        if (!password.isEmpty()) {
+            this.password = password;
+        }
+        this.nickname = nickname;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
     }
 }

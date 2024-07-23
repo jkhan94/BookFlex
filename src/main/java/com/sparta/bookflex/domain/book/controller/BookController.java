@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/products")
+@RequestMapping("/books")
 public class BookController {
 
     private final BookService bookService;
@@ -36,13 +36,13 @@ public class BookController {
         return new CommonDto<>(HttpStatus.OK.value(), "상품 조회에 성공하였습니다.", bookResponseDto);
     }
 
-//    @GetMapping("")
-//    public CommonDto<List<BookResponseDto>> getBookByBookName(@RequestParam(name="bookName") Long bookId) {
-//
-//        BookResponseDto bookResponseDto = bookService.getBookById(bookId);
-//
-//        return new CommonDto<>(HttpStatus.OK.value(), "상품 조회에 성공하였습니다.", bookResponseDto);
-//    }
+    @GetMapping("/search")
+    public CommonDto<List<BookResponseDto>> getBooksByBookName(@RequestParam(name="bookName") String bookName) {
+
+        List<BookResponseDto> bookResponseDto = bookService.getBooksByBookName(bookName);
+
+        return new CommonDto<>(HttpStatus.OK.value(), "제목별 상품 조회에 성공하였습니다.", bookResponseDto);
+    }
 
     //페이징 적용 전
     @GetMapping
