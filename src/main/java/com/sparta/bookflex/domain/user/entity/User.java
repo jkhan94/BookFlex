@@ -117,6 +117,10 @@ public class User extends Timestamped {
         this.state = state;
     }
 
+    public void updateGrade(UserGrade grade){
+        this.grade = grade;
+    }
+
     public void updateProfile(String password, String nickname, String phoneNumber, String address) {
         if (!password.isEmpty()) {
             this.password = password;
