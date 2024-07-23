@@ -47,6 +47,9 @@ public class Book extends Timestamped {
     @Column(nullable = false)
     private String status;
 
+    @Column(nullable=false)
+    private int discountRate;
+
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
@@ -68,7 +71,17 @@ public class Book extends Timestamped {
     private PhotoImage photoImage;
 
     @Builder
-    public Book(String bookName, String publisher, String author, int price, int stock, String bookDescription, String status, Category category, PhotoImage photoImage) {
+    public Book(String bookName,
+                String publisher,
+                String author,
+                int price,
+                int stock,
+                String bookDescription,
+                String status,
+                Category category,
+                PhotoImage photoImage,
+                int discountRate) {
+
         this.bookName = bookName;
         this.publisher = publisher;
         this.author = author;
@@ -78,6 +91,7 @@ public class Book extends Timestamped {
         this.status = status;
         this.category = category;
         this.photoImage = photoImage;
+        this.discountRate= discountRate;
 
     }
 
