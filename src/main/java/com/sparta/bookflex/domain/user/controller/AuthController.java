@@ -1,8 +1,6 @@
 package com.sparta.bookflex.domain.user.controller;
 
 import com.sparta.bookflex.common.config.JwtConfig;
-import com.sparta.bookflex.common.dto.CommonDto;
-import com.sparta.bookflex.common.jwt.JwtProvider;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
 import com.sparta.bookflex.domain.user.dto.LoginReqDto;
 import com.sparta.bookflex.domain.user.dto.SignUpReqDto;
@@ -11,7 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;

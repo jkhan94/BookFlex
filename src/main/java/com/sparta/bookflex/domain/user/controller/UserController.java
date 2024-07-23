@@ -5,6 +5,7 @@ import com.sparta.bookflex.common.security.UserDetailsImpl;
 import com.sparta.bookflex.domain.user.dto.ProfileReqDto;
 import com.sparta.bookflex.domain.user.dto.ProfileResDto;
 import com.sparta.bookflex.domain.user.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,7 +27,7 @@ public class UserController {
 
     @PutMapping("/{userId}")
     public ResponseEntity<ProfileResDto> updateProfile(@PathVariable long userId, @AuthenticationPrincipal UserDetailsImpl userDetails
-    , @RequestBody ProfileReqDto reqDto) {
+    ,@Valid @RequestBody ProfileReqDto reqDto) {
 
         ProfileResDto resDto = userService.updateProfile(userId, userDetails.getUser(),
             reqDto);
