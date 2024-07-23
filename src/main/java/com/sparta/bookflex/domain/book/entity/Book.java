@@ -1,7 +1,7 @@
 package com.sparta.bookflex.domain.book.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
-import com.sparta.bookflex.domain.basket.entity.BasketBook;
+import com.sparta.bookflex.domain.basket.entity.Basket;
 import com.sparta.bookflex.domain.book.dto.BookRequestDto;
 import com.sparta.bookflex.domain.book.dto.BookResponseDto;
 import com.sparta.bookflex.domain.category.entity.Category;
@@ -35,7 +35,7 @@ public class Book extends Timestamped {
     @Column(nullable = false)
     private String author;
 
-    @Column
+    @Column(nullable = false)
     private int price;
 
     @Column(nullable = false)
@@ -52,7 +52,7 @@ public class Book extends Timestamped {
     private Category category;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<BasketBook> basketBookList = new ArrayList<>();
+    private List<Basket> basketList = new ArrayList<>();
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Wish> wishList = new ArrayList<>();
@@ -107,9 +107,6 @@ public class Book extends Timestamped {
         this.status = bookRequestDto.getStatus();
     }
 
-    public void decreaseStock (int number) {
-        this.stock-=number;
-    }
 }
 
 
