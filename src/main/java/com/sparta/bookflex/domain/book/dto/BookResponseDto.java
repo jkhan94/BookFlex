@@ -20,9 +20,11 @@ public class BookResponseDto {
     private String bookDescription;
     private String status;
     private String categoryName;
+    private int discountRate;
     private String photoImagePath;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+
 
     @Builder
     public BookResponseDto(Long bookId,
@@ -36,7 +38,8 @@ public class BookResponseDto {
                            String categoryName,
                            String photoImagePath,
                            LocalDateTime createdAt,
-                           LocalDateTime modifiedAt) {
+                           LocalDateTime modifiedAt,
+                           int discountRate) {
 
         this.bookId = bookId;
         this.bookName = bookName;
@@ -50,5 +53,6 @@ public class BookResponseDto {
         this.photoImagePath = photoImagePath;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
+        this.discountRate = discountRate;
     }
 }

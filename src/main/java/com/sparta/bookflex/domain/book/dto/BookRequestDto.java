@@ -26,18 +26,23 @@ public class BookRequestDto {
     @Pattern(regexp = "^[0-9]*$", message = "숫자만 입력 가능합니다.")
     private int price;
 
-    @NotBlank(message = "책 이름을 입력해주세요.")
+    @NotBlank(message = "재고량을 입력해주세요.")
     @Pattern(regexp = "^[0-9]*$", message = "숫자만 입력 가능합니다.")
     private int stock;
 
-    @NotBlank(message = "책 이름을 입력해주세요.")
+    @NotBlank(message = "책 설명을 입력해주세요.")
     private String bookDescription;
 
-    @NotBlank(message = "책 이름을 입력해주세요.")
+    @NotBlank(message = "상품 상태를 입력해주세요.")
     private String status;
 
     @NotBlank(message = "카테고리를 지정해주세요.")
     private String category;
+
+    @Pattern(regexp = "^[0-9]*$", message = "숫자만 입력 가능합니다.")
+    @NotBlank(message = "할인율을 입력해주세요.")
+    private int discountRate;
+
 
     public Book toEntity(PhotoImage photoImage, Category category) {
         return Book.builder()
@@ -48,6 +53,7 @@ public class BookRequestDto {
                 .stock(this.stock)
                 .bookDescription(this.bookDescription)
                 .status(this.status)
+                .discountRate(this.discountRate)
                 .category(category)
                 .photoImage(photoImage)
                 .build();
