@@ -1,6 +1,8 @@
 package com.sparta.bookflex.domain.user.service;
 
 import com.sparta.bookflex.common.config.JwtConfig;
+import com.sparta.bookflex.common.exception.BusinessException;
+import com.sparta.bookflex.common.exception.ErrorCode;
 import com.sparta.bookflex.common.jwt.JwtProvider;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
 import com.sparta.bookflex.domain.user.dto.LoginReqDto;
@@ -33,7 +35,7 @@ public class AuthService {
         String username = signupReqDto.getUsername();
 
         if (userRepository.findByUserName(username).isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 유저ID입니다");
+            throw new BusinessException(ErrorCode.EXIST_USER);
         }
 
         User user = User.builder()
@@ -97,7 +99,7 @@ public class AuthService {
         User curUser = findByUserName(user.getUsername());
 
         if(!curUser.getRefreshToken().equals(refreshToken)){
-            throw new IllegalArgumentException("해당 유저와 다른 refresh Token 입니다");
+            throw new BusinessException(ErrorCode.USER_NOT_AUTHENTICATED);
         }
 
         String newAccessToken = jwtProvider.createToken(curUser, JwtConfig.accessTokenTime);
@@ -107,7 +109,7 @@ public class AuthService {
 
     public User findByUserName(String username) {
         return userRepository.findByUserName(username).orElseThrow(
-            ()-> new IllegalArgumentException("존재하지 않는 유저입니다")
+            ()-> new BusinessException(ErrorCode.USER_NOT_FOUND)
         );
     }
 }
