@@ -29,6 +29,9 @@ public class CategoryService {
 
     @Transactional
     public CategoryResponseDto createCategory(CategoryRequestDto requestDto) {
+
+        checkCategoryName(requestDto);
+
         Category category = Category.builder()
                 .categoryName(requestDto.getCategoryName())
                 .build();
@@ -97,12 +100,10 @@ public class CategoryService {
     public CategoryResponseDto updateCategory(long categoryId, CategoryRequestDto requestDto) {
         Category category = getCategoryById(categoryId);
 
-        if (categoryRepository.findByCategoryName(requestDto.getCategoryName()).isEmpty()) {
-            category.update(requestDto);
-            categoryRepository.save(category);
-        } else {
-            throw new BusinessException(CATEGORY_ALREADY_EXISTS);
-        }
+        checkCategoryName(requestDto);
+
+        category.update(requestDto);
+        categoryRepository.save(category);
 
         return CategoryResponseDto.builder()
                 .categoryName(category.getCategoryName())
@@ -122,6 +123,18 @@ public class CategoryService {
         return categoryRepository.findById(categoryId).orElseThrow(
                 () -> new BusinessException(CATEGORY_NOT_FOUND)
         );
+    }
+
+    private void checkCategoryName(CategoryRequestDto requestDto) {
+        if (categoryRepository.findByCategoryName(requestDto.getCategoryName()).isPresent()) {
+            throw new BusinessException(CATEGORY_ALREADY_EXISTS);
+        }
+    }
+
+
+    public Category getCategoryByCategoryName(String categoryName) {
+        return categoryRepository.findByCategoryName(categoryName)
+                .orElseThrow(()-> new BusinessException(CATEGORY_NOT_FOUND));
     }
 
 }

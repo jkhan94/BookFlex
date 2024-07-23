@@ -2,11 +2,13 @@ package com.sparta.bookflex.domain.book.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.basket.entity.BasketBook;
+import com.sparta.bookflex.domain.book.dto.BookRequestDto;
+import com.sparta.bookflex.domain.book.dto.BookResponseDto;
 import com.sparta.bookflex.domain.category.entity.Category;
 import com.sparta.bookflex.domain.photoimage.entity.PhotoImage;
 import com.sparta.bookflex.domain.reveiw.entity.Review;
 import com.sparta.bookflex.domain.sale.entity.Sale;
-import com.sparta.bookflex.domain.wish.entity.WishBook;
+import com.sparta.bookflex.domain.wish.entity.Wish;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -33,7 +35,7 @@ public class Book extends Timestamped {
     @Column(nullable = false)
     private String author;
 
-    @Column(nullable = false)
+    @Column
     private int price;
 
     @Column(nullable = false)
@@ -53,7 +55,7 @@ public class Book extends Timestamped {
     private List<BasketBook> basketBookList = new ArrayList<>();
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<WishBook> wishBookList = new ArrayList<>();
+    private List<Wish> wishList = new ArrayList<>();
 
     @OneToMany(mappedBy = "book")
     private List<Review> reviewList = new ArrayList<>();
@@ -76,8 +78,38 @@ public class Book extends Timestamped {
         this.status = status;
         this.category = category;
         this.photoImage = photoImage;
+
     }
 
+    public BookResponseDto toResponseDto() {
+        return BookResponseDto.builder()
+                .bookId(this.id)
+                .bookName(this.bookName)
+                .author(this.author)
+                .publisher(this.publisher)
+                .price(this.price)
+                .stock(this.stock)
+                .bookDescription(this.bookDescription)
+                .status(this.status)
+                .categoryName(this.category.getCategoryName())
+                .photoImagePath(this.photoImage.getFilePath())
+                .createdAt(this.createdAt)
+                .modifiedAt(this.modifiedAt)
+                .build();
+    }
+
+    public void update(BookRequestDto bookRequestDto) {
+        this.bookName = bookRequestDto.getBookName();
+        this.author = bookRequestDto.getAuthor();
+        this.price = bookRequestDto.getPrice();
+        this.stock = bookRequestDto.getStock();
+        this.bookDescription = bookRequestDto.getBookDescription();
+        this.status = bookRequestDto.getStatus();
+    }
+
+    public void decreaseStock (int number) {
+        this.stock-=number;
+    }
 }
 
 
