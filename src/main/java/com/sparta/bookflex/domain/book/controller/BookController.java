@@ -4,6 +4,7 @@ import com.sparta.bookflex.common.dto.CommonDto;
 import com.sparta.bookflex.domain.book.dto.BookRequestDto;
 import com.sparta.bookflex.domain.book.dto.BookResponseDto;
 import com.sparta.bookflex.domain.book.service.BookService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class BookController {
     private final BookService bookService;
 
     @PostMapping
-    public CommonDto<BookResponseDto> registerProduct(@RequestPart(value = "request") BookRequestDto bookRequestDto,
+    public CommonDto<BookResponseDto> registerProduct(@RequestPart(value = "request") @Valid BookRequestDto bookRequestDto,
                                                       @RequestPart(value = "multipartFile") MultipartFile multipartFile) throws IOException {
 
         BookResponseDto bookResponseDto = bookService.registerProduct(bookRequestDto, multipartFile);
@@ -59,7 +60,7 @@ public class BookController {
 
     @PutMapping("/{booksId}")
     public CommonDto<BookResponseDto> modifyBookInfo(@PathVariable(value = "productId") Long bookId,
-                                                     @RequestPart(value = "request") BookRequestDto bookRequestDto,
+                                                     @RequestPart(value = "request") @Valid BookRequestDto bookRequestDto,
                                                      @RequestPart(value = "multipartFile") MultipartFile multipartFile) throws IOException {
 
         BookResponseDto bookResponseDto = bookService.modifyBookInfo(bookId, bookRequestDto, multipartFile);

@@ -22,6 +22,7 @@ public enum ErrorCode {
     PASSWORD_INCORRECT(HttpStatus.BAD_REQUEST, "현재 비밀번호와 사용자의 비밀번호가 일치하지 않습니다."),
     PASSWORD_REUSED(HttpStatus.BAD_REQUEST, "동일한 비밀번호로는 변경하실 수 없습니다."),
     USER_NOT_AUTHENTICATED(HttpStatus.UNAUTHORIZED, "인증되지 않은 사용자입니다."),
+    USER_NOT_WRITER(HttpStatus.FORBIDDEN, "작성자만 수정할 수 있습니다."),
 
     // 보드
     BOARD_CREATE_MISSING_DATA(HttpStatus.BAD_REQUEST, "보드 이름과 한 줄 설명은 필수입니다."),
@@ -46,8 +47,10 @@ public enum ErrorCode {
 
     // 카테고리
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "카테고리를 찾을 수 없습니다."),
-    CATEGORY_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 존재하는 카테고리입니다.");
+    CATEGORY_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 존재하는 카테고리입니다."),
 
+    // 리뷰
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다.");
 
 
     private final HttpStatus status;
