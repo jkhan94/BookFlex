@@ -81,7 +81,8 @@ public class Book extends Timestamped {
 
     }
 
-    public BookResponseDto toResponseDto() {
+    public BookResponseDto toResponseDto(String photoImageUrl) {
+
         return BookResponseDto.builder()
                 .bookId(this.id)
                 .bookName(this.bookName)
@@ -92,7 +93,7 @@ public class Book extends Timestamped {
                 .bookDescription(this.bookDescription)
                 .status(this.status)
                 .categoryName(this.category.getCategoryName())
-                .photoImagePath(this.photoImage.getFilePath())
+                .photoImagePath(photoImageUrl)
                 .createdAt(this.createdAt)
                 .modifiedAt(this.modifiedAt)
                 .build();

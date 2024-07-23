@@ -1,7 +1,5 @@
 package com.sparta.bookflex.domain.book.dto;
 
-import com.sparta.bookflex.domain.photoimage.entity.PhotoImage;
-import com.sparta.bookflex.domain.category.entity.Category;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -49,6 +49,10 @@ public class PhotoImageService {
                 .build());
     }
 
+    public String getPhotoImageUrl(String path) {
+        return amazonS3.getUrl(bucketName, path).toString();
+    }
+
     @Transactional
     public PhotoImage updatePhotoImage(MultipartFile multipartFile, Long bookId) throws IOException {
 
