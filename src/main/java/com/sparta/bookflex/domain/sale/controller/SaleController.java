@@ -14,7 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/sales")
+@RequestMapping("/sales")
 public class SaleController {
 
     private final SaleService saleService;
