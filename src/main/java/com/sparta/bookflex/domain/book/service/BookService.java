@@ -56,6 +56,15 @@ public class BookService {
     }
 
     @Transactional
+    public List<BookResponseDto> getBooksByBookName(String bookName) {
+
+        List<Book> bookList = bookRepository
+                .findByBookName(bookName);
+
+        return bookList.stream().map(Book::toResponseDto).toList();
+    }
+
+    @Transactional
     public List<BookResponseDto> getBookList() {
 
         List<Book> bookList = bookRepository.findAll();

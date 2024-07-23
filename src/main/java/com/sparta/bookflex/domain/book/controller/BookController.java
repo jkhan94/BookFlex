@@ -36,12 +36,12 @@ public class BookController {
         return new CommonDto<>(HttpStatus.OK.value(), "상품 조회에 성공하였습니다.", bookResponseDto);
     }
 
-//    @GetMapping("")
-//    public CommonDto<List<BookResponseDto>> getBookByBookName(@RequestParam(name="bookName") Long bookId) {
+//    @GetMapping
+//    public CommonDto<List<BookResponseDto>> getBooksByBookName(@RequestParam(name="bookName") String bookName) {
 //
-//        BookResponseDto bookResponseDto = bookService.getBookById(bookId);
+//        List<BookResponseDto> bookResponseDto = bookService.getBooksByBookName(bookName);
 //
-//        return new CommonDto<>(HttpStatus.OK.value(), "상품 조회에 성공하였습니다.", bookResponseDto);
+//        return new CommonDto<>(HttpStatus.OK.value(), "제목별 상품 조회에 성공하였습니다.", bookResponseDto);
 //    }
 
     //페이징 적용 전
