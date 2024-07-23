@@ -42,8 +42,11 @@ public class UserService {
         inputUser.updateGrade(reqDto.getUserGrade());
     }
 
+    @Transactional
     public void updateState(long userId, User user, StateReqDto reqDto) {
-        User inputUser = getUser(userId, user);
+
+        User inputUser = userRepository.findById(userId).orElseThrow(() ->
+            new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         inputUser.updateState(reqDto.getState());
     }
