@@ -1,5 +1,9 @@
 package com.sparta.bookflex.domain.category;
 
+import com.sparta.bookflex.common.exception.BusinessException;
+import com.sparta.bookflex.common.exception.ErrorCode;
+import com.sparta.bookflex.domain.book.entity.BookStatus;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -128,5 +132,12 @@ public enum Category {
 
         return Objects.nonNull(category.mainCategory) &&
                 this.contains(category.mainCategory);
+    }
+
+    public static Category of(String Category) {
+        return Arrays.stream(values())
+                .filter(C -> Category.equals(C.categoryName))
+                .findFirst()
+                .orElseThrow(() -> new BusinessException(ErrorCode.CATEGORY_NOT_FOUND));
     }
 }
