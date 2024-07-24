@@ -1,6 +1,6 @@
 package com.sparta.bookflex.domain.systemlog.entity;
 
-import com.sparta.bookflex.domain.systemlog.ActionType;
+import com.sparta.bookflex.domain.systemlog.enums.ActionType;
 import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -16,7 +15,6 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class SystemLog {
 
@@ -34,7 +32,13 @@ public class SystemLog {
     @CreatedDate
     private LocalDateTime createdAt;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
+
+    public SystemLog(ActionType action, String description, User user) {
+        this.action = action;
+        this.description = description;
+        this.user = user;
+    }
 }

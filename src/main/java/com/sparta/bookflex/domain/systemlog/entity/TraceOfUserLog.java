@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-public class CopyOfSystemLog {
+public class TraceOfUserLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
