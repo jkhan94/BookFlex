@@ -2,6 +2,8 @@ package com.sparta.bookflex.domain.reveiw.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.book.entity.Book;
+import com.sparta.bookflex.domain.reveiw.ReviewRequestDto;
+import com.sparta.bookflex.domain.reveiw.ReviewResponseDto;
 import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -41,5 +43,23 @@ public class Review extends Timestamped {
         this.star = star;
         this.user = user;
         this.book = book;
+    }
+
+    public ReviewResponseDto toResponseDto() {
+        return ReviewResponseDto.builder()
+                .title(this.title)
+                .content(this.content)
+                .star(this.star)
+                .username(this.user.getUsername())
+                .bookName(this.book.getBookName())
+                .createdAt(this.createdAt)
+                .modifiedAt(this.modifiedAt)
+                .build();
+    }
+
+    public void update(ReviewRequestDto reviewRequestDto) {
+        this.title = reviewRequestDto.getTitle();
+        this.content = reviewRequestDto.getContent();
+        this.star = reviewRequestDto.getStar();
     }
 }
