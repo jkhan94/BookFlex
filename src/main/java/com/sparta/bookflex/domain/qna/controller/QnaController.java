@@ -5,6 +5,7 @@ import com.sparta.bookflex.common.exception.BusinessException;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
 import com.sparta.bookflex.domain.qna.dto.QnaRequestDto;
 import com.sparta.bookflex.domain.qna.dto.QnaResponseDto;
+import com.sparta.bookflex.domain.qna.dto.ReplyRequestDto;
 import com.sparta.bookflex.domain.qna.service.QnaService;
 import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.enums.UserRole;
@@ -28,7 +29,6 @@ public class QnaController {
     private final QnaService qnaService;
     private final AuthService authService;
 
-    /*    고객문의 작성 */
     @PostMapping
     @Envelop("문의가 접수되었습니다.")
     public ResponseEntity<QnaResponseDto> createQna(@AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -43,7 +43,18 @@ public class QnaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
-    /*    고객문의 조회 */
+
+    @GetMapping("/{qnaId}")
+    @Envelop("문의를 조회했습니다.")
+    public ResponseEntity<QnaResponseDto> getSingleQna(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                       @PathVariable long qnaId) {
+
+//        User user = authService.findByUserName(userDetails.getUser().getUsername());
+
+        QnaResponseDto responseDto = qnaService.getSingleQna(qnaId);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+
     @GetMapping
     @Envelop("문의를 조회했습니다.")
     public ResponseEntity<List<QnaResponseDto>> getUserQnas(@AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -60,7 +71,6 @@ public class QnaController {
     }
 
 
-    /*    고객문의 관리자 조회 */
     @GetMapping("/admin")
     @Envelop("문의를 조회했습니다.")
     public ResponseEntity<List<QnaResponseDto>> getAllQnas(@AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -76,7 +86,6 @@ public class QnaController {
         return ResponseEntity.status(HttpStatus.OK).body(responseList);
     }
 
-    /*   고객문의 유저 삭제 */
     @DeleteMapping("/{qnaId}")
     @Envelop("문의를 삭제했습니다.")
     public ResponseEntity deleteQna(@AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -91,7 +100,6 @@ public class QnaController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    /*   고객문의 관리자 삭제   */
     @DeleteMapping("/admin/{qnaId}")
     @Envelop("문의를 삭제했습니다.")
     public ResponseEntity deleteQnaAdmin(@AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -105,4 +113,37 @@ public class QnaController {
         qnaService.deleteQnaAdmin(qnaId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    /*
+        문의 답변 등록
+        POST / anwers/{qnaId}
+
+        요청DTO
+        reply	문의 답변 내용
+
+        응답DTO
+        statusCode	201
+        message	“답변을 등록했습니다.”
+        data	qnaType	문의 유형
+                inquiry	문의 내용
+                createAt	작성일자
+                reply	답변
+     */
+    @PostMapping("/admin/{qnaId}")
+    @Envelop("답변을 등록했습니다.")
+    public ResponseEntity<QnaResponseDto> createQnaReply(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                         @PathVariable long qnaId,
+                                                         @RequestBody @Valid ReplyRequestDto requestDto) {
+
+/*
+    User user = authService.findByUserName(userDetails.getUser().getUsername());
+    if (user.getAuth() != UserRole.ADMIN) {
+        throw new BusinessException(QNA_CREATE_NOT_ALLOWED);
+    }
+*/
+
+        QnaResponseDto responseDto = qnaService.createQnaReply(requestDto, qnaId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+    }
+
 }

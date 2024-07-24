@@ -3,6 +3,7 @@ package com.sparta.bookflex.domain.qna.service;
 import com.sparta.bookflex.common.exception.BusinessException;
 import com.sparta.bookflex.domain.qna.dto.QnaRequestDto;
 import com.sparta.bookflex.domain.qna.dto.QnaResponseDto;
+import com.sparta.bookflex.domain.qna.dto.ReplyRequestDto;
 import com.sparta.bookflex.domain.qna.entity.Qna;
 import com.sparta.bookflex.domain.qna.repository.QnaRepository;
 import com.sparta.bookflex.domain.user.entity.User;
@@ -40,6 +41,7 @@ public class QnaService {
         qnaRepository.save(qna);
 
         return QnaResponseDto.builder()
+                .qnaId(qna.getId())
                 .qnaType(qna.getQnaType())
                 .inquiry(qna.getInquiry())
                 .createdAt(qna.getCreatedAt())
@@ -47,7 +49,21 @@ public class QnaService {
                 .build();
     }
 
-    // User: userId로 조회되는 것만
+    @Transactional(readOnly = true)
+    public QnaResponseDto getSingleQna(long qnaId) {
+        Qna qna = qnaRepository.findById(qnaId).orElseThrow(
+                () -> new BusinessException(QNA_NOT_FOUND)
+        );
+
+        return QnaResponseDto.builder()
+                .qnaId(qna.getId())
+                .qnaType(qna.getQnaType())
+                .inquiry(qna.getInquiry())
+                .createdAt(qna.getCreatedAt())
+                .reply(qna.getReply())
+                .build();
+    }
+
     @Transactional(readOnly = true)
     public List<QnaResponseDto> getUserQnas(User user, int page, String sortBy) {
         Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
@@ -55,6 +71,7 @@ public class QnaService {
 
         Page<QnaResponseDto> qnaPage = qnaRepository.findAllByUserId(user.getId(), pageable).map(
                 qna -> QnaResponseDto.builder()
+                        .qnaId(qna.getId())
                         .qnaType(qna.getQnaType())
                         .inquiry(qna.getInquiry())
                         .createdAt(qna.getCreatedAt())
@@ -64,7 +81,6 @@ public class QnaService {
         return qnaPage.getContent();
     }
 
-    //        ADMIN : findAll
     @Transactional(readOnly = true)
     public List<QnaResponseDto> getAllQnas(int page, String sortBy) {
         Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
@@ -72,6 +88,7 @@ public class QnaService {
 
         Page<QnaResponseDto> qnaPage = qnaRepository.findAll(pageable).map(
                 qna -> QnaResponseDto.builder()
+                        .qnaId(qna.getId())
                         .qnaType(qna.getQnaType())
                         .inquiry(qna.getInquiry())
                         .createdAt(qna.getCreatedAt())
@@ -84,19 +101,16 @@ public class QnaService {
 
     @Transactional
     public void deleteQna(User user, long qnaId) {
-        //        없는 문의 삭제 불가
         Qna qna = qnaRepository.findById(qnaId).orElseThrow(
                 () -> new BusinessException(QNA_NOT_FOUND)
         );
 
-        // USER는 본인이 작성한 문의만 삭제 가능
         if (user.getId() != qna.getUser().getId()) {
             throw new BusinessException(QNA_DELETE_NOT_ALLOWED);
         }
 
-        // reply가 있으면 삭제 불가
         if (!qna.getReply().equals(WAITING_FOR_REPLY)) {
-            throw new BusinessException(REPLY_EXISTS);
+            throw new BusinessException(QNA_DELETE_NOT_ALLOWED_REPLY_EXISTS);
         }
 
         qnaRepository.delete(qna);
@@ -104,16 +118,36 @@ public class QnaService {
 
     @Transactional
     public void deleteQnaAdmin(long qnaId) {
-        //        없는 문의 삭제 불가
         Qna qna = qnaRepository.findById(qnaId).orElseThrow(
                 () -> new BusinessException(QNA_NOT_FOUND)
         );
 
-        //        reply가 있으면 삭제 불가
         if (!qna.getReply().equals(WAITING_FOR_REPLY)) {
-            throw new BusinessException(REPLY_EXISTS);
+            throw new BusinessException(QNA_DELETE_NOT_ALLOWED_REPLY_EXISTS);
         }
 
         qnaRepository.delete(qna);
+    }
+
+    @Transactional
+    public QnaResponseDto createQnaReply(ReplyRequestDto requestDto, long qnaId) {
+        Qna qna = qnaRepository.findById(qnaId).orElseThrow(
+                () -> new BusinessException(QNA_NOT_FOUND)
+        );
+
+        if (!qna.getReply().equals(WAITING_FOR_REPLY)) {
+            throw new BusinessException(REPLY_ALREADY_EXISTS);
+        }
+
+        qna.updateReply(qna, requestDto);
+        qnaRepository.save(qna);
+
+        return QnaResponseDto.builder()
+                .qnaId(qna.getId())
+                .qnaType(qna.getQnaType())
+                .inquiry(qna.getInquiry())
+                .createdAt(qna.getCreatedAt())
+                .reply(qna.getReply())
+                .build();
     }
 }
