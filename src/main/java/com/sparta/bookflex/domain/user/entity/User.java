@@ -11,7 +11,7 @@ import com.sparta.bookflex.domain.shipment.entity.Shipment;
 import com.sparta.bookflex.domain.systemlog.entity.TraceOfUserLog;
 import com.sparta.bookflex.domain.user.dto.ProfileResDto;
 import com.sparta.bookflex.domain.user.enums.UserGrade;
-import com.sparta.bookflex.domain.user.enums.UserRole;
+import com.sparta.bookflex.domain.user.enums.RoleType;
 import com.sparta.bookflex.domain.user.enums.UserState;
 
 import com.sparta.bookflex.domain.wish.entity.Wish;
@@ -66,7 +66,7 @@ public class User extends Timestamped {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private UserRole auth;
+    private RoleType auth;
 
     @Column()
     private String refreshToken;
@@ -74,8 +74,8 @@ public class User extends Timestamped {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Basket basket;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private com.sparta.bookflex.domain.user.entity.UserRole userRole;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Role> userRole;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wish> wishList;
@@ -102,7 +102,7 @@ public class User extends Timestamped {
     private List<UserCoupon> userCouponList;
 
     @Builder
-    public User(String username, String password, String email, String name, String nickname, String phoneNumber, String address, LocalDate birthDay, UserGrade grade, UserState state, UserRole auth) {
+    public User(String username, String password, String email, String name, String nickname, String phoneNumber, String address, LocalDate birthDay, UserGrade grade, UserState state, RoleType auth) {
         this.username = username;
         this.password = password;
         this.email = email;

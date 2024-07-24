@@ -8,7 +8,7 @@ import com.sparta.bookflex.domain.qna.dto.QnaResponseDto;
 import com.sparta.bookflex.domain.qna.dto.ReplyRequestDto;
 import com.sparta.bookflex.domain.qna.service.QnaService;
 import com.sparta.bookflex.domain.user.entity.User;
-import com.sparta.bookflex.domain.user.enums.UserRole;
+import com.sparta.bookflex.domain.user.enums.RoleType;
 import com.sparta.bookflex.domain.user.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class QnaController {
                                                     @RequestBody @Valid QnaRequestDto requestDto) {
 
         User user = authService.findByUserName(userDetails.getUser().getUsername());
-        if (user.getAuth() != UserRole.USER) {
+        if (user.getAuth() != RoleType.USER) {
             throw new BusinessException(QNA_CREATE_NOT_ALLOWED);
         }
 
@@ -62,7 +62,7 @@ public class QnaController {
                                                             @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy) {
 
         User user = authService.findByUserName(userDetails.getUser().getUsername());
-        if (user.getAuth() != UserRole.USER) {
+        if (user.getAuth() != RoleType.USER) {
             throw new BusinessException(QNA_VIEW_NOT_ALLOWED);
         }
 
@@ -78,7 +78,7 @@ public class QnaController {
                                                            @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy) {
 
         User user = authService.findByUserName(userDetails.getUser().getUsername());
-        if (user.getAuth() != UserRole.ADMIN) {
+        if (user.getAuth() != RoleType.ADMIN) {
             throw new BusinessException(QNA_VIEW_NOT_ALLOWED);
         }
 
@@ -92,7 +92,7 @@ public class QnaController {
                                     @PathVariable long qnaId) {
 
         User user = authService.findByUserName(userDetails.getUser().getUsername());
-        if (user.getAuth() != UserRole.USER) {
+        if (user.getAuth() != RoleType.USER) {
             throw new BusinessException(QNA_DELETE_NOT_ALLOWED);
         }
 
@@ -106,7 +106,7 @@ public class QnaController {
                                          @PathVariable long qnaId) {
 
         User user = authService.findByUserName(userDetails.getUser().getUsername());
-        if (user.getAuth() != UserRole.ADMIN) {
+        if (user.getAuth() != RoleType.ADMIN) {
             throw new BusinessException(QNA_DELETE_NOT_ALLOWED);
         }
 

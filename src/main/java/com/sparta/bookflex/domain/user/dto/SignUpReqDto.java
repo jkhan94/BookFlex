@@ -1,7 +1,7 @@
 package com.sparta.bookflex.domain.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.sparta.bookflex.domain.user.enums.UserRole;
+import com.sparta.bookflex.domain.user.enums.RoleType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -41,6 +41,6 @@ public class SignUpReqDto {
     private LocalDate birthday;
 
     @NotNull(message = "role 값이 필수로 들어있어야 합니다.")
-    private UserRole authType;
+    private RoleType authType;
 
 }

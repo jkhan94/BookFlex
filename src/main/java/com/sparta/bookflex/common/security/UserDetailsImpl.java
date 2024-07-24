@@ -2,7 +2,7 @@ package com.sparta.bookflex.common.security;
 
 
 import com.sparta.bookflex.domain.user.entity.User;
-import com.sparta.bookflex.domain.user.enums.UserRole;
+import com.sparta.bookflex.domain.user.enums.RoleType;
 import com.sparta.bookflex.domain.user.enums.UserState;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Getter
 public class UserDetailsImpl implements UserDetails {
@@ -23,7 +22,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        UserRole userRole = user.getAuth();
+        RoleType userRole = user.getAuth();
         String auth = userRole.getAuth();
 
         SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(auth);

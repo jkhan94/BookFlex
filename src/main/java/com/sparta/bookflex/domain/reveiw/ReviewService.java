@@ -9,7 +9,7 @@ import com.sparta.bookflex.domain.reveiw.repository.ReviewRepository;
 import com.sparta.bookflex.domain.sale.entity.Sale;
 import com.sparta.bookflex.domain.sale.repository.SaleRepository;
 import com.sparta.bookflex.domain.user.entity.User;
-import com.sparta.bookflex.domain.user.enums.UserRole;
+import com.sparta.bookflex.domain.user.enums.RoleType;
 import com.sparta.bookflex.domain.user.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -77,7 +77,7 @@ public class ReviewService {
 
         String reviewTitle = review.getTitle();
 
-        if (user.getId() != (review.getUser().getId()) && !user.getAuth().equals(UserRole.ADMIN)) {
+        if (user.getId() != (review.getUser().getId()) && !user.getAuth().equals(RoleType.ADMIN)) {
             throw new BusinessException(ErrorCode.UNAUTHORIZED_ACTION);
         }
 

@@ -15,19 +15,61 @@ public enum ActionType {
     REFUND_CANCEL(LogMessageType.REFUND_CANCEL),
     LOGIN(LogMessageType.LOGIN),
     LOGOUT(LogMessageType.LOGOUT),
+    BOOK_PURCHASE(LogMessageType.BOOK_PURCHASE),
     POINT("");
 
     @Getter
-    private final String descriptionMsg;
+    private String descriptionMsg;
 
-    private ActionType(String msg) {
+    ActionType(String msg) {
         this.descriptionMsg = msg;
     }
 
-    public void setTarget(String name, long value) {
+    public void setTarget(String name, long value, ActionType type) {
         LogMessageType.targetName = name;
         LogMessageType.targetValue = value;
         LogMessageType.updateMessage();
+        switch (type) {
+            case PAYMENT_COMPLETE -> {
+                type.descriptionMsg = LogMessageType.PAYMENT_OK;
+            }
+            case PAYMENT_CANCEL -> {
+                type.descriptionMsg = LogMessageType.PAYMENT_FAIL;
+            }
+            case COUPON_GET -> {
+                type.descriptionMsg = LogMessageType.COUPON_GET;
+            }
+            case COUPON_USE -> {
+                type.descriptionMsg = LogMessageType.COUPON_USE;
+            }
+            case ORDERBOOK_COMPLETE -> {
+                type.descriptionMsg = LogMessageType.ORDERBOOK_OK;
+            }
+            case ORDERBOOK_CANCEL -> {
+                type.descriptionMsg = LogMessageType.ORDERBOOK_FAIL;
+            }
+            case SHIPMENT_START -> {
+                type.descriptionMsg = LogMessageType.SHIPMENT_START;
+            }
+            case SHIPMENT_CANCEL -> {
+                type.descriptionMsg = LogMessageType.SHIPMENT_CANCEL;
+            }
+            case REFUND_COMPLETE -> {
+                type.descriptionMsg = LogMessageType.REFUND_COMPLETE;
+            }
+            case REFUND_CANCEL -> {
+                type.descriptionMsg = LogMessageType.REFUND_CANCEL;
+            }
+            case LOGIN -> {
+                type.descriptionMsg = LogMessageType.LOGIN;
+            }
+            case LOGOUT -> {
+                type.descriptionMsg = LogMessageType.LOGOUT;
+            }
+            case BOOK_PURCHASE -> {
+                type.descriptionMsg = LogMessageType.BOOK_PURCHASE;
+            }
+        }
     }
 
     private static class LogMessageType {
@@ -45,6 +87,7 @@ public enum ActionType {
         public static String REFUND_CANCEL = String.format("%s상품에 대한 환불신청이 취소됐습니다.", targetName);
         public static String LOGIN = String.format("%s님이 로그인했습니다.", targetName);
         public static String LOGOUT = String.format("%s님이 로그아웃했습니다.", targetName);
+        public static String BOOK_PURCHASE = String.format("%s책을 구매했습니다", targetName);
 
         public static void updateMessage() {
             PAYMENT_OK = String.format("%s상품에 대한 %d원 결제가 완료되었습니다.", targetName, targetValue);
@@ -59,6 +102,7 @@ public enum ActionType {
             REFUND_CANCEL = String.format("%s상품에 대한 환불신청이 취소됐습니다.", targetName);
             LOGIN = String.format("%s님이 로그인했습니다.", targetName);
             LOGOUT = String.format("%s님이 로그아웃했습니다.", targetName);
+            BOOK_PURCHASE = String.format("%s책을 구매했습니다", targetName);
         }
     }
 }
