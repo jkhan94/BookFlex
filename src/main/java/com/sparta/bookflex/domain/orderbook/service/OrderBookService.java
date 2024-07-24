@@ -68,7 +68,6 @@ public class OrderBookService {
             OrderItem orderItem= OrderItem.builder()
                     .quantity(item.getQuantity())
                     .book(book)
-                    .user(user)
                     .price(price)
                     .orderBook(null)
                     .build();

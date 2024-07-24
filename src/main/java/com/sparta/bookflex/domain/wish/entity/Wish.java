@@ -1,5 +1,6 @@
 package com.sparta.bookflex.domain.wish.entity;
 
+import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
@@ -11,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Wish {
+public class Wish extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
