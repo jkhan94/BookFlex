@@ -8,6 +8,8 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 
 @Getter
 @Setter
@@ -24,7 +26,7 @@ public class BookRequestDto {
 
     @NotBlank(message = "가격을 입력해주세요.")
     @Pattern(regexp = "^[0-9]*$", message = "숫자만 입력 가능합니다.")
-    private int price;
+    private BigDecimal price;
 
     @NotBlank(message = "재고량을 입력해주세요.")
     @Pattern(regexp = "^[0-9]*$", message = "숫자만 입력 가능합니다.")
