@@ -1,4 +1,4 @@
-package com.sparta.bookflex.domain.usercoupon.repository;
+package com.sparta.bookflex.domain.coupon.repository;
 
 import com.sparta.bookflex.domain.usercoupon.entity.UserCoupon;
 import org.springframework.data.jpa.repository.JpaRepository;
