@@ -1,3 +1,4 @@
+/*
 package com.sparta.bookflex.domain.basket.service;
 
 import com.sparta.bookflex.domain.basket.dto.BasketCreateReqDto;
@@ -72,9 +73,7 @@ public class BasketService {
         }
 
         Basket basket = Basket.builder()
-                .quantity(basketCreateDto.getQuantity())
                 .user(selectedUser)
-                .book(book)
                 .build();
 
         basketRepository.save(basket);
@@ -85,9 +84,7 @@ public class BasketService {
             throw new IllegalArgumentException("사용자가 존재하지 않습니다.");
         }
 
-        if(!isBookExist(bookId)) {
-            throw new IllegalArgumentException("책이 존재하지 않습니다.");
-        }
+        Book book = getBook(bookId);
 
         Optional<Basket> basket = basketRepository.findByUserIdAndBookId(user.getId(), bookId);
         if(basket.isEmpty()) {
@@ -97,9 +94,9 @@ public class BasketService {
 
         return BasketResDto.builder()
                 .baseketId(basket.get().getId())
-                .bookName(basket.get().getBook().getBookName())
-                .price(basket.get().getBook().getPrice())
-                .quantity(basket.get().getQuantity())
+                .bookName(book.getBookName())
+                .price(book.getPrice())
+
                 .build();
 
     }
@@ -117,9 +114,7 @@ public class BasketService {
 
         return baskets.map(basket -> BasketResDto.builder()
                 .baseketId(basket.getId())
-                .bookName(basket.getBook().getBookName())
-                .price(basket.getBook().getPrice())
-                .quantity(basket.getQuantity())
+
                 .build());
     }
 
@@ -132,13 +127,11 @@ public class BasketService {
 
 
         Basket basket = basketRepository.findById(basketId).orElseThrow(() -> new IllegalArgumentException("장바구니에 책이 존재하지 않습니다."));
-        basket.updateQuantity(quantity);
+
         basketRepository.save(basket);
         return BasketResDto.builder()
                 .baseketId(basket.getId())
-                .bookName(basket.getBook().getBookName())
-                .price(basket.getBook().getPrice())
-                .quantity(basket.getQuantity())
+
                 .build();
     }
 
@@ -161,3 +154,4 @@ public class BasketService {
 
 
 }
+*/

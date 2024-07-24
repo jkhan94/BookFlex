@@ -11,6 +11,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Entity
 @Getter
 @Table(name = "sale")
@@ -31,8 +33,11 @@ public class Sale extends Timestamped {
     @Column(name = "quantity", nullable = false)
     private int quantity;
 
+    @Column(name = "price", nullable = false)
+    private BigDecimal price;
+
     @Column(name = "total", nullable = false)
-    private int total;
+    private BigDecimal total;
 
     @ManyToOne
     @JoinColumn(name = "book_id")
@@ -42,24 +47,16 @@ public class Sale extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "order_id")
-    private OrderBook orderBook;
 
 
     @Builder
-    public Sale(SaleState status, int quantity, Book book, User user,OrderBook orderBook) {
+    public Sale(SaleState status, int quantity, Book book, User user,BigDecimal price,BigDecimal total) {
         this.status = status;
         this.quantity = quantity;
         this.book = book;
         this.user = user;
-        this.total = quantity * (book != null ? book.getPrice() : 0);
-        this.orderBook = orderBook;
-
-    }
-
-    public void updateOrderBook(OrderBook orderBook) {
-        this.orderBook = orderBook;
+        this.price = price;
+        this.total = total;
     }
 
     public void updateStatus(SaleState status) {

@@ -32,10 +32,6 @@ public class Qna extends Timestamped {
     @JoinColumn(name = "user_id")
     User user;
 
-    @ManyToOne
-    @JoinColumn(name = "book_id")
-    Book book;
-
     @Builder
     public Qna(String email, String qnaType, String inquiry, String reply, User user) {
         this.email = email;
