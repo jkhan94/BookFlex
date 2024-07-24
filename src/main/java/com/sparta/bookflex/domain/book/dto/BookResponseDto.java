@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Setter
@@ -15,7 +16,7 @@ public class BookResponseDto {
     private String bookName;
     private String publisher;
     private String author;
-    private int price;
+    private BigDecimal price;
     private int stock;
     private String bookDescription;
     private String status;
@@ -31,7 +32,7 @@ public class BookResponseDto {
                            String bookName,
                            String author,
                            String publisher,
-                           int price,
+                           BigDecimal price,
                            int stock,
                            String bookDescription,
                            String status,

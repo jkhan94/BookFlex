@@ -31,6 +31,7 @@ public class AuthService {
     private final JwtProvider jwtProvider;
     private final AuthenticationManager authenticationManager;
 
+    @Transactional
     public void signUp(SignUpReqDto signupReqDto) {
         String username = signupReqDto.getUsername();
 
@@ -51,6 +52,8 @@ public class AuthService {
             .password(passwordEncoder.encode(signupReqDto.getPassword()))
             .auth(signupReqDto.getAuthType())
             .build();
+
+        user.createCart();
 
         userRepository.save(user);
     }

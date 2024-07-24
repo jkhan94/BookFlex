@@ -1,10 +1,11 @@
 package com.sparta.bookflex.domain.book.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
-import com.sparta.bookflex.domain.basket.entity.Basket;
+import com.sparta.bookflex.domain.basket.entity.BasketItem;
 import com.sparta.bookflex.domain.book.dto.BookRequestDto;
 import com.sparta.bookflex.domain.book.dto.BookResponseDto;
 import com.sparta.bookflex.domain.category.entity.Category;
+import com.sparta.bookflex.domain.orderbook.entity.OrderItem;
 import com.sparta.bookflex.domain.photoimage.entity.PhotoImage;
 import com.sparta.bookflex.domain.reveiw.entity.Review;
 import com.sparta.bookflex.domain.sale.entity.Sale;
@@ -15,6 +16,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,8 +37,8 @@ public class Book extends Timestamped {
     @Column(nullable = false)
     private String author;
 
-    @Column(nullable = false)
-    private int price;
+    @Column(nullable = false, precision = 12, scale=2)
+    private BigDecimal price;
 
     @Column(nullable = false)
     private int stock;
@@ -55,13 +57,16 @@ public class Book extends Timestamped {
     private Category category;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Basket> basketList = new ArrayList<>();
+    private List<BasketItem> baskeItemtList = new ArrayList<>();
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Wish> wishList = new ArrayList<>();
 
     @OneToMany(mappedBy = "book")
     private List<Review> reviewList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<OrderItem> orderItemList = new ArrayList<>();
 
     @OneToMany(mappedBy = "book")
     private List<Sale> saleList = new ArrayList<>();
@@ -74,7 +79,7 @@ public class Book extends Timestamped {
     public Book(String bookName,
                 String publisher,
                 String author,
-                int price,
+                BigDecimal price,
                 int stock,
                 String bookDescription,
                 String status,

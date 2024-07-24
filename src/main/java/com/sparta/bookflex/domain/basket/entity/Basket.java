@@ -20,25 +20,17 @@ public class Basket extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private int quantity;
-
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "book_id")
-    private Book book;
+
+    @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BasketItem> basketItems = new ArrayList<>();
 
     @Builder
-    public Basket(int quantity, User user, Book book) {
-        this.quantity = quantity;
+    public Basket(User user) {
         this.user = user;
-        this.book = book;
     }
 
-    public void updateQuantity(int quantity) {
-        this.quantity = quantity;
-    }
 }

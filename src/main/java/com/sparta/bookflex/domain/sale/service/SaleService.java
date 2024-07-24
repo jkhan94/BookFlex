@@ -82,7 +82,7 @@ public class SaleService {
         return SaleResponseDto.builder()
                 .saleId(sale.getId())
                 .bookName(sale.getBook().getBookName())
-                .price(sale.getBook().getPrice())
+
                 .quantity(sale.getQuantity())
                 .status(sale.getStatus().getDesscription())
                 .createdAt(sale.getCreatedAt())
@@ -95,7 +95,7 @@ public class SaleService {
                 sale -> SaleResponseDto.builder()
                         .saleId(sale.getId())
                         .bookName(sale.getBook().getBookName())
-                        .price(sale.getBook().getPrice())
+
                         .quantity(sale.getQuantity())
                         .status(sale.getStatus().getDesscription())
                         .createdAt(sale.getCreatedAt())
@@ -113,21 +113,15 @@ public class SaleService {
                 .status(SaleState.PENDING_PAYMENT)
                 .book(book)
                 .user(user)
-                .orderBook(null)
+
                 .build();
 
-        int total = sale.getTotal();
 
-        OrderBook orderBook = OrderBook.builder()
-                .status(SaleState.PENDING_PAYMENT)
-                .total(total)
-                .user(user)
-                .build();
-        orderBook.updateSaleList(Collections.singletonList(sale));
 
-        sale.updateOrderBook(orderBook);
 
-        orderBookRepository.save(orderBook);
+
+
+
         saleRepository.save(sale);
     }
 
