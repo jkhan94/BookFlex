@@ -58,10 +58,16 @@ public enum ErrorCode {
     QNA_DELETE_NOT_ALLOWED(HttpStatus.FORBIDDEN,"문의를 삭제할 수 없습니다."),
     QNA_VIEW_NOT_ALLOWED(HttpStatus.FORBIDDEN,"문의를 조회할 수 없습니다."),
     QNA_NOT_FOUND(HttpStatus.NOT_FOUND,"문의 내역을 찾을 수 없습니다."),
-    REPLY_EXISTS(HttpStatus.BAD_REQUEST,"답변 완료된 문의는 삭제할 수 없습니다."),
+    QNA_DELETE_NOT_ALLOWED_REPLY_EXISTS(HttpStatus.BAD_REQUEST,"답변 완료된 문의는 삭제할 수 없습니다."),
+    REPLY_ALREADY_EXISTS(HttpStatus.BAD_REQUEST,"답변 완료된 문의입니다."),
 
     // 리뷰
-    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다.");
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다."),
+
+    ///장바구니
+    BASKET_NOT_FOUND(HttpStatus.NOT_FOUND, "장바구니을 찾을 수 없습니다."),
+    BASKET_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "장바구니에서 책을 착을 수 없습니다." ),
+    BASKET_ITEM_ALREADY_EXIST(HttpStatus.CONFLICT, "이미 장바구니 내에 칙이 존재합니다" );
 
 
     private final HttpStatus status;

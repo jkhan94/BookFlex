@@ -2,6 +2,7 @@ package com.sparta.bookflex.domain.user.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.basket.entity.Basket;
+import com.sparta.bookflex.domain.coupon.entity.UserCoupon;
 import com.sparta.bookflex.domain.orderbook.entity.OrderBook;
 import com.sparta.bookflex.domain.qna.entity.Qna;
 import com.sparta.bookflex.domain.reveiw.entity.Review;
@@ -12,7 +13,7 @@ import com.sparta.bookflex.domain.user.dto.ProfileResDto;
 import com.sparta.bookflex.domain.user.enums.UserGrade;
 import com.sparta.bookflex.domain.user.enums.UserRole;
 import com.sparta.bookflex.domain.user.enums.UserState;
-import com.sparta.bookflex.domain.usercoupon.entity.UserCoupon;
+
 import com.sparta.bookflex.domain.wish.entity.Wish;
 import jakarta.persistence.*;
 import lombok.*;
