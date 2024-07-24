@@ -61,7 +61,12 @@ public enum ErrorCode {
     REPLY_EXISTS(HttpStatus.BAD_REQUEST,"답변 완료된 문의는 삭제할 수 없습니다."),
 
     // 리뷰
-    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다.");
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다."),
+
+    ///장바구니
+    BASKET_NOT_FOUND(HttpStatus.NOT_FOUND, "장바구니을 찾을 수 없습니다."),
+    BASKET_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "장바구니에서 책을 착을 수 없습니다." ),
+    BASKET_ITEM_ALREADY_EXIST(HttpStatus.CONFLICT, "이미 장바구니 내에 칙이 존재합니다" );
 
 
     private final HttpStatus status;

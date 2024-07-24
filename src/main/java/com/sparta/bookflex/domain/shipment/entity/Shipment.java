@@ -40,6 +40,9 @@ public class Shipment extends Timestamped {
     @Column(name = "delivered_at")
     private LocalDateTime deliveredAt;
 
+    @Column(name = "address", nullable = false)
+    private String address;
+
     @OneToMany(mappedBy = "shipment")
     private List<OrderItem> orderItemList;
 
@@ -48,7 +51,7 @@ public class Shipment extends Timestamped {
     User user;
 
     @Builder
-    public Shipment(String trackingNumber, String carrier, SaleState status, LocalDateTime shippedAt, LocalDateTime deliveredAt, List<OrderItem> orderItemList,User user) {
+    public Shipment(String trackingNumber, String carrier, SaleState status, LocalDateTime shippedAt, LocalDateTime deliveredAt, List<OrderItem> orderItemList,User user,String address) {
         this.trackingNumber = trackingNumber;
         this.carrier = carrier;
         this.status = status;
@@ -56,6 +59,7 @@ public class Shipment extends Timestamped {
         this.deliveredAt = deliveredAt;
         this.orderItemList = orderItemList;
         this.user = user;
+        this.address = address;
     }
 
 
