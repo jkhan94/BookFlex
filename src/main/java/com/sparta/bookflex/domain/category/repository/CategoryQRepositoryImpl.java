@@ -21,9 +21,10 @@ public class CategoryQRepositoryImpl implements CategoryQRepository {
     public Page<Book> findAllBooks(long categoryId, Pageable pageable) {
         List<Book> result = queryFactory.select(book)
                 .from(book)
-                .leftJoin(category).on(category.id.eq(book.category.id))
+                .leftJoin(category)
+//                .on(category.id.eq(book.category.id))
                 .fetchJoin()
-                .where(book.category.id.eq(categoryId))
+//                .where(book.category.id.eq(categoryId))
                 .orderBy(book.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -31,9 +32,9 @@ public class CategoryQRepositoryImpl implements CategoryQRepository {
 
         List<Book> count = queryFactory.select(book)
                 .from(book)
-                .leftJoin(category).on(category.id.eq(book.category.id))
+//                .leftJoin(category).on(category.id.eq(book.category.id))
                 .fetchJoin()
-                .where(book.category.id.eq(categoryId))
+//                .where(book.category.id.eq(categoryId))
                 .fetch();
 
         return new PageImpl<>(result, pageable, count.size());

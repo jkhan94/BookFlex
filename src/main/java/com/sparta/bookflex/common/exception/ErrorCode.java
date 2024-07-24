@@ -45,6 +45,8 @@ public enum ErrorCode {
 
     // 책
     BOOK_NOT_FOUND(HttpStatus.NOT_FOUND, "책을 찾을 수 없습니다."),
+    BOOKSTATUS_NOT_FOUND(HttpStatus.NOT_FOUND, "상품 상태를 찾을 수 없습니다."),
+    CANNOT_EXCEED(HttpStatus.BAD_REQUEST, "구매수량이 재고수량을 초과하였습니다." ),
 
     // 카테고리
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "카테고리를 찾을 수 없습니다."),
