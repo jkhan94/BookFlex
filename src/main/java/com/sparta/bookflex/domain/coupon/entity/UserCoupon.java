@@ -1,7 +1,6 @@
-package com.sparta.bookflex.domain.usercoupon.entity;
+package com.sparta.bookflex.domain.coupon.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
-import com.sparta.bookflex.domain.coupon.entity.Coupon;
 import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
