@@ -98,6 +98,7 @@ public class BookService {
         return book.toResponseDto(photoImageUrl);
     }
 
+
     public String deleteBook(Long bookId) {
 
         Book book = getBookByBookId(bookId);
