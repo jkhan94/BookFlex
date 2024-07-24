@@ -51,7 +51,11 @@ public enum ErrorCode {
     CATEGORY_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 존재하는 카테고리입니다."),
 
     // 고객문의
-    QNA_NOT_ALLOWED(HttpStatus.FORBIDDEN, "문의를 남길 수 없습니다."),
+    QNA_CREATE_NOT_ALLOWED(HttpStatus.FORBIDDEN,"문의를 남길 수 없습니다."),
+    QNA_DELETE_NOT_ALLOWED(HttpStatus.FORBIDDEN,"문의를 삭제할 수 없습니다."),
+    QNA_VIEW_NOT_ALLOWED(HttpStatus.FORBIDDEN,"문의를 조회할 수 없습니다."),
+    QNA_NOT_FOUND(HttpStatus.NOT_FOUND,"문의 내역을 찾을 수 없습니다."),
+    REPLY_EXISTS(HttpStatus.BAD_REQUEST,"답변 완료된 문의는 삭제할 수 없습니다."),
 
     // 리뷰
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다.");
