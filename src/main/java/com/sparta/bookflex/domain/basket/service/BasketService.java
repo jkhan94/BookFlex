@@ -127,7 +127,7 @@ public class BasketService {
 //
 //    }
 
-    @Transactional
+    @Transactional(readOnly=true)
     public Page<BasketItemResponseDto> getBasketItems(User user, Pageable pageable, Long basketId) {
         if(!isUserExist(user.getUsername())) {
             throw new BusinessException(ErrorCode.USER_NOT_FOUND);
