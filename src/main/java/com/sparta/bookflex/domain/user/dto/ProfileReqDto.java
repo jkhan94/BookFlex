@@ -8,7 +8,6 @@ import lombok.Getter;
 @Getter
 public class ProfileReqDto {
 
-    @Null
     @Size(min = 6, message = "비밀번호는 최소 6자 이상이어야 하며 영문 대소문자와 특수문자를 1개이상 포함해야합니다")
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{6,}$")
     private String password;
