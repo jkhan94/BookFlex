@@ -40,8 +40,16 @@ public class OrderBookController {
                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         OrderResponsDto updatedOrder = orderBookService.updateOrderStatus(orderId, userDetails.getUser(), statusUpdate);
         return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(new CommonDto<>(HttpStatus.CREATED.value(), "주문상태가 변경되었습니다.",updatedOrder));
+                .status(HttpStatus.OK)
+                .body(new CommonDto<>(HttpStatus.OK.value(),  "주문상태가 변경되었습니다.",updatedOrder));
+    }
+    @GetMapping("/orders/{orderId}")
+    public ResponseEntity<CommonDto<OrderResponsDto>> getOrderById(@PathVariable Long orderId,
+                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        OrderResponsDto orderResponseDto = orderBookService.getOrderById(orderId, userDetails.getUser());
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new CommonDto<>(HttpStatus.OK.value(), "주문조회에 성공했습니다.", orderResponseDto));
     }
 
 

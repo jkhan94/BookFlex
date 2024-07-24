@@ -85,6 +85,7 @@ public class OrderBookService {
     }
 
 
+    @Transactional
     public OrderResponsDto updateOrderStatus(Long orderId, User user, OrderStatusRequestDto statusUpdate) {
         OrderBook orderBook = getOrderBook(orderId);
 
@@ -112,6 +113,33 @@ public class OrderBookService {
                 .status(status.toString())
                 .total(orderBook.getTotal())
                 .sales(saleResponseDtos)
+                .build();
+
+    }
+
+    @Transactional
+    public OrderResponsDto getOrderById(Long orderId, User user) {
+        // 주문과 관련된 판매 항목을 포함하여 주문 내역을 조회합니다.
+        OrderBook orderBook = orderBookRepository.findByIdAndUser(orderId, user)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found or you don't have access to this order."));
+
+        List<SaleResponseDto> saleResponseDtos = new ArrayList<>();
+        for (Sale sale : orderBook.getSaleList()) {
+            saleResponseDtos.add(SaleResponseDto.builder()
+                    .status(sale.getStatus().toString())
+                    .bookName(sale.getBook().getBookName())
+                    .price(sale.getBook().getPrice())
+                    .quantity(sale.getQuantity())
+                    .total(sale.getQuantity() * sale.getBook().getPrice())
+                    .createdAt(sale.getCreatedAt())
+                    .build());
+        }
+
+        return OrderResponsDto.builder()
+                .orderId(orderBook.getId())
+                .total(orderBook.getTotal())
+                .total(orderBook.getTotal())
+                .status(orderBook.getStatus().toString())
                 .build();
 
     }
