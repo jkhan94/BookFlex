@@ -1,8 +1,6 @@
 package com.sparta.bookflex.domain.qna.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sparta.bookflex.domain.book.entity.Book;
-import com.sparta.bookflex.domain.qna.dto.QnaResponseDto;
 import com.sparta.bookflex.domain.qna.entity.Qna;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,12 +9,10 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-import static com.sparta.bookflex.domain.book.entity.QBook.book;
-import static com.sparta.bookflex.domain.category.entity.QCategory.category;
 import static com.sparta.bookflex.domain.qna.entity.QQna.qna;
 
 @RequiredArgsConstructor
-public class QnaQRepositoryImpl implements QnaQRepository{
+public class QnaQRepositoryImpl implements QnaQRepository {
 
     private final JPAQueryFactory queryFactory;
 

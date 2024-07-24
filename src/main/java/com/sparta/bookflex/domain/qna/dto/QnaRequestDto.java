@@ -13,12 +13,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class QnaRequestDto {
     @Email(message = "이메일을 입력해주세요.")
-    @NotBlank(message="이메일을 입력해주세요.")
+    @NotBlank(message = "이메일을 입력해주세요.")
     private String email;
 
-    @ValidEnum(enumClass = QnaTypeCode.class, message="문의 유형을 선택해주세요.")
+    @ValidEnum(enumClass = QnaTypeCode.class, message = "문의 유형을 선택해주세요.")
     private QnaTypeCode qnaType;
 
-    @NotBlank(message="문의 내용을 입력해주세요.")
+    @NotBlank(message = "문의 내용을 입력해주세요.")
     private String inquiry;
 }

@@ -95,7 +95,7 @@ public class QnaController {
     @DeleteMapping("/admin/{qnaId}")
     @Envelop("문의를 삭제했습니다.")
     public ResponseEntity deleteQnaAdmin(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                    @PathVariable long qnaId) {
+                                         @PathVariable long qnaId) {
 
         User user = authService.findByUserName(userDetails.getUser().getUsername());
         if (user.getAuth() != UserRole.ADMIN) {

@@ -21,7 +21,7 @@ public enum QnaTypeCode {
     }
 
     @JsonCreator
-    public static QnaTypeCode toJson(String qnaType){
+    public static QnaTypeCode toJson(String qnaType) {
         for (QnaTypeCode type : QnaTypeCode.values()) {
             if (type.getTypeName().equals(qnaType)) {
                 return type;
