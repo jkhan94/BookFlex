@@ -33,4 +33,7 @@ public class Basket extends Timestamped {
         this.user = user;
     }
 
+    public void addBasketItem(BasketItem basketItem) {
+        basketItems.add(basketItem);
+    }
 }

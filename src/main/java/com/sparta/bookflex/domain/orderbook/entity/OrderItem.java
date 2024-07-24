@@ -46,9 +46,6 @@ public class OrderItem extends Timestamped {
     private OrderBook orderBook;
 
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
 
     @ManyToOne
     @JoinColumn(name = "shipment_id")
@@ -59,10 +56,9 @@ public class OrderItem extends Timestamped {
 
 
     @Builder
-    public OrderItem(int quantity, Book book, User user, OrderBook orderBook,BigDecimal price,Shipment shipment) {
+    public OrderItem(int quantity, Book book,  OrderBook orderBook,BigDecimal price,Shipment shipment) {
         this.quantity = quantity;
         this.book = book;
-        this.user = user;
         this.price = price;
         this.total = BigDecimal.valueOf(quantity).multiply(price);
         this.orderBook = orderBook;
