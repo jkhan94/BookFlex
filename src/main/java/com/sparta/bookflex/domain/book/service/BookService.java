@@ -8,8 +8,6 @@ import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.entity.BookStatus;
 import com.sparta.bookflex.domain.book.repository.BookCustomRepositoryImpl;
 import com.sparta.bookflex.domain.book.repository.BookRepository;
-import com.sparta.bookflex.domain.category.enums.Category;
-import com.sparta.bookflex.domain.category.service.CategoryService;
 import com.sparta.bookflex.domain.photoimage.entity.PhotoImage;
 import com.sparta.bookflex.domain.photoimage.service.PhotoImageService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,13 +26,13 @@ import java.util.List;
 public class BookService {
 
     private final BookRepository bookRepository;
-    private final CategoryService categoryService;
     private final PhotoImageService photoImageService;
     private final BookCustomRepositoryImpl bookCustomRepositoryImpl;
 
 
     @Transactional
-    public BookResponseDto registerProduct(BookRequestDto bookRequestDto, MultipartFile multipartFile) throws IOException {
+    public BookResponseDto registerProduct(BookRequestDto bookRequestDto,
+                                           MultipartFile multipartFile) throws IOException {
 
         PhotoImage photoImage = photoImageService.savePhotoImage(multipartFile);
 
@@ -63,34 +60,22 @@ public class BookService {
     }
 
     @Transactional
-    public List<BookResponseDto> getBooksByBookName(String bookName) {
+    public List<BookResponseDto> getBookList(int page,
+                                             int size,
+                                             boolean isAsc,
+                                             String sortBy,
+                                             BookStatus bookStatus,
+                                             String bookName) {
 
-        List<Book> bookList = bookRepository
-                .findByBookName(bookName);
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
 
-        List<BookResponseDto> bookResponseDtoList = new ArrayList<>();
+        Sort sort = Sort.by(direction, sortBy);
 
-        for (Book book : bookList) {
-            String photoImageUrl = photoImageService.getPhotoImageUrl(book.getPhotoImage().getFilePath());
-            bookResponseDtoList.add(book.toResponseDto(photoImageUrl));
-        }
+        Pageable pageble = PageRequest.of(page - 1, size, sort);
 
-        return bookResponseDtoList;
-    }
-
-    @Transactional
-    public List<BookResponseDto> getBookList() {
-
-        List<Book> bookList = bookRepository.findAll();
-
-        List<BookResponseDto> bookResponseDtoList = new ArrayList<>();
-
-        for (Book book : bookList) {
-            String photoImageUrl = photoImageService.getPhotoImageUrl(book.getPhotoImage().getFilePath());
-            bookResponseDtoList.add(book.toResponseDto(photoImageUrl));
-        }
-
-        return bookResponseDtoList;
+        return bookCustomRepositoryImpl.findBooks(bookName, bookStatus, pageble).stream()
+                .map(book -> book.toResponseDto(photoImageService.getPhotoImageUrl(book.getPhotoImage().getFilePath())))
+                .toList();
     }
 
     @Transactional
@@ -98,8 +83,7 @@ public class BookService {
                                           BookRequestDto bookRequestDto,
                                           MultipartFile multipartFile) throws IOException {
 
-        Book book = bookRepository
-                .findById(bookId).orElseThrow(() -> new BusinessException(ErrorCode.BOOK_NOT_FOUND));
+        Book book = getBookByBookId(bookId);
 
         PhotoImage photoImage = photoImageService.updatePhotoImage(multipartFile, book.getId());
 
