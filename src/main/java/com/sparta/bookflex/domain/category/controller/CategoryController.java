@@ -7,7 +7,7 @@ import com.sparta.bookflex.domain.category.dto.CategoryRequestDto;
 import com.sparta.bookflex.domain.category.dto.CategoryResponseDto;
 import com.sparta.bookflex.domain.category.service.CategoryService;
 import com.sparta.bookflex.domain.user.entity.User;
-import com.sparta.bookflex.domain.user.enums.UserRole;
+import com.sparta.bookflex.domain.user.enums.RoleType;
 import com.sparta.bookflex.domain.user.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -86,7 +86,7 @@ public class CategoryController {
 
     private void checkUser(UserDetailsImpl userDetails) {
         User user = authService.findByUserName(userDetails.getUser().getUsername());
-        if (user.getAuth() != UserRole.ADMIN) {
+        if (user.getAuth() != RoleType.ADMIN) {
             throw new BusinessException(USER_NOT_AUTHORIZED);
         }
     }

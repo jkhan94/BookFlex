@@ -5,6 +5,9 @@ import com.sparta.bookflex.common.exception.BusinessException;
 import com.sparta.bookflex.common.exception.ErrorCode;
 import com.sparta.bookflex.common.jwt.JwtProvider;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
+import com.sparta.bookflex.common.utill.LoggingSingleton;
+import com.sparta.bookflex.domain.systemlog.enums.ActionType;
+import com.sparta.bookflex.domain.systemlog.repository.SystemLogRepository;
 import com.sparta.bookflex.domain.user.dto.LoginReqDto;
 import com.sparta.bookflex.domain.user.dto.SignUpReqDto;
 import com.sparta.bookflex.domain.user.entity.User;
@@ -30,6 +33,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final AuthenticationManager authenticationManager;
+    private final SystemLogRepository systemLogRepository;
 
     @Transactional
     public void signUp(SignUpReqDto signupReqDto) {
@@ -78,6 +82,8 @@ public class AuthService {
         List<String> tokenList = new ArrayList<>();
         tokenList.add(accessToken);
         tokenList.add(refreshToken);
+
+        systemLogRepository.save(LoggingSingleton.Logging(ActionType.LOGIN, curUser, curUser.getUsername(), 0));
 
         return tokenList;
     }
