@@ -4,6 +4,7 @@ package com.sparta.bookflex.domain.sale.entity;
 import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.orderbook.entity.OrderBook;
+import com.sparta.bookflex.domain.orderbook.entity.OrderItem;
 import com.sparta.bookflex.domain.sale.Enum.SaleState;
 import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
@@ -57,6 +58,15 @@ public class Sale extends Timestamped {
         this.user = user;
         this.price = price;
         this.total = total;
+    }
+
+    public Sale(OrderItem orderItem,SaleState status) {
+        this.status = status;
+        this.quantity = orderItem.getQuantity();
+        this.book = orderItem.getBook();
+        this.user = orderItem.getOrderBook().getUser();
+        this.price = orderItem.getPrice();
+        this.total = orderItem.getPrice();
     }
 
     public void updateStatus(SaleState status) {

@@ -12,6 +12,10 @@ import com.sparta.bookflex.domain.orderbook.entity.OrderBook;
 import com.sparta.bookflex.domain.orderbook.entity.OrderItem;
 import com.sparta.bookflex.domain.orderbook.repository.OrderBookRepository;
 import com.sparta.bookflex.domain.orderbook.repository.OrderItemRepository;
+import com.sparta.bookflex.domain.photoimage.service.PhotoImageService;
+import com.sparta.bookflex.domain.sale.Enum.SaleState;
+import com.sparta.bookflex.domain.sale.entity.Sale;
+import com.sparta.bookflex.domain.sale.repository.SaleRepository;
 import com.sparta.bookflex.domain.systemlog.enums.ActionType;
 import com.sparta.bookflex.domain.systemlog.repository.TraceOfUserLogRepository;
 import com.sparta.bookflex.domain.user.entity.User;
@@ -33,16 +37,25 @@ public class OrderBookService {
     private final BookService bookService;
     private final TraceOfUserLogRepository traceOfUserLogRepository;
 
+    private final PhotoImageService photoImageService;
+    private final SaleRepository saleRepository;
+
     @Autowired
     public OrderBookService(OrderItemRepository orderItemRepository,
                             OrderBookRepository orderBookRepository,
-                            AuthService authService, BookService bookService, TraceOfUserLogRepository traceOfUserLogRepository) {
+                            AuthService authService, BookService bookService,
+                            TraceOfUserLogRepository traceOfUserLogRepository,
+                            PhotoImageService photoImageService,
+                            SaleRepository saleRepository) {
 
 
         this.authService = authService;
         this.bookService = bookService;
         this.orderBookRepository = orderBookRepository;
         this.traceOfUserLogRepository = traceOfUserLogRepository;
+        this.orderItemRepository = orderItemRepository;
+        this.photoImageService = photoImageService;
+        this.saleRepository = saleRepository;
     }
 
     private Book getBook(Long bookId) {
@@ -93,6 +106,14 @@ public class OrderBookService {
                 LoggingSingleton.userLogging(ActionType.BOOK_PURCHASE, user, bookName, 0, orderItem.getBook()));
         }
 
+        List<Sale> saleList = new ArrayList<>();
+
+        for(OrderItem orderItem : orderItemList) {
+            Sale sale = new Sale(orderItem, SaleState.PENDING_PAYMENT);
+            saleList.add(sale);
+            saleRepository.save(sale);
+        }
+
         orderBookRepository.save(orderBook);
         return orderBook;
     }
@@ -118,6 +139,7 @@ public class OrderBookService {
                 .createdAt(orderItem.getCreatedAt())
                 .bookName(orderItem.getBook().getBookName())
                 .quantity(orderItem.getQuantity())
+                .photoImagePath(photoImageService.getPhotoImageUrl(orderItem.getBook().getPhotoImage().getFilePath()))
                 .build();
 
             orderItemResponseDtoList.add(orderItemResponseDto);
