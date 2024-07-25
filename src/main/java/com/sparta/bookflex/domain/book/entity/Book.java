@@ -4,7 +4,7 @@ import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.basket.entity.BasketItem;
 import com.sparta.bookflex.domain.book.dto.BookRequestDto;
 import com.sparta.bookflex.domain.book.dto.BookResponseDto;
-import com.sparta.bookflex.domain.category.entity.Category;
+import com.sparta.bookflex.domain.category.enums.Category;
 import com.sparta.bookflex.domain.orderbook.entity.OrderItem;
 import com.sparta.bookflex.domain.photoimage.entity.PhotoImage;
 import com.sparta.bookflex.domain.reveiw.entity.Review;
@@ -37,7 +37,7 @@ public class Book extends Timestamped {
     @Column(nullable = false)
     private String author;
 
-    @Column(nullable = false, precision = 12, scale=2)
+    @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal price;
 
     @Column(nullable = false)
@@ -49,11 +49,9 @@ public class Book extends Timestamped {
     @Column(nullable = false)
     private String status;
 
-    @Column(nullable=false)
+    @Column(nullable = false)
     private int discountRate;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE, orphanRemoval = true)
@@ -96,7 +94,7 @@ public class Book extends Timestamped {
         this.status = status;
         this.category = category;
         this.photoImage = photoImage;
-        this.discountRate= discountRate;
+        this.discountRate = discountRate;
 
     }
 

@@ -6,7 +6,7 @@ import com.sparta.bookflex.domain.book.dto.BookRequestDto;
 import com.sparta.bookflex.domain.book.dto.BookResponseDto;
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.repository.BookRepository;
-import com.sparta.bookflex.domain.category.entity.Category;
+import com.sparta.bookflex.domain.category.enums.Category;
 import com.sparta.bookflex.domain.category.service.CategoryService;
 import com.sparta.bookflex.domain.photoimage.entity.PhotoImage;
 import com.sparta.bookflex.domain.photoimage.service.PhotoImageService;
@@ -38,8 +38,6 @@ public class BookService {
         Book book = bookRequestDto.toEntity(photoImage, category);
 
         book = bookRepository.save(book);
-
-        category.getBookList().add(book);
 
         photoImage.updateBookId(book.getId());
 
