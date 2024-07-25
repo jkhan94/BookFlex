@@ -50,6 +50,7 @@ public class SecurityConfig {
             (authorizationHttpRequests) -> authorizationHttpRequests
                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/auth/signup").permitAll()
+                .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
                 .anyRequest().authenticated()
         );
 

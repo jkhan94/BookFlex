@@ -38,7 +38,7 @@ public class CategoryService {
                     .subCategoryNames(allSub)
                     .build());
 
-            allSub.clear();
+            allSub = new ArrayList<>();
         }
 
         return allCategories;
