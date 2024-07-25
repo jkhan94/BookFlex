@@ -140,7 +140,7 @@ public class OrderBookService {
         for (OrderItem orderItem : orderBook.getOrderItemList()) {
             Book book = orderItem.getBook();
             if(isOrderCancelled) {
-                book.decreaseStock(orderItem.getQuantity());
+                book.increaseStock(orderItem.getQuantity());
             }
             OrderItemResponseDto orderItemResponseDto = OrderItemResponseDto.builder()
                 .orderItemId(orderItem.getOrderBook().getId())

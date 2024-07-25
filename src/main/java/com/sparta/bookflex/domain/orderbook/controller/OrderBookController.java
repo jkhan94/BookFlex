@@ -39,7 +39,7 @@ public class OrderBookController {
                 .status(HttpStatus.OK)
                 .body(new CommonDto<>(HttpStatus.OK.value(),  "주문상태가 변경되었습니다.",updatedOrder));
     }
-    @GetMapping("/orders/{orderId}")
+    @GetMapping("/{orderId}")
     public ResponseEntity<CommonDto<OrderResponsDto>> getOrderById(@PathVariable Long orderId,
                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         OrderResponsDto orderResponseDto = orderBookService.getOrderById(orderId, userDetails.getUser());

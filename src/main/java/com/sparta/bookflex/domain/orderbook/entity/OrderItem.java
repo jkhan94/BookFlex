@@ -21,7 +21,6 @@ public class OrderItem extends Timestamped {
     @Column(name = "order_item_id")
     private Long id;
 
-
     @Column(name = "quantity", nullable = false)
     private int quantity;
 
@@ -35,18 +34,13 @@ public class OrderItem extends Timestamped {
     @JoinColumn(name = "book_id")
     private Book book;
 
-
     @ManyToOne
     @JoinColumn(name = "order_book_id")
     private OrderBook orderBook;
 
-
-
     @ManyToOne
     @JoinColumn(name = "shipment_id")
     private Shipment shipment;
-
-
 
     @Builder
     public OrderItem(int quantity, Book book,  OrderBook orderBook,BigDecimal price,Shipment shipment) {
@@ -56,7 +50,6 @@ public class OrderItem extends Timestamped {
         this.total = BigDecimal.valueOf(quantity).multiply(price);
         this.orderBook = orderBook;
         this.shipment = shipment;
-
     }
 
     public void updateShipment(Shipment shipment) {
@@ -66,8 +59,6 @@ public class OrderItem extends Timestamped {
     public void updateOrderBook(OrderBook orderBook) {
         this.orderBook = orderBook;
     }
-
-
 
 }
 
