@@ -4,6 +4,10 @@ import com.sparta.bookflex.common.aop.Envelop;
 import com.sparta.bookflex.domain.category.dto.CategoryAllResponseDto;
 import com.sparta.bookflex.domain.category.dto.CategoryNameResponseDto;
 import com.sparta.bookflex.domain.category.service.CategoryService;
+import com.sparta.bookflex.domain.user.entity.User;
+import com.sparta.bookflex.domain.user.enums.RoleType;
+import com.sparta.bookflex.domain.user.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
+import static com.sparta.bookflex.common.exception.ErrorCode.USER_NOT_AUTHORIZED;
 
 @RestController
 @RequiredArgsConstructor

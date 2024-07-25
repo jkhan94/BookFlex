@@ -20,7 +20,8 @@ public class BookResponseDto {
     private int stock;
     private String bookDescription;
     private String status;
-    private String categoryName;
+    private String mainCategoryName;
+    private String subCategoryName;
     private int discountRate;
     private String photoImagePath;
     private LocalDateTime createdAt;
@@ -36,7 +37,8 @@ public class BookResponseDto {
                            int stock,
                            String bookDescription,
                            String status,
-                           String categoryName,
+                           String mainCategoryName,
+                           String subCategoryName,
                            String photoImagePath,
                            LocalDateTime createdAt,
                            LocalDateTime modifiedAt,
@@ -50,7 +52,8 @@ public class BookResponseDto {
         this.stock = stock;
         this.bookDescription = bookDescription;
         this.status = status;
-        this.categoryName = categoryName;
+        this.mainCategoryName = mainCategoryName;
+        this.subCategoryName = subCategoryName;
         this.photoImagePath = photoImagePath;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;

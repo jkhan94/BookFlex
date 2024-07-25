@@ -1,5 +1,7 @@
 package com.sparta.bookflex.domain.book.entity;
 
+import com.sparta.bookflex.common.exception.BusinessException;
+import com.sparta.bookflex.common.exception.ErrorCode;
 import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.basket.entity.BasketItem;
 import com.sparta.bookflex.domain.book.dto.BookRequestDto;
@@ -15,6 +17,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Sort;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -47,12 +50,16 @@ public class Book extends Timestamped {
     private String bookDescription;
 
     @Column(nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private BookStatus status;
 
     @Column(nullable = false)
-    private int discountRate;
+    @Enumerated(EnumType.STRING)
+    private Category mainCategory;
 
-    private Category category;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Category subCategory;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<BasketItem> baskeItemtList = new ArrayList<>();
@@ -80,10 +87,10 @@ public class Book extends Timestamped {
                 BigDecimal price,
                 int stock,
                 String bookDescription,
-                String status,
-                Category category,
-                PhotoImage photoImage,
-                int discountRate) {
+                BookStatus status,
+                Category mainCategory,
+                Category subCategory,
+                PhotoImage photoImage) {
 
         this.bookName = bookName;
         this.publisher = publisher;
@@ -92,9 +99,9 @@ public class Book extends Timestamped {
         this.stock = stock;
         this.bookDescription = bookDescription;
         this.status = status;
-        this.category = category;
+        this.mainCategory = mainCategory;
+        this.subCategory = subCategory;
         this.photoImage = photoImage;
-        this.discountRate = discountRate;
 
     }
 
@@ -108,8 +115,9 @@ public class Book extends Timestamped {
                 .price(this.price)
                 .stock(this.stock)
                 .bookDescription(this.bookDescription)
-                .status(this.status)
-                .categoryName(this.category.getCategoryName())
+                .status(this.status.getStatusValue())
+                .mainCategoryName(this.mainCategory.getCategoryName())
+                .subCategoryName(this.subCategory.getCategoryName())
                 .photoImagePath(photoImageUrl)
                 .createdAt(this.createdAt)
                 .modifiedAt(this.modifiedAt)
@@ -117,12 +125,43 @@ public class Book extends Timestamped {
     }
 
     public void update(BookRequestDto bookRequestDto) {
+
         this.bookName = bookRequestDto.getBookName();
+        this.publisher = bookRequestDto.getPublisher();
         this.author = bookRequestDto.getAuthor();
         this.price = bookRequestDto.getPrice();
         this.stock = bookRequestDto.getStock();
         this.bookDescription = bookRequestDto.getBookDescription();
-        this.status = bookRequestDto.getStatus();
+        this.status = bookRequestDto.getStock() > 1 ? BookStatus.ONSALE : BookStatus.SOLDOUT;
+        this.mainCategory =Category.of(bookRequestDto.getMainCategory());
+        this.subCategory = Category.of(bookRequestDto.getSubCategory());
+
+    }
+
+    public void decreaseStock(int quantity) {
+
+        if (this.stock >= quantity) {
+            this.stock -= quantity;
+        } else {
+            throw new BusinessException(ErrorCode.CANNOT_EXCEED);
+        }
+
+        checkStock();
+    }
+
+    public void increaseStock(int quantity) {
+
+        this.stock += quantity;
+
+        checkStock();
+    }
+
+    public void checkStock() {
+        if (this.stock < 1) {
+            this.status = BookStatus.SOLDOUT;
+        } else {
+            this.status = BookStatus.ONSALE;
+        }
     }
 
 }

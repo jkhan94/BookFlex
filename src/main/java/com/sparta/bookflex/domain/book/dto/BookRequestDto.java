@@ -2,6 +2,7 @@ package com.sparta.bookflex.domain.book.dto;
 
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.category.enums.Category;
+import com.sparta.bookflex.domain.book.entity.BookStatus;
 import com.sparta.bookflex.domain.photoimage.entity.PhotoImage;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -24,29 +25,28 @@ public class BookRequestDto {
     @NotBlank(message = "작가명을 입력해주세요.")
     private String author;
 
-    @NotBlank(message = "가격을 입력해주세요.")
-    @Pattern(regexp = "^[0-9]*$", message = "숫자만 입력 가능합니다.")
+//    @NotBlank(message = "가격을 입력해주세요.")
+//    @Pattern(regexp = "^[0-9]*$", message = "숫자만 입력 가능합니다.")
     private BigDecimal price;
 
-    @NotBlank(message = "재고량을 입력해주세요.")
-    @Pattern(regexp = "^[0-9]*$", message = "숫자만 입력 가능합니다.")
+//    @NotBlank(message = "재고량을 입력해주세요.")
+//    @Pattern(regexp = "^[0-9]*$", message = "숫자만 입력 가능합니다.")
     private int stock;
 
     @NotBlank(message = "책 설명을 입력해주세요.")
     private String bookDescription;
 
-    @NotBlank(message = "상품 상태를 입력해주세요.")
+//    @NotBlank(message = "상품 상태를 입력해주세요.")
     private String status;
 
     @NotBlank(message = "카테고리를 지정해주세요.")
-    private String category;
+    private String mainCategory;
 
-    @Pattern(regexp = "^[0-9]*$", message = "숫자만 입력 가능합니다.")
-    @NotBlank(message = "할인율을 입력해주세요.")
-    private int discountRate;
+    @NotBlank(message = "카테고리를 지정해주세요.")
+    private String subCategory;
 
 
-    public Book toEntity(PhotoImage photoImage, Category category) {
+    public Book toEntity(PhotoImage photoImage) {
         return Book.builder()
                 .bookName(this.bookName)
                 .publisher(this.publisher)
@@ -54,9 +54,9 @@ public class BookRequestDto {
                 .price(this.price)
                 .stock(this.stock)
                 .bookDescription(this.bookDescription)
-                .status(this.status)
-                .discountRate(this.discountRate)
-                .category(category)
+                .status(BookStatus.of(this.status))
+                .mainCategory(Category.of(this.mainCategory))
+                .subCategory(Category.of(this.subCategory))
                 .photoImage(photoImage)
                 .build();
     }

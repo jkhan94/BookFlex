@@ -2,7 +2,7 @@ package com.sparta.bookflex.common.jwt;
 
 import com.sparta.bookflex.common.config.JwtConfig;
 import com.sparta.bookflex.domain.user.entity.User;
-import com.sparta.bookflex.domain.user.enums.UserRole;
+import com.sparta.bookflex.domain.user.enums.RoleType;
 import com.sparta.bookflex.domain.user.enums.UserGrade;
 import com.sparta.bookflex.domain.user.enums.UserState;
 import io.jsonwebtoken.*;
@@ -22,7 +22,7 @@ public class JwtProvider {
         String username = user.getUsername();
         UserState state = user.getState();
         UserGrade grade = user.getGrade();
-        UserRole auth = user.getAuth();
+        RoleType auth = user.getAuth();
 
         return JwtConfig.BEARER_PREFIX +
                 Jwts.builder()
