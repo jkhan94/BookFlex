@@ -1,5 +1,7 @@
 package com.sparta.bookflex.domain.orderbook.service;
 
+import com.sparta.bookflex.common.exception.BusinessException;
+import com.sparta.bookflex.common.exception.ErrorCode;
 import com.sparta.bookflex.common.utill.LoggingSingleton;
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.service.BookService;
@@ -168,7 +170,7 @@ public class OrderBookService {
     public OrderResponsDto getOrderById(Long orderId, User user) {
         // 주문과 관련된 판매 항목을 포함하여 주문 내역을 조회합니다.
         OrderBook orderBook = orderBookRepository.findByIdAndUser(orderId, user)
-            .orElseThrow(() -> new IllegalArgumentException("Order not found or you don't have access to this order."));
+            .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
 
         List<OrderItemResponseDto> orderItemResponseDtoList = new ArrayList<>();
         for (OrderItem orderItem : orderBook.getOrderItemList()) {

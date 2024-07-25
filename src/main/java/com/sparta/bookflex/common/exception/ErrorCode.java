@@ -70,7 +70,12 @@ public enum ErrorCode {
     ///장바구니
     BASKET_NOT_FOUND(HttpStatus.NOT_FOUND, "장바구니을 찾을 수 없습니다."),
     BASKET_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "장바구니에서 책을 착을 수 없습니다." ),
-    BASKET_ITEM_ALREADY_EXIST(HttpStatus.CONFLICT, "이미 장바구니 내에 칙이 존재합니다" );
+    BASKET_ITEM_ALREADY_EXIST(HttpStatus.CONFLICT, "이미 장바구니 내에 칙이 존재합니다" ),
+
+    //주문
+
+    ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "주문을 찾을 수 없습니다."),
+    ORDER_STATUS_NOT_FOUND(HttpStatus.NOT_FOUND, "주문 상태를 찾을 수 없습니다.");
 
 
     private final HttpStatus status;
