@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 public class CouponResponseDto {
     private Long couponId;
     private String couponName;
-    private String couponCode;
     private CouponStatus couponStatus;
     private int totalCount;
     private BigDecimal minPrice;
@@ -24,11 +23,10 @@ public class CouponResponseDto {
     private LocalDateTime modifiedAt;
 
     @Builder
-    public CouponResponseDto(Long couponId, String couponName, String couponCode, CouponStatus couponStatus, int totalCount, BigDecimal minPrice,
-                             BigDecimal discountPrice, LocalDateTime startDate, LocalDateTime expirationDate, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public CouponResponseDto(Long couponId, String couponName, CouponStatus couponStatus, int totalCount, BigDecimal minPrice, BigDecimal discountPrice,
+                             LocalDateTime startDate, LocalDateTime expirationDate, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.couponId = couponId;
         this.couponName = couponName;
-        this.couponCode = couponCode;
         this.couponStatus = couponStatus;
         this.totalCount = totalCount;
         this.minPrice = minPrice;

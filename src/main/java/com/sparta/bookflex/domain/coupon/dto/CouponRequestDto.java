@@ -13,8 +13,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class CouponRequestDto {
     private String couponName;
-    private String couponCode;
-    private CouponStatus couponStatus;
     private int totalCount;
     private BigDecimal minPrice;
     private BigDecimal discountPrice;
