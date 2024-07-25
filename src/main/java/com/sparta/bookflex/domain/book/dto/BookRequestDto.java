@@ -1,8 +1,8 @@
 package com.sparta.bookflex.domain.book.dto;
 
 import com.sparta.bookflex.domain.book.entity.Book;
+import com.sparta.bookflex.domain.category.enums.Category;
 import com.sparta.bookflex.domain.book.entity.BookStatus;
-import com.sparta.bookflex.domain.category.Category;
 import com.sparta.bookflex.domain.photoimage.entity.PhotoImage;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

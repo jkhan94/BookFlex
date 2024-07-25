@@ -6,8 +6,7 @@ import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.basket.entity.BasketItem;
 import com.sparta.bookflex.domain.book.dto.BookRequestDto;
 import com.sparta.bookflex.domain.book.dto.BookResponseDto;
-
-import com.sparta.bookflex.domain.category.Category;
+import com.sparta.bookflex.domain.category.enums.Category;
 import com.sparta.bookflex.domain.orderbook.entity.OrderItem;
 import com.sparta.bookflex.domain.photoimage.entity.PhotoImage;
 import com.sparta.bookflex.domain.reveiw.entity.Review;
