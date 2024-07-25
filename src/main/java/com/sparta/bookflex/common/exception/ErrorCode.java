@@ -62,6 +62,7 @@ public enum ErrorCode {
     QNA_VIEW_NOT_ALLOWED(HttpStatus.FORBIDDEN,"문의를 조회할 수 없습니다."),
     QNA_NOT_FOUND(HttpStatus.NOT_FOUND,"문의 내역을 찾을 수 없습니다."),
     QNA_DELETE_NOT_ALLOWED_REPLY_EXISTS(HttpStatus.BAD_REQUEST,"답변 완료된 문의는 삭제할 수 없습니다."),
+    REPLY_CREATE_NOT_ALLOWED(HttpStatus.FORBIDDEN,"답변을 남길 수 없습니다."),
     REPLY_ALREADY_EXISTS(HttpStatus.BAD_REQUEST,"답변 완료된 문의입니다."),
 
     // 리뷰
