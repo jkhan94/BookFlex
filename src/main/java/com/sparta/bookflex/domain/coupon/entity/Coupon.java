@@ -2,6 +2,7 @@ package com.sparta.bookflex.domain.coupon.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.coupon.entity.UserCoupon;
+import com.sparta.bookflex.domain.coupon.enums.CouponStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,6 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Coupon extends Timestamped {
 
     @Id
@@ -25,18 +25,31 @@ public class Coupon extends Timestamped {
     private Long id;
 
     @Column(nullable = false)
-    private String couponCode;
-
-    @Column(nullable = false, precision = 12, scale=2)
-    private BigDecimal discountAmount;
-
-    @Column(nullable = false, precision = 12, scale=2)
-    private BigDecimal discountPercentage;
+    private String couponName;
 
     @Column(nullable = false)
-    private LocalDateTime experationDate;
+    private String couponCode;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private CouponStatus couponStatus;
+
+    @Column(nullable = false)
+    private int totalCount;
+
+    @Column(nullable = false, precision = 12, scale=2)
+    private BigDecimal minPrice;
+
+    @Column(nullable = false, precision = 12, scale=2)
+    private BigDecimal discountPrice;
+
+    @Column(nullable = false)
+    private LocalDateTime startDate;
+
+    @Column(nullable = false)
+    private LocalDateTime expirationDate;
 
     @OneToMany(mappedBy="coupon", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<UserCoupon> userCouponList = new ArrayList<>();
+    private List<UserCoupon> userCouponList;
 
 }
