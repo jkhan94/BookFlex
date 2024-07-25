@@ -1,57 +1,13 @@
 package com.sparta.bookflex.domain.category.enums;
 
 import com.sparta.bookflex.common.exception.BusinessException;
-import lombok.Getter;
-
-import com.sparta.bookflex.common.exception.BusinessException;
 import com.sparta.bookflex.common.exception.ErrorCode;
-import com.sparta.bookflex.domain.book.entity.BookStatus;
+import lombok.Getter;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.sparta.bookflex.common.exception.ErrorCode.CATEGORY_NOT_FOUND;
-
-/*
-국내도서
-소설
-인문
-경제
-역사
-종교
-예술
-과학
-자기계발
-여행
-요리
-가정/육아
-잡지
-사전
-외국어
-참고서
-
-    시/에세이
-
-    건강
-    취미/실용/스포츠
-
-    기술/공학
-    컴퓨터/IT
-
-
-외국도서
-    영미도서
-    일본도서
-    중국도서
-    프랑스도서
-    독일도서
-    스페인도서
-
-    러시아도서
-    북유럽도서
-    그외유럽도서
-    기타나라도서
-*/
 
 public enum Category {
     ROOT("카테고리", null),
