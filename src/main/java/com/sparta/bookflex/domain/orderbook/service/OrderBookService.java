@@ -61,6 +61,7 @@ public class OrderBookService {
 
         for (OrderRequestDto.OrderItemDto item : orderRequestDto.getItems()) {
             Book book = getBook(item.getBookId());
+
             BigDecimal price = item.getPrice();
             BigDecimal itemTotal = BigDecimal.valueOf(item.getQuantity()).multiply(price);
             total = total.add(itemTotal);

@@ -51,8 +51,6 @@ public class OrderItem extends Timestamped {
     @JoinColumn(name = "shipment_id")
     private Shipment shipment;
 
-    @OneToMany(mappedBy = "orderItem", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderItemRefund> orderItemRefunds = new ArrayList<>();
 
 
     @Builder
@@ -74,9 +72,7 @@ public class OrderItem extends Timestamped {
         this.orderBook = orderBook;
     }
 
-    public void addRefund(OrderItemRefund refund) {
-        this.orderItemRefunds.add(refund);
-    }
+
 
 }
 
