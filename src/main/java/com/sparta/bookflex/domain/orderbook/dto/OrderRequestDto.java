@@ -3,6 +3,7 @@ package com.sparta.bookflex.domain.orderbook.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
@@ -14,6 +15,7 @@ public class OrderRequestDto {
     @NoArgsConstructor
     public static class OrderItemDto {
         private Long bookId;
+        private BigDecimal price;
         private int quantity;
     }
 }

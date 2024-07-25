@@ -5,15 +5,11 @@ import com.sparta.bookflex.common.security.UserDetailsImpl;
 import com.sparta.bookflex.domain.orderbook.dto.OrderRequestDto;
 import com.sparta.bookflex.domain.orderbook.dto.OrderResponsDto;
 import com.sparta.bookflex.domain.orderbook.dto.OrderStatusRequestDto;
-import com.sparta.bookflex.domain.orderbook.entity.OrderBook;
 import com.sparta.bookflex.domain.orderbook.service.OrderBookService;
-import com.sparta.bookflex.domain.sale.Enum.SaleState;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/orders")
@@ -43,7 +39,7 @@ public class OrderBookController {
                 .status(HttpStatus.OK)
                 .body(new CommonDto<>(HttpStatus.OK.value(),  "주문상태가 변경되었습니다.",updatedOrder));
     }
-    @GetMapping("/orders/{orderId}")
+    @GetMapping("/{orderId}")
     public ResponseEntity<CommonDto<OrderResponsDto>> getOrderById(@PathVariable Long orderId,
                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         OrderResponsDto orderResponseDto = orderBookService.getOrderById(orderId, userDetails.getUser());

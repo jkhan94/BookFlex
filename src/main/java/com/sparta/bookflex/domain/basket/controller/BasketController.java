@@ -4,7 +4,6 @@ import com.sparta.bookflex.common.dto.CommonDto;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
 import com.sparta.bookflex.domain.basket.dto.BasketCreateReqestDto;
 import com.sparta.bookflex.domain.basket.dto.BasketItemResponseDto;
-import com.sparta.bookflex.domain.basket.dto.BasketResDto;
 import com.sparta.bookflex.domain.basket.service.BasketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

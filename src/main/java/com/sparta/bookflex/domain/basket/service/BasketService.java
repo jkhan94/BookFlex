@@ -144,8 +144,10 @@ public class BasketService {
         }
 
         return basketItems.map(basketItem -> BasketItemResponseDto.builder()
-                .basketItemId(basketItem.getId())
+                .baskeItemid(basketItem.getId())
+                .bookId(basketItem.getBook().getId())
                 .quantity(basketItem.getQuantity())
+                .price(basketItem.getPrice())
                 .bookName(basketItem.getBook().getBookName())
                 .photoImagePath(photoImageService.getPhotoImageUrl(basketItem.getBook().getPhotoImage().getFilePath()))
                 .build()
@@ -164,7 +166,7 @@ public class BasketService {
         basketItem.updateQuantity(quantity);
         basketItemRepository.save(basketItem);
         return BasketItemResponseDto.builder()
-                .basketItemId(basketItem.getId())
+                .bookId(basketItem.getBook().getId())
                 .quantity(quantity)
                 .bookName(basketItem.getBook().getBookName())
                 .photoImagePath(photoImageService.getPhotoImageUrl(basketItem.getBook().getPhotoImage().getFilePath()))

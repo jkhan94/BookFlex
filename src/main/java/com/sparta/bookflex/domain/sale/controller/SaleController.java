@@ -2,10 +2,8 @@ package com.sparta.bookflex.domain.sale.controller;
 
 import com.sparta.bookflex.common.dto.CommonDto;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
-import com.sparta.bookflex.domain.orderbook.dto.OrderRequestDto;
 import com.sparta.bookflex.domain.sale.dto.SaleRequestDto;
 import com.sparta.bookflex.domain.sale.dto.SaleResponseDto;
-import com.sparta.bookflex.domain.sale.dto.SaleStateReqestDto;
 import com.sparta.bookflex.domain.sale.service.SaleService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -68,17 +66,17 @@ public class SaleController {
                 .body(new CommonDto<>(HttpStatus.OK.value(), "주문 목록을 조회했습니다.", saleResponseDtoList));
     }
 
-    @PutMapping("/{saleId}/status")
-    public ResponseEntity<CommonDto<Void>> updateSaleStatus(
-            @PathVariable Long saleId,
-            @RequestBody SaleStateReqestDto saleStateReqDto,
-            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-
-        saleService.updateSaleStatus(saleId, saleStateReqDto.getSaleState(), userDetails.getUser());
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new CommonDto<>(HttpStatus.OK.value(), "판매 상태가 변경되었습니다.", null));
-    }
+//    @PutMapping("/{saleId}/status")
+//    public ResponseEntity<CommonDto<Void>> updateSaleStatus(
+//            @PathVariable Long saleId,
+//            @RequestBody SaleStateReqestDto saleStateReqDto,
+//            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+//
+//        saleService.updateSaleStatus(saleId, saleStateReqDto.getSaleState(), userDetails.getUser());
+//        return ResponseEntity
+//                .status(HttpStatus.OK)
+//                .body(new CommonDto<>(HttpStatus.OK.value(), "판매 상태가 변경되었습니다.", null));
+//    }
 
 
 

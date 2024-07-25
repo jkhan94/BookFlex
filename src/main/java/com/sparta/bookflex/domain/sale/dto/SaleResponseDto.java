@@ -1,6 +1,5 @@
 package com.sparta.bookflex.domain.sale.dto;
 
-import com.sparta.bookflex.domain.sale.Enum.SaleState;
 import lombok.Builder;
 import lombok.Getter;
 

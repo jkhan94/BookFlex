@@ -14,16 +14,18 @@ public class OrderItemResponseDto {
     private BigDecimal price;
     private int quantity;
     private BigDecimal total;;
+    private String photoImagePath;
     private LocalDateTime createdAt;
 
     @Builder
-    public OrderItemResponseDto(Long orderItemId, String bookName, BigDecimal price, int quantity,  LocalDateTime createdAt, BigDecimal total) {
+    public OrderItemResponseDto(Long orderItemId, String bookName, BigDecimal price, int quantity,  LocalDateTime createdAt, BigDecimal total,String photoImagePath) {
         this.orderItemId = orderItemId;
         this.bookName = bookName;
         this.price = price;
         this.quantity = quantity;
         this.createdAt = createdAt;
         this.total = total;
+        this.photoImagePath = photoImagePath;
     }
 
 
