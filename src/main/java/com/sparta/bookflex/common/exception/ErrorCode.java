@@ -46,10 +46,13 @@ public enum ErrorCode {
 
     // 책
     BOOK_NOT_FOUND(HttpStatus.NOT_FOUND, "책을 찾을 수 없습니다."),
+    BOOKSTATUS_NOT_FOUND(HttpStatus.NOT_FOUND, "상품 상태를 찾을 수 없습니다."),
+    CANNOT_EXCEED(HttpStatus.BAD_REQUEST, "구매수량이 재고수량을 초과하였습니다." ),
 
     // 카테고리
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "카테고리를 찾을 수 없습니다."),
     CATEGORY_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 존재하는 카테고리입니다."),
+    NOT_LEAF_CATEGORY(HttpStatus.BAD_REQUEST,"하위 카테고리를 선택해주세요."),
 
     // 토큰
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "이미 만료된 토큰입니다"),
@@ -58,7 +61,8 @@ public enum ErrorCode {
     QNA_DELETE_NOT_ALLOWED(HttpStatus.FORBIDDEN,"문의를 삭제할 수 없습니다."),
     QNA_VIEW_NOT_ALLOWED(HttpStatus.FORBIDDEN,"문의를 조회할 수 없습니다."),
     QNA_NOT_FOUND(HttpStatus.NOT_FOUND,"문의 내역을 찾을 수 없습니다."),
-    REPLY_EXISTS(HttpStatus.BAD_REQUEST,"답변 완료된 문의는 삭제할 수 없습니다."),
+    QNA_DELETE_NOT_ALLOWED_REPLY_EXISTS(HttpStatus.BAD_REQUEST,"답변 완료된 문의는 삭제할 수 없습니다."),
+    REPLY_ALREADY_EXISTS(HttpStatus.BAD_REQUEST,"답변 완료된 문의입니다."),
 
     // 리뷰
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다."),

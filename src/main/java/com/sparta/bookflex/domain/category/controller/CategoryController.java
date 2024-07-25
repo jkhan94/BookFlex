@@ -1,93 +1,46 @@
 package com.sparta.bookflex.domain.category.controller;
 
 import com.sparta.bookflex.common.aop.Envelop;
-import com.sparta.bookflex.common.exception.BusinessException;
-import com.sparta.bookflex.common.security.UserDetailsImpl;
-import com.sparta.bookflex.domain.category.dto.CategoryRequestDto;
-import com.sparta.bookflex.domain.category.dto.CategoryResponseDto;
+import com.sparta.bookflex.domain.category.dto.CategoryAllResponseDto;
+import com.sparta.bookflex.domain.category.dto.CategoryNameResponseDto;
 import com.sparta.bookflex.domain.category.service.CategoryService;
-import com.sparta.bookflex.domain.user.entity.User;
-import com.sparta.bookflex.domain.user.enums.UserRole;
-import com.sparta.bookflex.domain.user.service.AuthService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-
-import static com.sparta.bookflex.common.exception.ErrorCode.USER_NOT_AUTHORIZED;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/categories")
 public class CategoryController {
-
     private final CategoryService categoryService;
-    private final AuthService authService;
-
-    @Envelop("카테고리를 추가했습니다.")
-    @PostMapping
-    public ResponseEntity<CategoryResponseDto> createCategory(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                              @RequestBody @Valid CategoryRequestDto requestDto) {
-
-        checkUser(userDetails);
-
-        CategoryResponseDto responseDto = categoryService.createCategory(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
-    }
-
-    @GetMapping("/{categoryId}")
-    @Envelop("카테고리 조회에 성공하였습니다.")
-    public ResponseEntity<CategoryResponseDto> getSingleCategory(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                                 @PathVariable long categoryId,
-                                                                 @RequestParam(value = "page", defaultValue = "1") int page,
-                                                                 @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy) {
-
-        CategoryResponseDto responseDto = categoryService.getSingleCategory(categoryId, page - 1, sortBy);
-        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
-    }
 
     @GetMapping
-    @Envelop("카테고리 목록 조회에 성공하였습니다.")
-    public ResponseEntity<List<CategoryResponseDto>> getAllCategories(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                                      @RequestParam(value = "page", defaultValue = "1") int page,
-                                                                      @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy) {
+    @Envelop("모든 카테고리 조회에 성공하였습니다.")
+    public ResponseEntity<List<CategoryAllResponseDto>> getAllCategories() {
 
-        List<CategoryResponseDto> responseList = categoryService.getAllCategories(page - 1, sortBy);
+        List<CategoryAllResponseDto> responseList = categoryService.getAllCategories();
         return ResponseEntity.status(HttpStatus.OK).body(responseList);
     }
 
-    @PutMapping("/{categoryId}")
-    @Envelop("카테고리를 수정했습니다.")
-    public ResponseEntity<CategoryResponseDto> updateCategory(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                              @PathVariable long categoryId,
-                                                              @RequestBody @Valid CategoryRequestDto requestDto) {
+    @GetMapping("/main")
+    @Envelop("메인 카테고리 조회에 성공하였습니다.")
+    public ResponseEntity<List<CategoryNameResponseDto>> getAllMainCategories() {
 
-        checkUser(userDetails);
-
-        CategoryResponseDto responseDto = categoryService.updateCategory(categoryId, requestDto);
-        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+        List<CategoryNameResponseDto> responseList = categoryService.getAllMainCategories();
+        return ResponseEntity.status(HttpStatus.OK).body(responseList);
     }
 
+    @GetMapping("/sub")
+    @Envelop("서브 카테고리 목록 조회에 성공하였습니다.")
+    public ResponseEntity<List<CategoryNameResponseDto>> getAllSubCategories(@RequestParam(value = "mainCategory", defaultValue = "카테고리") String mainCategory) {
 
-    @DeleteMapping("/{categoryId}")
-    @Envelop("카테고리를 삭제했습니다.")
-    public ResponseEntity deleteCategory(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                         @PathVariable long categoryId) {
-
-        checkUser(userDetails);
-
-        categoryService.deleteCategory(categoryId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    private void checkUser(UserDetailsImpl userDetails) {
-        User user = authService.findByUserName(userDetails.getUser().getUsername());
-        if (user.getAuth() != UserRole.ADMIN) {
-            throw new BusinessException(USER_NOT_AUTHORIZED);
-        }
+        List<CategoryNameResponseDto> responseList = categoryService.getAllSubCategories(mainCategory);
+        return ResponseEntity.status(HttpStatus.OK).body(responseList);
     }
 }

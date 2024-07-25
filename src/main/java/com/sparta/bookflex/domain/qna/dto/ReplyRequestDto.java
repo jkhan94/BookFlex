@@ -1,4 +1,4 @@
-package com.sparta.bookflex.domain.category.dto;
+package com.sparta.bookflex.domain.qna.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryRequestDto {
-    @NotBlank(message = "카테고리 이름을 입력해주세요.")
-    private String categoryName;
+public class ReplyRequestDto {
+
+    @NotBlank(message = "문의에 대한 답변을 입력해주세요.")
+    private String reply;
 }

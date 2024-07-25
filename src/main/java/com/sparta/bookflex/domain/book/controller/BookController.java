@@ -3,6 +3,7 @@ package com.sparta.bookflex.domain.book.controller;
 import com.sparta.bookflex.common.dto.CommonDto;
 import com.sparta.bookflex.domain.book.dto.BookRequestDto;
 import com.sparta.bookflex.domain.book.dto.BookResponseDto;
+import com.sparta.bookflex.domain.book.entity.BookStatus;
 import com.sparta.bookflex.domain.book.service.BookService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,8 @@ public class BookController {
 
     @PostMapping
     public CommonDto<BookResponseDto> registerProduct(@RequestPart(value = "request") @Valid BookRequestDto bookRequestDto,
-                                                      @RequestPart(value = "multipartFile") MultipartFile multipartFile) throws IOException {
+                                                      @RequestPart(value = "multipartFile") MultipartFile multipartFile
+    ) throws IOException {
 
         BookResponseDto bookResponseDto = bookService.registerProduct(bookRequestDto, multipartFile);
 
@@ -30,36 +32,33 @@ public class BookController {
     }
 
     @GetMapping("/{productId}")
-    public CommonDto<BookResponseDto> getBookById(@PathVariable(value="productId") Long bookId) {
+    public CommonDto<BookResponseDto> getBookById(@PathVariable(value = "productId") Long bookId) {
 
         BookResponseDto bookResponseDto = bookService.getBookById(bookId);
 
-        return new CommonDto<>(HttpStatus.OK.value(), "상품 조회에 성공하였습니다.", bookResponseDto);
+        return new CommonDto<>(HttpStatus.OK.value(), "상품 상세 조회에 성공하였습니다.", bookResponseDto);
     }
 
-    @GetMapping("/search")
-    public CommonDto<List<BookResponseDto>> getBooksByBookName(@RequestParam(name="bookName") String bookName) {
-
-        List<BookResponseDto> bookResponseDto = bookService.getBooksByBookName(bookName);
-
-        return new CommonDto<>(HttpStatus.OK.value(), "제목별 상품 조회에 성공하였습니다.", bookResponseDto);
-    }
-
-    //페이징 적용 전
     @GetMapping
-    public CommonDto<List<BookResponseDto>> getBookList() {
+    public CommonDto<List<BookResponseDto>> getBookList(@RequestParam(name = "page") int page,
+                                                        @RequestParam(name = "size") int size,
+                                                        @RequestParam(name = "direction") boolean isAsc,
+                                                        @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
+                                                        @RequestParam(name = "status", required = false) BookStatus status,
+                                                        @RequestParam(name = "bookName", required = false) String bookName
+    ) {
 
-        List<BookResponseDto> bookResponseDtoList = bookService.getBookList();
+        List<BookResponseDto> bookResponseDtoList = bookService.getBookList(page, size, isAsc, sortBy, status, bookName);
 
         if (bookResponseDtoList == null) {
             return new CommonDto<>(HttpStatus.OK.value(), "등록된 상품이 존재하지 않습니다.", bookResponseDtoList);
         }
 
-        return new CommonDto<>(HttpStatus.OK.value(), "상품 전체 조회에 성공하였습니다.", bookResponseDtoList);
+        return new CommonDto<>(HttpStatus.OK.value(), "상품 조회에 성공하였습니다.", bookResponseDtoList);
     }
 
     @PutMapping("/{booksId}")
-    public CommonDto<BookResponseDto> modifyBookInfo(@PathVariable(value = "productId") Long bookId,
+    public CommonDto<BookResponseDto> modifyBookInfo(@PathVariable(value = "booksId") Long bookId,
                                                      @RequestPart(value = "request") @Valid BookRequestDto bookRequestDto,
                                                      @RequestPart(value = "multipartFile") MultipartFile multipartFile) throws IOException {
 
@@ -74,5 +73,10 @@ public class BookController {
         String bookName = bookService.deleteBook(bookId);
 
         return new CommonDto<>(HttpStatus.NO_CONTENT.value(), "상품 삭제에 성공하였습니다.", bookName + " 을 상품 목록에서 삭제하였습니다");
+    }
+
+    @PutMapping("/{bookId}/quantity/{quantity}")
+    public void decreaseStock(@PathVariable Long bookId, @PathVariable int quantity) {
+        bookService.decreaseStock(bookId, quantity);
     }
 }

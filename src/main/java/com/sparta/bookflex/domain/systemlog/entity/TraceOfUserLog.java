@@ -1,9 +1,10 @@
 package com.sparta.bookflex.domain.systemlog.entity;
 
+import com.sparta.bookflex.domain.book.entity.Book;
+import com.sparta.bookflex.domain.systemlog.enums.ActionType;
 import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -13,17 +14,17 @@ import java.time.LocalDateTime;
 
 @Getter
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-public class CopyOfSystemLog {
+public class TraceOfUserLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(nullable = false)
-    private String activityType;
+    @Enumerated(EnumType.STRING)
+    private ActionType activityType;
 
     @Column
     private String description;
@@ -35,4 +36,15 @@ public class CopyOfSystemLog {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "book_id")
+    private Book book;
+
+    public TraceOfUserLog(ActionType action, String description, User user, Book book) {
+        this.activityType = action;
+        this.description = description;
+        this.user = user;
+        this.book = book;
+    }
 }

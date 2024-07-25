@@ -1,8 +1,10 @@
 package com.sparta.bookflex.domain.orderbook.service;
 
+import com.sparta.bookflex.common.utill.LoggingSingleton;
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.service.BookService;
 import com.sparta.bookflex.domain.orderbook.dto.OrderItemResponseDto;
+import com.sparta.bookflex.domain.orderbook.dto.OrderRequestDto;
 import com.sparta.bookflex.domain.orderbook.dto.OrderResponsDto;
 import com.sparta.bookflex.domain.orderbook.dto.OrderStatusRequestDto;
 import com.sparta.bookflex.domain.orderbook.emuns.OrderState;
@@ -10,11 +12,8 @@ import com.sparta.bookflex.domain.orderbook.entity.OrderBook;
 import com.sparta.bookflex.domain.orderbook.entity.OrderItem;
 import com.sparta.bookflex.domain.orderbook.repository.OrderBookRepository;
 import com.sparta.bookflex.domain.orderbook.repository.OrderItemRepository;
-import com.sparta.bookflex.domain.sale.Enum.SaleState;
-import com.sparta.bookflex.domain.orderbook.dto.OrderRequestDto;
-import com.sparta.bookflex.domain.sale.dto.SaleResponseDto;
-import com.sparta.bookflex.domain.sale.entity.Sale;
-import com.sparta.bookflex.domain.sale.repository.SaleRepository;
+import com.sparta.bookflex.domain.systemlog.enums.ActionType;
+import com.sparta.bookflex.domain.systemlog.repository.TraceOfUserLogRepository;
 import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,16 +31,18 @@ public class OrderBookService {
     private OrderBookRepository orderBookRepository;
     private final AuthService authService;
     private final BookService bookService;
+    private final TraceOfUserLogRepository traceOfUserLogRepository;
 
     @Autowired
     public OrderBookService(OrderItemRepository orderItemRepository,
                             OrderBookRepository orderBookRepository,
-                            AuthService authService, BookService bookService) {
+                            AuthService authService, BookService bookService, TraceOfUserLogRepository traceOfUserLogRepository) {
 
 
         this.authService = authService;
         this.bookService = bookService;
         this.orderBookRepository = orderBookRepository;
+        this.traceOfUserLogRepository = traceOfUserLogRepository;
     }
 
     private Book getBook(Long bookId) {
@@ -50,7 +51,7 @@ public class OrderBookService {
 
     private OrderBook getOrderBook(Long orderId) {
         return orderBookRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("주문 내역이 없습니다."));
+            .orElseThrow(() -> new IllegalArgumentException("주문 내역이 없습니다."));
 
     }
 
@@ -66,25 +67,30 @@ public class OrderBookService {
             BigDecimal itemTotal = BigDecimal.valueOf(item.getQuantity()).multiply(price);
             total = total.add(itemTotal);
 
-            OrderItem orderItem= OrderItem.builder()
-                    .quantity(item.getQuantity())
-                    .book(book)
-                    .price(price)
-                    .orderBook(null)
-                    .build();
+            OrderItem orderItem = OrderItem.builder()
+                .quantity(item.getQuantity())
+                .book(book)
+                .price(price)
+                .orderBook(null)
+                .build();
             orderItemList.add(orderItem);
         }
 
         OrderBook orderBook = OrderBook.builder()
-                .status(OrderState.PENDING_PAYMENT)
-                .total(total)
-                .user(user)
-                .build();
+            .status(OrderState.PENDING_PAYMENT)
+            .total(total)
+            .user(user)
+            .build();
         orderBook.updateSaleList(orderItemList);
-
 
         for (OrderItem orderItem : orderItemList) {
             orderItem.updateOrderBook(orderBook);
+        }
+
+        for (OrderItem orderItem : orderItemList) {
+            String bookName = orderItem.getBook().getBookName();
+            traceOfUserLogRepository.save(
+                LoggingSingleton.userLogging(ActionType.BOOK_PURCHASE, user, bookName, 0, orderItem.getBook()));
         }
 
         orderBookRepository.save(orderBook);
@@ -106,23 +112,23 @@ public class OrderBookService {
         List<OrderItemResponseDto> orderItemResponseDtoList = new ArrayList<>();
         for (OrderItem orderItem : orderBook.getOrderItemList()) {
             OrderItemResponseDto orderItemResponseDto = OrderItemResponseDto.builder()
-                    .orderItemId(orderItem.getOrderBook().getId())
-                    .price(orderItem.getPrice())
-                    .total(orderItem.getPrice())
-                    .createdAt(orderItem.getCreatedAt())
-                    .bookName(orderItem.getBook().getBookName())
-                    .quantity(orderItem.getQuantity())
-                    .build();
+                .orderItemId(orderItem.getOrderBook().getId())
+                .price(orderItem.getPrice())
+                .total(orderItem.getPrice())
+                .createdAt(orderItem.getCreatedAt())
+                .bookName(orderItem.getBook().getBookName())
+                .quantity(orderItem.getQuantity())
+                .build();
 
             orderItemResponseDtoList.add(orderItemResponseDto);
         }
 
         return OrderResponsDto.builder()
-                .orderId(orderId)
-                .status(status.toString())
-                .total(orderBook.getTotal())
-                .orderItemResponseDtoList(orderItemResponseDtoList)
-                .build();
+            .orderId(orderId)
+            .status(status.toString())
+            .total(orderBook.getTotal())
+            .orderItemResponseDtoList(orderItemResponseDtoList)
+            .build();
 
     }
 
@@ -130,29 +136,29 @@ public class OrderBookService {
     public OrderResponsDto getOrderById(Long orderId, User user) {
         // 주문과 관련된 판매 항목을 포함하여 주문 내역을 조회합니다.
         OrderBook orderBook = orderBookRepository.findByIdAndUser(orderId, user)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found or you don't have access to this order."));
+            .orElseThrow(() -> new IllegalArgumentException("Order not found or you don't have access to this order."));
 
         List<OrderItemResponseDto> orderItemResponseDtoList = new ArrayList<>();
         for (OrderItem orderItem : orderBook.getOrderItemList()) {
             OrderItemResponseDto orderItemResponseDto = OrderItemResponseDto.builder()
-                    .orderItemId(orderItem.getOrderBook().getId())
-                    .price(orderItem.getPrice())
-                    .total(orderItem.getPrice())
-                    .createdAt(orderItem.getCreatedAt())
-                    .bookName(orderItem.getBook().getBookName())
-                    .quantity(orderItem.getQuantity())
-                    .build();
+                .orderItemId(orderItem.getOrderBook().getId())
+                .price(orderItem.getPrice())
+                .total(orderItem.getPrice())
+                .createdAt(orderItem.getCreatedAt())
+                .bookName(orderItem.getBook().getBookName())
+                .quantity(orderItem.getQuantity())
+                .build();
 
             orderItemResponseDtoList.add(orderItemResponseDto);
         }
 
         return OrderResponsDto.builder()
-                .orderId(orderBook.getId())
-                .total(orderBook.getTotal())
-                .total(orderBook.getTotal())
-                .status(orderBook.getStatus().toString())
-                .orderItemResponseDtoList(orderItemResponseDtoList)
-                .build();
+            .orderId(orderBook.getId())
+            .total(orderBook.getTotal())
+            .total(orderBook.getTotal())
+            .status(orderBook.getStatus().toString())
+            .orderItemResponseDtoList(orderItemResponseDtoList)
+            .build();
 
     }
 }

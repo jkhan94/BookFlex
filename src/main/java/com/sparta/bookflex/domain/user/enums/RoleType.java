@@ -1,12 +1,12 @@
 package com.sparta.bookflex.domain.user.enums;
 
-public enum UserRole {
+public enum RoleType {
     USER(UserType.USER),
     ADMIN(UserType.ADMIN);
 
     private final String userAuth;
 
-    UserRole(String userAuth) { this.userAuth = userAuth;}
+    RoleType(String userAuth) { this.userAuth = userAuth;}
 
     public String getAuth() { return userAuth;}
 

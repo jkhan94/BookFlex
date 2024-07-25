@@ -8,11 +8,10 @@ import com.sparta.bookflex.domain.qna.entity.Qna;
 import com.sparta.bookflex.domain.reveiw.entity.Review;
 import com.sparta.bookflex.domain.sale.entity.Sale;
 import com.sparta.bookflex.domain.shipment.entity.Shipment;
-import com.sparta.bookflex.domain.systemlog.entity.CopyOfSystemLog;
-import com.sparta.bookflex.domain.user.dto.ProfileReqDto;
+import com.sparta.bookflex.domain.systemlog.entity.TraceOfUserLog;
 import com.sparta.bookflex.domain.user.dto.ProfileResDto;
-import com.sparta.bookflex.domain.user.enums.UserRole;
 import com.sparta.bookflex.domain.user.enums.UserGrade;
+import com.sparta.bookflex.domain.user.enums.RoleType;
 import com.sparta.bookflex.domain.user.enums.UserState;
 
 import com.sparta.bookflex.domain.wish.entity.Wish;
@@ -20,7 +19,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -31,7 +29,7 @@ public class User extends Timestamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Column
     private long id;
 
     @Column(nullable = false)
@@ -68,7 +66,7 @@ public class User extends Timestamped {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private UserRole auth;
+    private RoleType auth;
 
     @Column()
     private String refreshToken;
@@ -76,8 +74,8 @@ public class User extends Timestamped {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Basket basket;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private com.sparta.bookflex.domain.user.entity.UserRole userRole;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Role> userRole;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wish> wishList;
@@ -92,7 +90,7 @@ public class User extends Timestamped {
     private List<Review> reviewList;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CopyOfSystemLog> copyOfSystemLogList;
+    private List<TraceOfUserLog> copyOfSystemLogList;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Shipment> shipmentList;
@@ -104,7 +102,7 @@ public class User extends Timestamped {
     private List<UserCoupon> userCouponList;
 
     @Builder
-    public User(String username, String password, String email, String name, String nickname, String phoneNumber, String address, LocalDate birthDay, UserGrade grade, UserState state, UserRole auth) {
+    public User(String username, String password, String email, String name, String nickname, String phoneNumber, String address, LocalDate birthDay, UserGrade grade, UserState state, RoleType auth) {
         this.username = username;
         this.password = password;
         this.email = email;
