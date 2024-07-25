@@ -1,4 +1,4 @@
-package com.sparta.bookflex.domain.category;
+package com.sparta.bookflex.domain.category.dto;
 
 import lombok.Builder;
 import lombok.Getter;

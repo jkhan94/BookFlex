@@ -1,4 +1,4 @@
-package com.sparta.bookflex.domain.category;
+package com.sparta.bookflex.domain.category.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -8,12 +8,12 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class CategoryEnumResponseDto {
+public class CategoryAllResponseDto {
     private String mainCategoryName;
     private List<String> subCategoryNames;
 
     @Builder
-    public CategoryEnumResponseDto(String mainCategoryName, List<String> subCategoryNames) {
+    public CategoryAllResponseDto(String mainCategoryName, List<String> subCategoryNames) {
         this.mainCategoryName = mainCategoryName;
         this.subCategoryNames = subCategoryNames;
     }

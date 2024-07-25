@@ -1,8 +1,6 @@
-package com.sparta.bookflex.domain.category;
+package com.sparta.bookflex.domain.category.enums;
 
 import com.sparta.bookflex.common.exception.BusinessException;
-import com.sparta.bookflex.common.exception.ErrorCode;
-import lombok.Data;
 import lombok.Getter;
 
 import java.util.*;
@@ -108,18 +106,13 @@ public enum Category {
     }
 
     // 메인 카테고리 이름으로 enum 찾기
-    public static Category findMainCategoryByName(String categoryName) {
+    public static Category findCategoryByName(String categoryName) {
         for (Category c : Category.values()) {
             if (c.getCategoryName().equals(categoryName)) {
                 return c;
             }
         }
         throw new BusinessException(CATEGORY_NOT_FOUND);
-    }
-
-    // 마지막 카테고리(상품추가 가능)인지 반환
-    public boolean isLeafCategory() {
-        return subCategories.isEmpty();
     }
 
     // 마지막 카테고리(상품추가 가능)들 반환
@@ -132,6 +125,12 @@ public enum Category {
     private boolean isLeafCategoryOf(Category category) {
         return this.isLeafCategory() && category.contains(this);
     }
+
+    // 마지막 카테고리(상품추가 가능)인지 반환
+    public boolean isLeafCategory() {
+        return subCategories.isEmpty();
+    }
+
 
     private boolean contains(Category category) {
         if (this.equals(category)) return true;
