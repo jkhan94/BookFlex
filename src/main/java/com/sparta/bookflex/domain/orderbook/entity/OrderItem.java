@@ -3,18 +3,13 @@ package com.sparta.bookflex.domain.orderbook.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.book.entity.Book;
-import com.sparta.bookflex.domain.orderbook.emuns.OrderState;
-import com.sparta.bookflex.domain.sale.Enum.SaleState;
 import com.sparta.bookflex.domain.shipment.entity.Shipment;
-import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter

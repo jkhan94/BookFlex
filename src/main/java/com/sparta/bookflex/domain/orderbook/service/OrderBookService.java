@@ -13,7 +13,6 @@ import com.sparta.bookflex.domain.orderbook.entity.OrderItem;
 import com.sparta.bookflex.domain.orderbook.repository.OrderBookRepository;
 import com.sparta.bookflex.domain.orderbook.repository.OrderItemRepository;
 import com.sparta.bookflex.domain.photoimage.service.PhotoImageService;
-import com.sparta.bookflex.domain.sale.Enum.SaleState;
 import com.sparta.bookflex.domain.sale.entity.Sale;
 import com.sparta.bookflex.domain.sale.repository.SaleRepository;
 import com.sparta.bookflex.domain.systemlog.enums.ActionType;
@@ -109,7 +108,7 @@ public class OrderBookService {
         List<Sale> saleList = new ArrayList<>();
 
         for(OrderItem orderItem : orderItemList) {
-            Sale sale = new Sale(orderItem, SaleState.PENDING_PAYMENT);
+            Sale sale = new Sale(orderItem, OrderState.PENDING_PAYMENT);
             saleList.add(sale);
             saleRepository.save(sale);
         }
@@ -129,9 +128,20 @@ public class OrderBookService {
         }
 
         orderBook.updateStatus(status);
+        boolean isOrderCancelled = status.equals(OrderState.ORDER_CANCELLED) || status.equals(OrderState.SALE_COMPLETED) || status.equals(OrderState.REFUND_PROCESSING );
+
+        if (isOrderCancelled) {
+            for (Sale sale : orderBook.getSaleList()) {
+                sale.updateStatus(statusUpdate.getStatus());
+            }
+        }
 
         List<OrderItemResponseDto> orderItemResponseDtoList = new ArrayList<>();
         for (OrderItem orderItem : orderBook.getOrderItemList()) {
+            Book book = orderItem.getBook();
+            if(isOrderCancelled) {
+                book.decreaseStock(orderItem.getQuantity());
+            }
             OrderItemResponseDto orderItemResponseDto = OrderItemResponseDto.builder()
                 .orderItemId(orderItem.getOrderBook().getId())
                 .price(orderItem.getPrice())

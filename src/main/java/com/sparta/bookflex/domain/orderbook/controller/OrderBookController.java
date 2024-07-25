@@ -5,15 +5,11 @@ import com.sparta.bookflex.common.security.UserDetailsImpl;
 import com.sparta.bookflex.domain.orderbook.dto.OrderRequestDto;
 import com.sparta.bookflex.domain.orderbook.dto.OrderResponsDto;
 import com.sparta.bookflex.domain.orderbook.dto.OrderStatusRequestDto;
-import com.sparta.bookflex.domain.orderbook.entity.OrderBook;
 import com.sparta.bookflex.domain.orderbook.service.OrderBookService;
-import com.sparta.bookflex.domain.sale.Enum.SaleState;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/orders")
