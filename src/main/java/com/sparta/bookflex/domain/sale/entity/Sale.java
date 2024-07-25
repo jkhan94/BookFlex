@@ -3,9 +3,9 @@ package com.sparta.bookflex.domain.sale.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.book.entity.Book;
+import com.sparta.bookflex.domain.orderbook.emuns.OrderState;
 import com.sparta.bookflex.domain.orderbook.entity.OrderBook;
 import com.sparta.bookflex.domain.orderbook.entity.OrderItem;
-import com.sparta.bookflex.domain.sale.Enum.SaleState;
 import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -29,7 +29,7 @@ public class Sale extends Timestamped {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private SaleState status;
+    private OrderState status;
 
     @Column(name = "quantity", nullable = false)
     private int quantity;
@@ -48,28 +48,34 @@ public class Sale extends Timestamped {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "order_book_id")
+    private OrderBook orderBook;
+
 
 
     @Builder
-    public Sale(SaleState status, int quantity, Book book, User user,BigDecimal price,BigDecimal total) {
+    public Sale(OrderState status, int quantity, Book book, User user,BigDecimal price,BigDecimal total,OrderBook orderBook) {
         this.status = status;
         this.quantity = quantity;
         this.book = book;
         this.user = user;
         this.price = price;
         this.total = total;
+        this.orderBook = orderBook;
     }
 
-    public Sale(OrderItem orderItem,SaleState status) {
+    public Sale(OrderItem orderItem,OrderState status) {
         this.status = status;
         this.quantity = orderItem.getQuantity();
         this.book = orderItem.getBook();
         this.user = orderItem.getOrderBook().getUser();
         this.price = orderItem.getPrice();
         this.total = orderItem.getPrice();
+        this.orderBook = orderItem.getOrderBook();
     }
 
-    public void updateStatus(SaleState status) {
+    public void updateStatus(OrderState status) {
         this.status = status;
     }
 }

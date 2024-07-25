@@ -1,10 +1,8 @@
 package com.sparta.bookflex.domain.shipment.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
-import com.sparta.bookflex.domain.orderbook.entity.OrderBook;
+import com.sparta.bookflex.domain.orderbook.emuns.OrderState;
 import com.sparta.bookflex.domain.orderbook.entity.OrderItem;
-import com.sparta.bookflex.domain.sale.Enum.SaleState;
-import com.sparta.bookflex.domain.sale.entity.Sale;
 import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -31,7 +29,7 @@ public class Shipment extends Timestamped {
     private String carrier;
 
     @Column(name = "status",nullable = false)
-    private SaleState status;
+    private OrderState status;
 
 
     @Column(name = "shipped_at")
@@ -51,7 +49,7 @@ public class Shipment extends Timestamped {
     User user;
 
     @Builder
-    public Shipment(String trackingNumber, String carrier, SaleState status, LocalDateTime shippedAt, LocalDateTime deliveredAt, List<OrderItem> orderItemList,User user,String address) {
+    public Shipment(String trackingNumber, String carrier, OrderState status, LocalDateTime shippedAt, LocalDateTime deliveredAt, List<OrderItem> orderItemList, User user, String address) {
         this.trackingNumber = trackingNumber;
         this.carrier = carrier;
         this.status = status;
