@@ -1,6 +1,5 @@
 package com.sparta.bookflex.domain.orderbook.dto;
 
-import com.sparta.bookflex.domain.sale.dto.SaleResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 

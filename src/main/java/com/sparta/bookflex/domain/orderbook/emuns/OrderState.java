@@ -6,7 +6,9 @@ public enum OrderState {
     IN_DELIVERY("배송중"),
     DELIVERY_COMPLETED("배송완료"),
     SALE_COMPLETED("판매완료"),
-    ORDER_CANCELLED("주문취소");
+    ORDER_CANCELLED("주문취소"),
+    REFUND_PROCESSING("환불처리");
+
 
     private final String desscription;
 

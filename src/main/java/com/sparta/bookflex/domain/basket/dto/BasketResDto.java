@@ -8,18 +8,18 @@ import java.math.BigDecimal;
 @Getter
 public class BasketResDto {
 
-    private Long basketId;
-    //private PhotoImage photoImage;
+    private Long bookId;
     private String bookName;
     private BigDecimal price;
     private int quantity;
+    private String photoImagePath;
 
     @Builder
-    public BasketResDto(Long baseketId, String bookName, BigDecimal price, int quantity) {
-        this.basketId = baseketId;
-        //this.photoImage = photoImage;
+    public BasketResDto(Long bookId, String bookName, BigDecimal price, int quantity,String photoImagePath) {
+        this.bookId = bookId;
         this.bookName = bookName;
         this.price = price;
         this.quantity = quantity;
+        this.photoImagePath = photoImagePath;
     }
 }
