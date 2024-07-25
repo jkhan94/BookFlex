@@ -28,9 +28,6 @@ public class Coupon extends Timestamped {
     private String couponName;
 
     @Column(nullable = false)
-    private String couponCode;
-
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private CouponStatus couponStatus;
 

@@ -1,6 +1,7 @@
 package com.sparta.bookflex.domain.coupon.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
+import com.sparta.bookflex.domain.coupon.enums.CouponStatus;
 import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -18,6 +19,9 @@ public class UserCoupon extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    private String couponCode;
 
     @Column(nullable = false)
     private LocalDateTime issuedAt;
