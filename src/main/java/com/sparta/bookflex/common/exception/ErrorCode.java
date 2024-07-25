@@ -49,6 +49,7 @@ public enum ErrorCode {
     // 카테고리
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "카테고리를 찾을 수 없습니다."),
     CATEGORY_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 존재하는 카테고리입니다."),
+    NOT_LEAF_CATEGORY(HttpStatus.BAD_REQUEST,"하위 카테고리를 선택해주세요."),
 
     // 고객문의
     QNA_CREATE_NOT_ALLOWED(HttpStatus.FORBIDDEN,"문의를 남길 수 없습니다."),
