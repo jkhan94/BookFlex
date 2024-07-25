@@ -35,12 +35,9 @@ public class BookService {
 
 
     @Transactional
-    public BookResponseDto registerProduct(BookRequestDto bookRequestDto,
-                                           MultipartFile multipartFile) throws IOException {
+    public BookResponseDto registerProduct(BookRequestDto bookRequestDto, MultipartFile multipartFile) throws IOException {
 
         PhotoImage photoImage = photoImageService.savePhotoImage(multipartFile);
-
-        Category category = categoryService.getCategoryByCategoryName(bookRequestDto.getCategory());
 
         Book book = bookRequestDto.toEntity(photoImage);
 
@@ -66,22 +63,34 @@ public class BookService {
     }
 
     @Transactional
-    public List<BookResponseDto> getBookList(int page,
-                                             int size,
-                                             boolean isAsc,
-                                             String sortBy,
-                                             BookStatus bookStatus,
-                                             String bookName) {
+    public List<BookResponseDto> getBooksByBookName(String bookName) {
 
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        List<Book> bookList = bookRepository
+                .findByBookName(bookName);
 
-        Sort sort = Sort.by(direction, sortBy);
+        List<BookResponseDto> bookResponseDtoList = new ArrayList<>();
 
-        Pageable pageble = PageRequest.of(page - 1, size, sort);
+        for (Book book : bookList) {
+            String photoImageUrl = photoImageService.getPhotoImageUrl(book.getPhotoImage().getFilePath());
+            bookResponseDtoList.add(book.toResponseDto(photoImageUrl));
+        }
 
-        return bookCustomRepositoryImpl.findBooks(bookName, bookStatus, pageble).stream()
-                .map(book -> book.toResponseDto(photoImageService.getPhotoImageUrl(book.getPhotoImage().getFilePath())))
-                .toList();
+        return bookResponseDtoList;
+    }
+
+    @Transactional
+    public List<BookResponseDto> getBookList() {
+
+        List<Book> bookList = bookRepository.findAll();
+
+        List<BookResponseDto> bookResponseDtoList = new ArrayList<>();
+
+        for (Book book : bookList) {
+            String photoImageUrl = photoImageService.getPhotoImageUrl(book.getPhotoImage().getFilePath());
+            bookResponseDtoList.add(book.toResponseDto(photoImageUrl));
+        }
+
+        return bookResponseDtoList;
     }
 
     @Transactional
@@ -89,7 +98,8 @@ public class BookService {
                                           BookRequestDto bookRequestDto,
                                           MultipartFile multipartFile) throws IOException {
 
-        Book book = getBookByBookId(bookId);
+        Book book = bookRepository
+                .findById(bookId).orElseThrow(() -> new BusinessException(ErrorCode.BOOK_NOT_FOUND));
 
         PhotoImage photoImage = photoImageService.updatePhotoImage(multipartFile, book.getId());
 
