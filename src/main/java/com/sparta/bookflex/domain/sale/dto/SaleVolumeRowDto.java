@@ -1,4 +1,4 @@
-package com.sparta.bookflex.domain.salevolume.dto;
+package com.sparta.bookflex.domain.sale.dto;
 
 import com.sparta.bookflex.domain.category.enums.Category;
 import lombok.Builder;

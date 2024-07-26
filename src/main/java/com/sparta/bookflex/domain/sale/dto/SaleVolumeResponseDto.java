@@ -1,4 +1,4 @@
-package com.sparta.bookflex.domain.salevolume.dto;
+package com.sparta.bookflex.domain.sale.dto;
 
 
 import lombok.Builder;

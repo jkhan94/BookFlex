@@ -1,17 +1,13 @@
 package com.sparta.bookflex.domain.coupon.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
-import com.sparta.bookflex.domain.coupon.entity.UserCoupon;
-import com.sparta.bookflex.domain.coupon.enums.CouponStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -30,9 +26,9 @@ public class Coupon extends Timestamped {
     @Column(nullable = false)
     private String couponCode;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private CouponStatus couponStatus;
+//    @Column(nullable = false)
+//    @Enumerated(EnumType.STRING)
+//    private CouponStatus couponStatus;
 
     @Column(nullable = false)
     private int totalCount;
