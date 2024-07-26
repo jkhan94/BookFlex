@@ -4,7 +4,6 @@ import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.coupon.dto.CouponStatusRequestDto;
 import com.sparta.bookflex.domain.coupon.enums.CouponStatus;
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +11,6 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 
 @Entity
