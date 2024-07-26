@@ -1,44 +1,71 @@
 package com.sparta.bookflex.domain.payment.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
+import com.sparta.bookflex.domain.orderbook.emuns.OrderState;
 import com.sparta.bookflex.domain.orderbook.entity.OrderBook;
+import com.sparta.bookflex.domain.payment.enums.PayType;
 import com.sparta.bookflex.domain.payment.enums.PaymentStatus;
+import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Payment extends Timestamped {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
-    @Column(name = "price",precision = 12, scale = 2)
-    private BigDecimal price;
+    @Column(name = "total", nullable = false)
+    private int total;
 
-    @Column
-    private String paymentMethod;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "pay_type", nullable = false)
+    private PayType payType;
 
     @Column(nullable = false)
     private PaymentStatus status;
 
-    @Column(name = "refunded_amount", precision = 10, scale = 2)
-    private BigDecimal refundAmount = BigDecimal.ZERO;
-
     @OneToOne
-    @JoinColumn(name="order_book_id", nullable = false)
+    @JoinColumn(name = "order_book_id", nullable = false)
     private OrderBook orderBook;
 
-    @Builder
-    public Payment(BigDecimal price, String paymentMethod, PaymentStatus status, OrderBook orderbook) {
-        this.price = price;
-        this.paymentMethod = paymentMethod;
-        this.status = status;
-        this.orderBook = orderbook;
-    }
+    private boolean paySuccessYN;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Column(name = "pay_token")
+    private String payToken;
+
+    @Column(name = "fail_reason")
+    private String failReason;
+
+    @Column(name = "cancel_yn")
+    private boolean cancelYN;
+
+    @Column(name = "cancel_reason")
+    private String cancelReason;
+
+    @Builder
+    public Payment(int total, PayType payType, PaymentStatus status, OrderBook orderBook, boolean paySuccessYN, User user, String payToken, String failReason, boolean cancelYN, String cancelReason) {
+        this.total = total;
+        this.payType = payType;
+        this.status = status;
+        this.orderBook = orderBook;
+        this.paySuccessYN = paySuccessYN;
+        this.user = user;
+        this.payToken = payToken;
+        this.failReason = failReason;
+        this.cancelYN = cancelYN;
+        this.cancelReason = cancelReason;
+    }
 }
