@@ -143,7 +143,7 @@ public class Book extends Timestamped {
         if (this.stock >= quantity) {
             this.stock -= quantity;
         } else {
-            throw new BusinessException(ErrorCode.CANNOT_EXCEED);
+            throw new BusinessException(ErrorCode.CANNOT_EXCEED,this.bookName);
         }
 
         checkStock();
