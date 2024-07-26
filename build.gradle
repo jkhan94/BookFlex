@@ -57,6 +57,9 @@ dependencies {
 	// AWS S3 의존성 추가
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 	implementation 'com.amazonaws:aws-java-sdk-s3'
+
+	// 랜덤 문자열 생성
+	implementation 'org.apache.commons:commons-lang3:3.0'
 }
 
 // Querydsl 설정부
