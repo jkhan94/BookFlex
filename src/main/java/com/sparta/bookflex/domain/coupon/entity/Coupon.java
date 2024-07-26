@@ -1,6 +1,7 @@
 package com.sparta.bookflex.domain.coupon.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
+import com.sparta.bookflex.domain.coupon.dto.CouponResponseDto;
 import com.sparta.bookflex.domain.coupon.dto.CouponStatusRequestDto;
 import com.sparta.bookflex.domain.coupon.enums.CouponStatus;
 import jakarta.persistence.*;
@@ -64,5 +65,20 @@ public class Coupon extends Timestamped {
 
     public void decreaseTotalCount() {
         this.totalCount--;
+    }
+
+    public static CouponResponseDto toCouponResponseDto(Coupon coupon) {
+        return CouponResponseDto.builder()
+                .couponId(coupon.getId())
+                .couponName(coupon.getCouponName())
+                .couponStatus(coupon.getCouponStatus())
+                .totalCount(coupon.getTotalCount())
+                .minPrice(coupon.getMinPrice())
+                .discountPrice(coupon.getDiscountPrice())
+                .startDate(coupon.getStartDate())
+                .expirationDate(coupon.getExpirationDate())
+                .createdAt(coupon.getCreatedAt())
+                .modifiedAt(coupon.getModifiedAt())
+                .build();
     }
 }

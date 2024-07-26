@@ -80,10 +80,12 @@ public enum ErrorCode {
     COUPON_VIEW_NOT_ALLOWED(HttpStatus.FORBIDDEN,"쿠폰을 조회할 수 없습니다."),
     COUPON_UPDATE_NOT_ALLOWED(HttpStatus.FORBIDDEN,"쿠폰을 변경할 수 없습니다."),
     COUPON_DELETE_NOT_ALLOWED(HttpStatus.FORBIDDEN, "쿠폰을 삭제할 수 없습니다."),
-    COUPON_ISSUE_NOT_ALLOWED(HttpStatus.FORBIDDEN,"발급받을 수 없는 쿠폰입니다."),
+    COUPON_ISSUE_NOT_ALLOWED(HttpStatus.FORBIDDEN,"쿠픈을 발급받을 수 없습니다."),
+    COUPON_CANNOT_BE_ISSUED(HttpStatus.BAD_REQUEST,"발급받을 수 없는 쿠폰입니다."),
     COUPON_ALREADY_ISSUED(HttpStatus.CONFLICT,"이미 발급받은 쿠폰입니다."),
-    COUPON_NOT_ISSUED(HttpStatus.BAD_REQUEST, "발급되지 않은 쿠폰입니다."),
-    COUPON_ALREADY_USED(HttpStatus.BAD_REQUEST,"이미 사용된 쿠폰입니다.")
+    COUPON_NOT_ISSUED(HttpStatus.NOT_FOUND, "발급되지 않은 쿠폰입니다."),
+    COUPON_ALREADY_USED(HttpStatus.BAD_REQUEST,"이미 사용된 쿠폰입니다."),
+    COUPON_CANNOT_BE_ISSUED_TO_ALL(HttpStatus.BAD_REQUEST,"쿠폰 수량이 부족합니다.")
     ;
 
     private final HttpStatus status;

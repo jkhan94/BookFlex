@@ -20,25 +20,6 @@ public class CouponQRepositoryImpl implements CouponQRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<Coupon> findAllByUserId(long userId, Pageable pageable) {
-        List<Coupon> result = queryFactory.select(coupon)
-                .from(coupon)
-                .join(userCoupon).on(coupon.id.eq(userCoupon.coupon.id))
-                .where(userCoupon.user.id.eq(userId))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        List<Coupon> count = queryFactory.select(coupon)
-                .from(coupon)
-                .join(userCoupon).on(coupon.id.eq(userCoupon.coupon.id))
-                .where(userCoupon.user.id.eq(userId))
-                .fetch();
-
-        return new PageImpl<>(result, pageable, count.size());
-    }
-
-    @Override
     public void deleteExpiredCoupon() {
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         queryFactory.delete(coupon)
