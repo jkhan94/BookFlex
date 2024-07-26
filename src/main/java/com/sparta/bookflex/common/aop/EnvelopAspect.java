@@ -15,7 +15,9 @@ import java.lang.reflect.Method;
 @Component
 public class EnvelopAspect {
 
-    @Around("within(@org.springframework.web.bind.annotation.RestController *)")
+
+
+    @Around ("@annotation(com.sparta.bookflex.common.aop.Envelop)")
     public Object envelopResponse(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
