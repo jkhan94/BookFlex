@@ -59,7 +59,7 @@ public class Coupon extends Timestamped {
         this.expirationDate = expirationDate;
     }
 
-    public void updateStatus(@Valid CouponStatusRequestDto requestDto) {
+    public void updateStatus(CouponStatusRequestDto requestDto) {
         this.couponStatus = requestDto.getCouponStatus();
     }
 
