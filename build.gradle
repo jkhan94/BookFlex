@@ -53,6 +53,9 @@ dependencies {
 	// AWS S3 의존성 추가
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 	implementation 'com.amazonaws:aws-java-sdk-s3'
+
+	//메일서비스 의존성 추가
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 // Querydsl 설정부

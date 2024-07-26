@@ -71,7 +71,7 @@ public class OrderBookService {
     public OrderBook createOrder(OrderRequestDto orderRequestDto, User user) {
         BigDecimal total = BigDecimal.ZERO;
         List<OrderItem> orderItemList = new ArrayList<>();
-
+//orderbookrequestdto를 갖다가 orderitem을 만들고 orderitemList에 담는다.
         for (OrderRequestDto.OrderItemDto item : orderRequestDto.getItems()) {
             Book book = getBook(item.getBookId());
             book.decreaseStock(item.getQuantity());
@@ -87,7 +87,7 @@ public class OrderBookService {
                 .build();
             orderItemList.add(orderItem);
         }
-
+//만든 orderitemList를 기반으로 orderbook을 만든다.
         OrderBook orderBook = OrderBook.builder()
             .status(OrderState.PENDING_PAYMENT)
             .total(total)
@@ -98,7 +98,7 @@ public class OrderBookService {
         for (OrderItem orderItem : orderItemList) {
             orderItem.updateOrderBook(orderBook);
         }
-
+// 로그를 남긴다.
         for (OrderItem orderItem : orderItemList) {
             String bookName = orderItem.getBook().getBookName();
             traceOfUserLogRepository.save(
@@ -106,7 +106,7 @@ public class OrderBookService {
         }
 
         List<Sale> saleList = new ArrayList<>();
-
+// orderitem을 기반으로 sale을 만든다.
         for(OrderItem orderItem : orderItemList) {
             Sale sale = new Sale(orderItem, OrderState.PENDING_PAYMENT);
             saleList.add(sale);
