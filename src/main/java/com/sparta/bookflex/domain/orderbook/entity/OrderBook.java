@@ -35,7 +35,6 @@ public class OrderBook extends Timestamped {
     @OneToMany(mappedBy = "orderBook", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItemList;
 
-
     @OneToMany(mappedBy = "orderBook")
     private List<Sale> saleList;
 
