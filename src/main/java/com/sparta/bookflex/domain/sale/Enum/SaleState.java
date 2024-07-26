@@ -1,5 +1,7 @@
 package com.sparta.bookflex.domain.sale.Enum;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum SaleState {
     PENDING_PAYMENT("결제대기"),
     ITEM_PREPARING("상품준비"),
@@ -8,6 +10,7 @@ public enum SaleState {
     SALE_COMPLETED("판매완료"),
     ORDER_CANCELLED("주문취소");
 
+    @JsonValue
     private final String desscription;
 
     SaleState(String desscription){
@@ -17,4 +20,5 @@ public enum SaleState {
     public String getDesscription(){
         return this.desscription;
     }
+
 }

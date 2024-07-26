@@ -40,7 +40,7 @@ public class BookService {
 
         PhotoImage photoImage = photoImageService.savePhotoImage(multipartFile);
 
-        Category category = categoryService.getCategoryByCategoryName(bookRequestDto.getCategory());
+        //Category category = categoryService.getCategoryByCategoryName(bookRequestDto.getMainCategory());
 
         Book book = bookRequestDto.toEntity(photoImage);
 
