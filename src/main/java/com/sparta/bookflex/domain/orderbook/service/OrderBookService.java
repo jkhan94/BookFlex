@@ -63,9 +63,9 @@ public class OrderBookService {
         return bookService.getBookByBookId(bookId);
     }
 
-    private OrderBook getOrderBook(Long orderId) {
+    public OrderBook getOrderBook(Long orderId) {
         return orderBookRepository.findById(orderId)
-            .orElseThrow(() -> new IllegalArgumentException("주문 내역이 없습니다."));
+            .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
 
     }
 
@@ -126,7 +126,7 @@ public class OrderBookService {
 
         OrderState status = statusUpdate.getStatus();
         if (orderBook.getStatus().equals(status)) {
-            throw new IllegalArgumentException("변경 전과 후가 동일한 상태입니다.");
+            throw new BusinessException(ErrorCode.ORDER_STATUS_NOT_CHANGED);
         }
 
         orderBook.updateStatus(status);

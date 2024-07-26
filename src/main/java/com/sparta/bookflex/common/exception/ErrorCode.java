@@ -76,11 +76,11 @@ public enum ErrorCode {
 
     ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "주문을 찾을 수 없습니다."),
     ORDER_STATUS_NOT_FOUND(HttpStatus.NOT_FOUND, "주문 상태를 찾을 수 없습니다."),
-
+    ORDER_STATUS_NOT_CHANGED(HttpStatus.BAD_REQUEST, "주문 상태가 변경전과 동일합니다.."   ),
     //결제
 
     FAIL_REQUEST_TOSS(HttpStatus.BAD_REQUEST, "토스와 연결을 실패했습니다"),
-    PAYMENT_CREATION_FAILED(HttpStatus.BAD_REQUEST, "결제 생성 과정에서 예상치 못한 오류가 발생했습니다."),
+    PAYMENT_CREATION_FAILED(HttpStatus.BAD_REQUEST, "결제 생성 과정에서 예상치 못한 오류가 발생했습니다.")
 
     ;
 
