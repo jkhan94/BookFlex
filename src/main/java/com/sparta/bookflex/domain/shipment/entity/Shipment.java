@@ -1,6 +1,7 @@
 package com.sparta.bookflex.domain.shipment.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
+import com.sparta.bookflex.domain.orderbook.emuns.OrderState;
 import com.sparta.bookflex.domain.orderbook.entity.OrderItem;
 import com.sparta.bookflex.domain.shipment.enums.ShipmentEnum;
 import com.sparta.bookflex.domain.user.entity.User;

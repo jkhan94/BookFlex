@@ -3,18 +3,13 @@ package com.sparta.bookflex.domain.orderbook.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.book.entity.Book;
-import com.sparta.bookflex.domain.orderbook.emuns.OrderState;
-import com.sparta.bookflex.domain.sale.Enum.SaleState;
 import com.sparta.bookflex.domain.shipment.entity.Shipment;
-import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
@@ -25,7 +20,6 @@ public class OrderItem extends Timestamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_item_id")
     private Long id;
-
 
     @Column(name = "quantity", nullable = false)
     private int quantity;
@@ -40,20 +34,13 @@ public class OrderItem extends Timestamped {
     @JoinColumn(name = "book_id")
     private Book book;
 
-
     @ManyToOne
     @JoinColumn(name = "order_book_id")
     private OrderBook orderBook;
 
-
-
     @ManyToOne
     @JoinColumn(name = "shipment_id")
     private Shipment shipment;
-
-    @OneToMany(mappedBy = "orderItem", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderItemRefund> orderItemRefunds = new ArrayList<>();
-
 
     @Builder
     public OrderItem(int quantity, Book book,  OrderBook orderBook,BigDecimal price,Shipment shipment) {
@@ -63,7 +50,6 @@ public class OrderItem extends Timestamped {
         this.total = BigDecimal.valueOf(quantity).multiply(price);
         this.orderBook = orderBook;
         this.shipment = shipment;
-
     }
 
     public void updateShipment(Shipment shipment) {
@@ -72,10 +58,6 @@ public class OrderItem extends Timestamped {
 
     public void updateOrderBook(OrderBook orderBook) {
         this.orderBook = orderBook;
-    }
-
-    public void addRefund(OrderItemRefund refund) {
-        this.orderItemRefunds.add(refund);
     }
 
 }

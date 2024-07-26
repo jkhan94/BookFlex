@@ -2,16 +2,12 @@ package com.sparta.bookflex.domain.orderbook.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.orderbook.emuns.OrderState;
-import com.sparta.bookflex.domain.payment.entity.Payment;
-import com.sparta.bookflex.domain.sale.Enum.SaleState;
 import com.sparta.bookflex.domain.sale.entity.Sale;
-import com.sparta.bookflex.domain.shipment.entity.Shipment;
 import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.query.Order;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -29,8 +25,6 @@ public class OrderBook extends Timestamped {
     @Column(name="status")
     private OrderState status;
 
-
-
     @Column(name = "total",precision = 10, scale = 2)
     private BigDecimal total;
 
@@ -41,8 +35,9 @@ public class OrderBook extends Timestamped {
     @OneToMany(mappedBy = "orderBook", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItemList;
 
-    @OneToOne(mappedBy = "orderBook")
-    private Payment payment;
+
+    @OneToMany(mappedBy = "orderBook")
+    private List<Sale> saleList;
 
 
 
