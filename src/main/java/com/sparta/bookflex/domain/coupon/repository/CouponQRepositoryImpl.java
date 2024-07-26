@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -20,6 +21,7 @@ public class CouponQRepositoryImpl implements CouponQRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
+    @Transactional
     public void deleteExpiredCoupon() {
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         queryFactory.delete(coupon)
@@ -28,11 +30,12 @@ public class CouponQRepositoryImpl implements CouponQRepository {
     }
 
     @Override
+    @Transactional
     public void updateIssuedCoupon() {
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         queryFactory.update(coupon)
                 .set(coupon.couponStatus, CouponStatus.Available)
-                .where(coupon.startDate.after(now))
+                .where(coupon.startDate.before(now))
                 .execute();
     }
 }
