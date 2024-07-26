@@ -1,14 +1,17 @@
 package com.sparta.bookflex.domain.coupon.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
-import com.sparta.bookflex.domain.coupon.enums.CouponStatus;
 import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Table(uniqueConstraints = {@UniqueConstraint(name = "UniqueCouponAndUser", columnNames = {"user_id", "coupon_id"})})
 @Entity
@@ -24,9 +27,6 @@ public class UserCoupon extends Timestamped {
     private String couponCode;
 
     @Column(nullable = false)
-    private LocalDateTime issuedAt;
-
-    @Column(nullable = false)
     private Boolean isUsed;
 
     @Column
@@ -38,8 +38,22 @@ public class UserCoupon extends Timestamped {
 
     @ManyToOne
     @JoinColumn(name = "coupon_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Coupon coupon;
 
+    @Builder
+    public UserCoupon(String couponCode, Boolean isUsed, LocalDateTime usedAt, User user, Coupon coupon) {
+        this.couponCode = couponCode;
+        this.isUsed = isUsed;
+        this.usedAt = usedAt;
+        this.user = user;
+        this.coupon = coupon;
+    }
+
+    public void updateStatus() {
+        this.isUsed = true;
+        this.usedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+    }
 }
 
 
