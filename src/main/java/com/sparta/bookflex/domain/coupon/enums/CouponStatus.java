@@ -12,7 +12,7 @@ public enum CouponStatus {
     private final String status;
 
     private static class CouponStatusCode {
-        public static final String NotAvailable = "사용불가";
-        public static final String Available = "사용가능";
+        public static final String NotAvailable = "발급불가";
+        public static final String Available = "발급가능";
     }
 }

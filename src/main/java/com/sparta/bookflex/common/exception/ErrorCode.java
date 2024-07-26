@@ -47,32 +47,44 @@ public enum ErrorCode {
     // 책
     BOOK_NOT_FOUND(HttpStatus.NOT_FOUND, "책을 찾을 수 없습니다."),
     BOOKSTATUS_NOT_FOUND(HttpStatus.NOT_FOUND, "상품 상태를 찾을 수 없습니다."),
-    CANNOT_EXCEED(HttpStatus.BAD_REQUEST, "구매수량이 재고수량을 초과하였습니다." ),
+    CANNOT_EXCEED(HttpStatus.BAD_REQUEST, "구매수량이 재고수량을 초과하였습니다."),
 
     // 카테고리
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "카테고리를 찾을 수 없습니다."),
     CATEGORY_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 존재하는 카테고리입니다."),
-    NOT_LEAF_CATEGORY(HttpStatus.BAD_REQUEST,"하위 카테고리를 선택해주세요."),
+    NOT_LEAF_CATEGORY(HttpStatus.BAD_REQUEST, "하위 카테고리를 선택해주세요."),
 
     // 토큰
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "이미 만료된 토큰입니다"),
+
     // 고객문의
-    QNA_CREATE_NOT_ALLOWED(HttpStatus.FORBIDDEN,"문의를 남길 수 없습니다."),
-    QNA_DELETE_NOT_ALLOWED(HttpStatus.FORBIDDEN,"문의를 삭제할 수 없습니다."),
-    QNA_VIEW_NOT_ALLOWED(HttpStatus.FORBIDDEN,"문의를 조회할 수 없습니다."),
-    QNA_NOT_FOUND(HttpStatus.NOT_FOUND,"문의 내역을 찾을 수 없습니다."),
-    QNA_DELETE_NOT_ALLOWED_REPLY_EXISTS(HttpStatus.BAD_REQUEST,"답변 완료된 문의는 삭제할 수 없습니다."),
-    REPLY_CREATE_NOT_ALLOWED(HttpStatus.FORBIDDEN,"답변을 남길 수 없습니다."),
-    REPLY_ALREADY_EXISTS(HttpStatus.BAD_REQUEST,"답변 완료된 문의입니다."),
+    QNA_CREATE_NOT_ALLOWED(HttpStatus.FORBIDDEN, "문의를 남길 수 없습니다."),
+    QNA_DELETE_NOT_ALLOWED(HttpStatus.FORBIDDEN, "문의를 삭제할 수 없습니다."),
+    QNA_VIEW_NOT_ALLOWED(HttpStatus.FORBIDDEN, "문의를 조회할 수 없습니다."),
+    QNA_NOT_FOUND(HttpStatus.NOT_FOUND, "문의 내역을 찾을 수 없습니다."),
+    QNA_DELETE_NOT_ALLOWED_REPLY_EXISTS(HttpStatus.BAD_REQUEST, "답변 완료된 문의는 삭제할 수 없습니다."),
+    REPLY_CREATE_NOT_ALLOWED(HttpStatus.FORBIDDEN, "답변을 남길 수 없습니다."),
+    REPLY_ALREADY_EXISTS(HttpStatus.CONFLICT, "답변 완료된 문의입니다."),
 
     // 리뷰
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다."),
 
     ///장바구니
     BASKET_NOT_FOUND(HttpStatus.NOT_FOUND, "장바구니을 찾을 수 없습니다."),
-    BASKET_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "장바구니에서 책을 착을 수 없습니다." ),
-    BASKET_ITEM_ALREADY_EXIST(HttpStatus.CONFLICT, "이미 장바구니 내에 칙이 존재합니다" );
+    BASKET_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "장바구니에서 책을 착을 수 없습니다."),
+    BASKET_ITEM_ALREADY_EXIST(HttpStatus.CONFLICT, "이미 장바구니 내에 칙이 존재합니다"),
 
+    // 쿠폰
+    COUPON_NOT_FOUND(HttpStatus.NOT_FOUND,"쿠폰을 찾을 수 없습니다."),
+    COUPON_CREATE_NOT_ALLOWED(HttpStatus.FORBIDDEN,"쿠폰을 생성할 수 없습니다."),
+    COUPON_VIEW_NOT_ALLOWED(HttpStatus.FORBIDDEN,"쿠폰을 조회할 수 없습니다."),
+    COUPON_UPDATE_NOT_ALLOWED(HttpStatus.FORBIDDEN,"쿠폰을 변경할 수 없습니다."),
+    COUPON_DELETE_NOT_ALLOWED(HttpStatus.FORBIDDEN, "쿠폰을 삭제할 수 없습니다."),
+    COUPON_ISSUE_NOT_ALLOWED(HttpStatus.FORBIDDEN,"발급받을 수 없는 쿠폰입니다."),
+    COUPON_ALREADY_ISSUED(HttpStatus.CONFLICT,"이미 발급받은 쿠폰입니다."),
+    COUPON_NOT_ISSUED(HttpStatus.BAD_REQUEST, "발급되지 않은 쿠폰입니다."),
+    COUPON_ALREADY_USED(HttpStatus.BAD_REQUEST,"이미 사용된 쿠폰입니다.")
+    ;
 
     private final HttpStatus status;
     private final String message;
