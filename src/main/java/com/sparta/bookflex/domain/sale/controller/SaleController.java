@@ -101,6 +101,7 @@ public class SaleController {
 
     }
 
+
     @GetMapping("/byCategoryName")
     public ResponseEntity<CommonDto<SaleVolumeResponseDto>> getSaleVoulmesByCategory(@RequestParam(name = "page", defaultValue = "1") int page,
                                                                                      @RequestParam(name = "size", defaultValue = "5") int size,
