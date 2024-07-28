@@ -29,10 +29,10 @@ public class PaymentController {
     }
 
     @PostMapping("/success")
-    public ResponseEntity<String> handlePaymentSuccess(@RequestBody TossPaymentResponseDto responseDto) {
-        // 결제 성공 처리 로직
-        // 예를 들어, 주문 상태 업데이트
-        return ResponseEntity.ok("Payment successful");
+    public ResponseEntity<CommonDto<Void>> handlePaymentSuccess(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody TossResultRequestDto resultRequestDto) {
+
+        paymentService.processPayment(userDetails.getUser(), resultRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonDto<>(HttpStatus.CREATED.value(), "결제가 완료되었습니다.", null));
     }
 
     @PostMapping("/fail")

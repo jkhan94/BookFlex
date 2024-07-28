@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface PaymentRepository extends JpaRepository<Payment,Long> {
 
 
+    Payment findByPayToken(String payToken);
 }

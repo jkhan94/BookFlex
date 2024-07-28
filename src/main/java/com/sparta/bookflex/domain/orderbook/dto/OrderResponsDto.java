@@ -17,6 +17,7 @@ public class OrderResponsDto {
 
     @Builder
     public OrderResponsDto(Long orderId, LocalDateTime createdAt, BigDecimal total, String status, List<OrderItemResponseDto> orderItemResponseDtoList) {
+        this.OrderNo = orderNo;
         this.orderId = orderId;
         this.createdAt = createdAt;
         this.total = total;

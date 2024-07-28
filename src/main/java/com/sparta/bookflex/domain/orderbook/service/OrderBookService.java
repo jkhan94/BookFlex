@@ -43,6 +43,7 @@ public class OrderBookService {
     private final PhotoImageService photoImageService;
     private final SaleRepository saleRepository;
 
+
     @Autowired
     public OrderBookService(OrderItemRepository orderItemRepository,
                             OrderBookRepository orderBookRepository,

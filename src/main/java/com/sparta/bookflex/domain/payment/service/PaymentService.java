@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.bookflex.common.config.TossPaymentConfig;
 import com.sparta.bookflex.common.exception.BusinessException;
 import com.sparta.bookflex.common.exception.ErrorCode;
+import com.sparta.bookflex.domain.orderbook.dto.OrderStatusRequestDto;
+import com.sparta.bookflex.domain.orderbook.emuns.OrderState;
 import com.sparta.bookflex.domain.orderbook.entity.OrderBook;
 import com.sparta.bookflex.domain.orderbook.service.OrderBookService;
 import com.sparta.bookflex.domain.payment.dto.*;
@@ -32,13 +34,20 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class PaymentService {
 
-    @Value("${payment.toss.test_secret_api_key}")
-    private String tossSecretKey;
+    private String tossSecretKey="sk_test_w5lNQylNqa5lNQe013Nq";
     private final RestTemplate restTemplate;
     private final AuthService authService;
     private final PaymentRepository paymentRepository;
     private final OrderBookService orderBookService;
     private final ObjectMapper objectMapper;
+
+    @Value("${payment.toss.success_url}")
+    private String successUrl;
+
+    @Value("${payment.toss.fail_url}")
+    private String failUrl;
+
+    private final String PREFIX = "BookFlexAB-";
 
     @Autowired
     public PaymentService(AuthService authService, PaymentRepository paymentRepository,
@@ -60,7 +69,7 @@ public class PaymentService {
             StringBuilder responseBody = new StringBuilder();
 
             try {
-                url = new URL("https://pay.toss.im/api/v2/payments");
+                url = new URL(TossPaymentConfig.PAYMENT_URL);
                 connection = url.openConnection();
                 connection.addRequestProperty("Content-Type", "application/json");
                 connection.setDoOutput(true);
@@ -108,15 +117,15 @@ public class PaymentService {
 
     private JSONObject getJsonObject(TossPaymentRequestDto requestDto) {
         JSONObject jsonBody = new JSONObject();
-        jsonBody.put("orderNo", requestDto.getOrderNo());
+        jsonBody.put("orderNo", PREFIX+requestDto.getOrderId());
         jsonBody.put("amount", requestDto.getAmount());
         jsonBody.put("amountTaxFree", requestDto.getAmountTaxFree());
         jsonBody.put("productDesc", requestDto.getProductDesc());
-        jsonBody.put("apiKey","sk_test_w5lNQylNqa5lNQe013Nq");
+        jsonBody.put("apiKey",tossSecretKey);
         jsonBody.put("autoExecute", true);
         jsonBody.put("resultCallback", requestDto.getResultCallback());
-        jsonBody.put("retUrl", requestDto.getRetUrl());
-        jsonBody.put("retCancelUrl", requestDto.getRetCancelUrl());
+        jsonBody.put("retUrl", successUrl);
+        jsonBody.put("retCancelUrl", failUrl);
         return jsonBody;
     }
 
@@ -174,35 +183,17 @@ public class PaymentService {
     }
 
 
-//    public TossRefundResponseDto processRefund(String paymentKey, String amount, String reason) {
-//        try {
-//            String url = "https://api.tosspayments.com/v1/refunds";
-//            HttpHeaders headers = new HttpHeaders();
-//            headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
-//            headers.set("Authorization", "Bearer " + tossSecretKey);
-//
-//            TossRefundRequestDto requestDto = TossRefundRequestDto.builder()
-//                    .paymentKey(paymentKey)
-//                    .amount(amount)
-//                    .reason(reason)
-//                    .build();
-//
-//            HttpEntity<TossRefundRequestDto> requestEntity = new HttpEntity<>(requestDto, headers);
-//            ResponseEntity<TossRefundResponseDto> response = restTemplate.exchange(
-//                    url,
-//                    HttpMethod.POST,
-//                    requestEntity,
-//                    TossRefundResponseDto.class
-//            );
-//
-//            if (response.getStatusCode() == HttpStatus.OK) {
-//                return response.getBody();
-//            } else {
-//                throw new RuntimeException("Failed to process refund: " + response.getStatusCode());
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new RuntimeException("Exception occurred while processing refund", e);
-//        }
-//    }
+    @Transactional
+    public void processPayment(User user, TossResultRequestDto tossResultRequestDto) {
+        Payment payment = paymentRepository.findByPayToken(tossResultRequestDto.getPayToken());
+        payment.updateStatus(PaymentStatus.PAY_COMPLETE);
+        payment.updateIsSuccessYN(true);
+        paymentRepository.save(payment);
+        OrderStatusRequestDto statusUpdate = OrderStatusRequestDto.builder()
+                        .status(OrderState.SALE_COMPLETED)
+                        .build();
+        orderBookService.updateOrderStatus(payment.getOrderBook().getId(), user, statusUpdate);
+
+        //쿠폰 사용 체크 필요
+    }
 }

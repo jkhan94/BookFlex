@@ -68,4 +68,13 @@ public class Payment extends Timestamped {
         this.cancelYN = cancelYN;
         this.cancelReason = cancelReason;
     }
+
+    public void updateStatus(PaymentStatus status) {
+        this.status = status;
+
+    }
+
+    public void updateIsSuccessYN(boolean b) {
+        this.paySuccessYN = b;
+    }
 }
