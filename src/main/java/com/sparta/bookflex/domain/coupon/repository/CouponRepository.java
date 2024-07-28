@@ -2,6 +2,8 @@ package com.sparta.bookflex.domain.coupon.repository;
 
 import com.sparta.bookflex.domain.coupon.entity.Coupon;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface CouponRepository extends JpaRepository<Coupon,Long> {
+@Repository
+public interface CouponRepository extends JpaRepository<Coupon, Long>, CouponQRepository {
 }
