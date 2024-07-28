@@ -1,6 +1,8 @@
 package com.sparta.bookflex.domain.coupon.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
+import com.sparta.bookflex.domain.coupon.dto.CouponResponseDto;
+import com.sparta.bookflex.domain.coupon.dto.UserCouponResponseDto;
 import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -48,6 +50,25 @@ public class UserCoupon extends Timestamped {
         this.usedAt = usedAt;
         this.user = user;
         this.coupon = coupon;
+    }
+
+    public static UserCouponResponseDto toUserCouponResponseDto(UserCoupon userCoupon, CouponResponseDto responseDto) {
+        return UserCouponResponseDto.builder()
+                .couponCode(userCoupon.getCouponCode())
+                .isUsed(userCoupon.getIsUsed())
+                .usedAt(userCoupon.getUsedAt())
+                .coupon(responseDto)
+                .build();
+    }
+
+    public static UserCoupon toUserCouponEntity(String couponCode, Boolean isUsed, LocalDateTime usedAt, User user, Coupon coupon) {
+        return UserCoupon.builder()
+                .couponCode(couponCode)
+                .isUsed(isUsed)
+                .usedAt(usedAt)
+                .user(user)
+                .coupon(coupon)
+                .build();
     }
 
     public void updateStatus() {
