@@ -61,7 +61,7 @@ dependencies {
 	// Apache HttpClient 의존성 추가
 	implementation 'org.apache.httpcomponents:httpclient'
 
-	// json, siompole 추가
+	// json, siomple 추가
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 }
 

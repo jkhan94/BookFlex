@@ -88,7 +88,7 @@ public class PaymentService {
             String checkoutPage = getCheckoutPage(jsonResponse);
 
 
-            OrderBook orderBook = orderBookService.getOrderBook((long)Integer.parseInt(requestDto.getOrderNo()));
+            OrderBook orderBook = orderBookService.getOrderBook(requestDto.getOrderId());
             Payment payment = Payment.builder()
                     .total(requestDto.getAmount())
                     .user(user)
@@ -112,7 +112,7 @@ public class PaymentService {
         jsonBody.put("amount", requestDto.getAmount());
         jsonBody.put("amountTaxFree", requestDto.getAmountTaxFree());
         jsonBody.put("productDesc", requestDto.getProductDesc());
-        jsonBody.put("apiKey",tossSecretKey);
+        jsonBody.put("apiKey","sk_test_w5lNQylNqa5lNQe013Nq");
         jsonBody.put("autoExecute", true);
         jsonBody.put("resultCallback", requestDto.getResultCallback());
         jsonBody.put("retUrl", requestDto.getRetUrl());
