@@ -28,6 +28,12 @@ public class OrderBook extends Timestamped {
     @Column(name = "total",precision = 10, scale = 2)
     private BigDecimal total;
 
+    @Column(name = "is_coupon")
+    private boolean isCoupon;
+
+    @Column(name = "discountPrice",precision = 10, scale = 2)
+    private BigDecimal discountPrice;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
@@ -42,10 +48,12 @@ public class OrderBook extends Timestamped {
 
 
     @Builder
-    public OrderBook(OrderState status, BigDecimal total, User user) {
+    public OrderBook(OrderState status, BigDecimal total, User user,boolean isCoupon, BigDecimal discountPrice) {
         this.status = status;
-        this.total = total;
         this.user = user;
+        this.isCoupon = isCoupon;
+        this.discountPrice = discountPrice;
+        this.total = total.subtract(discountPrice);
     }
 
     public void updateSaleList(List<OrderItem> orderItemList) {

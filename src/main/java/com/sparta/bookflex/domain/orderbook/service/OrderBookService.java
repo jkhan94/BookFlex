@@ -36,6 +36,7 @@ public class OrderBookService {
     private OrderBookRepository orderBookRepository;
     private final AuthService authService;
     private final BookService bookService;
+    private final CouponService couponService;
     private final TraceOfUserLogRepository traceOfUserLogRepository;
 
     private final PhotoImageService photoImageService;
@@ -47,7 +48,8 @@ public class OrderBookService {
                             AuthService authService, BookService bookService,
                             TraceOfUserLogRepository traceOfUserLogRepository,
                             PhotoImageService photoImageService,
-                            SaleRepository saleRepository) {
+                            SaleRepository saleRepository,
+                            CouponService couponService) {
 
 
         this.authService = authService;
@@ -57,6 +59,7 @@ public class OrderBookService {
         this.orderItemRepository = orderItemRepository;
         this.photoImageService = photoImageService;
         this.saleRepository = saleRepository;
+        this.couponService = couponService;
     }
 
     private Book getBook(Long bookId) {
@@ -89,6 +92,8 @@ public class OrderBookService {
                 .build();
             orderItemList.add(orderItem);
         }
+
+
 
         OrderBook orderBook = OrderBook.builder()
             .status(OrderState.PENDING_PAYMENT)
