@@ -90,10 +90,9 @@ public class CouponService {
 
     @Transactional
     public void deleteCoupon(long couponId) {
-        //    쿠폰이 있는지
         Coupon coupon = findCouponById(couponId);
 
-        //    이미 발급된 쿠폰은 삭제 불가.
+        // 이미 발급된 쿠폰은 삭제 불가.
         List<UserCoupon> issuedCoupon = userCouponRepository.findByCouponId(couponId);
         if (!issuedCoupon.isEmpty()) {
             throw new BusinessException(COUPON_DELETE_NOT_ALLOWED);
@@ -104,7 +103,6 @@ public class CouponService {
 
     @Transactional
     public void issueCouponToAll(long couponId) {
-        // 쿠폰이 있는지
         Coupon coupon = findCouponById(couponId);
 
         // 쿠폰이 발급가능 상태인지
@@ -112,7 +110,7 @@ public class CouponService {
             throw new BusinessException(COUPON_CANNOT_BE_ISSUED);
         }
 
-        //   쿠폰 잔여수량 1이상인지
+        // 쿠폰 잔여수량 1이상인지
         List<User> users = authService.findAll();
         if (coupon.getTotalCount() <= users.size()) {
             throw new BusinessException(COUPON_CANNOT_BE_ISSUED_TO_ALL);
@@ -136,15 +134,12 @@ public class CouponService {
 
     @Transactional
     public UserCouponResponseDto issueCouponToUser(long couponId, long userId) {
-        // 쿠폰이 있는지
         Coupon coupon = findCouponById(couponId);
 
-        // 쿠폰이 발급가능 상태인지
         if (coupon.getCouponStatus() == CouponStatus.NotAvailable) {
             throw new BusinessException(COUPON_CANNOT_BE_ISSUED);
         }
 
-        //   쿠폰 잔여수량 1이상인지
         if (coupon.getTotalCount() == 0) {
             throw new BusinessException(COUPON_CANNOT_BE_ISSUED);
         }
@@ -154,7 +149,8 @@ public class CouponService {
         if (user.getAuth() != RoleType.USER) {
             throw new BusinessException(COUPON_ISSUE_NOT_ALLOWED);
         }
-        //    유저가 이미 쿠폰을 받았는지.
+
+        // 유저가 이미 쿠폰을 받았는지.
         UserCoupon issuedCoupon = userCouponRepository.findByUserAndCoupon(user, coupon);
         if (issuedCoupon != null) {
             throw new BusinessException(COUPON_ALREADY_ISSUED);
@@ -173,20 +169,16 @@ public class CouponService {
 
     @Transactional
     public UserCouponResponseDto issueCoupon(long couponId, User user) {
-        // 쿠폰이 있는지
         Coupon coupon = findCouponById(couponId);
 
-        // 쿠폰이 발급가능 상태인지
         if (coupon.getCouponStatus() == CouponStatus.NotAvailable) {
             throw new BusinessException(COUPON_CANNOT_BE_ISSUED);
         }
 
-        //   쿠폰 잔여수량 1이상인지
         if (coupon.getTotalCount() == 0) {
             throw new BusinessException(COUPON_CANNOT_BE_ISSUED);
         }
 
-        //    유저가 이미 쿠폰을 받았는지.
         UserCoupon issuedCoupon = userCouponRepository.findByUserAndCoupon(user, coupon);
         if (issuedCoupon != null) {
             throw new BusinessException(COUPON_ALREADY_ISSUED);
@@ -216,16 +208,13 @@ public class CouponService {
 
     @Transactional(readOnly = true)
     public UserCouponResponseDto getSingleUserCoupon(long couponId, User user) {
-        //    쿠폰이 있는지
         Coupon coupon = findCouponById(couponId);
 
-        // 발급받은 쿠폰인지
         UserCoupon userCoupon = userCouponRepository.findByUserAndCoupon(user, coupon);
         if (userCoupon == null) {
             throw new BusinessException(COUPON_NOT_ISSUED);
         }
 
-        // 쿠폰이 미사용인지
         if (userCoupon.getIsUsed()) {
             throw new BusinessException(COUPON_ALREADY_USED);
         }
