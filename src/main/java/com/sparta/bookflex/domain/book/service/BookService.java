@@ -8,7 +8,6 @@ import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.entity.BookStatus;
 import com.sparta.bookflex.domain.book.repository.BookCustomRepositoryImpl;
 import com.sparta.bookflex.domain.book.repository.BookRepository;
-import com.sparta.bookflex.domain.category.enums.Category;
 import com.sparta.bookflex.domain.category.service.CategoryService;
 import com.sparta.bookflex.domain.photoimage.entity.PhotoImage;
 import com.sparta.bookflex.domain.photoimage.service.PhotoImageService;
@@ -21,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -39,8 +37,6 @@ public class BookService {
                                            MultipartFile multipartFile) throws IOException {
 
         PhotoImage photoImage = photoImageService.savePhotoImage(multipartFile);
-
-       // Category category = categoryService.getCategoryByCategoryName(bookRequestDto.getCategory());
 
         Book book = bookRequestDto.toEntity(photoImage);
 

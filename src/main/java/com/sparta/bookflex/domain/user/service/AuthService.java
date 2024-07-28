@@ -121,4 +121,14 @@ public class AuthService {
             ()-> new BusinessException(ErrorCode.USER_NOT_FOUND)
         );
     }
+
+    public User findById(long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                ()-> new BusinessException(ErrorCode.USER_NOT_FOUND)
+        );
+    }
+
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
 }

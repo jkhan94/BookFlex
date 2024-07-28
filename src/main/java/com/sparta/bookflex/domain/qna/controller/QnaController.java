@@ -49,7 +49,7 @@ public class QnaController {
     public ResponseEntity<QnaResponseDto> getSingleQna(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                        @PathVariable long qnaId) {
 
-//        User user = authService.findByUserName(userDetails.getUser().getUsername());
+        User user = authService.findByUserName(userDetails.getUser().getUsername());
 
         QnaResponseDto responseDto = qnaService.getSingleQna(qnaId);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
@@ -69,7 +69,6 @@ public class QnaController {
         List<QnaResponseDto> responseList = qnaService.getUserQnas(user, page - 1, sortBy);
         return ResponseEntity.status(HttpStatus.OK).body(responseList);
     }
-
 
     @GetMapping("/admin")
     @Envelop("문의를 조회했습니다.")
@@ -114,33 +113,16 @@ public class QnaController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    /*
-        문의 답변 등록
-        POST / anwers/{qnaId}
-
-        요청DTO
-        reply	문의 답변 내용
-
-        응답DTO
-        statusCode	201
-        message	“답변을 등록했습니다.”
-        data	qnaType	문의 유형
-                inquiry	문의 내용
-                createAt	작성일자
-                reply	답변
-     */
     @PostMapping("/admin/{qnaId}")
     @Envelop("답변을 등록했습니다.")
     public ResponseEntity<QnaResponseDto> createQnaReply(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                          @PathVariable long qnaId,
                                                          @RequestBody @Valid ReplyRequestDto requestDto) {
 
-/*
-    User user = authService.findByUserName(userDetails.getUser().getUsername());
-    if (user.getAuth() != UserRole.ADMIN) {
-        throw new BusinessException(QNA_CREATE_NOT_ALLOWED);
-    }
-*/
+        User user = authService.findByUserName(userDetails.getUser().getUsername());
+        if (user.getAuth() != RoleType.ADMIN) {
+            throw new BusinessException(REPLY_CREATE_NOT_ALLOWED);
+        }
 
         QnaResponseDto responseDto = qnaService.createQnaReply(requestDto, qnaId);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);

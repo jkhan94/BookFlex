@@ -1,22 +1,32 @@
 package com.sparta.bookflex.domain.coupon.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
+import com.sparta.bookflex.domain.coupon.dto.CouponResponseDto;
+import com.sparta.bookflex.domain.coupon.dto.UserCouponResponseDto;
 import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Objects;
+import java.time.ZoneId;
 
-@Table(name="user_coupon")
+@Table(uniqueConstraints = {@UniqueConstraint(name = "UniqueCouponAndUser", columnNames = {"user_id", "coupon_id"})})
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@IdClass(UserCouponId.class)
-public class UserCoupon extends Timestamped implements Serializable {
+public class UserCoupon extends Timestamped {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String couponCode;
 
     @Column(nullable = false)
     private Boolean isUsed;
@@ -24,38 +34,47 @@ public class UserCoupon extends Timestamped implements Serializable {
     @Column
     private LocalDateTime usedAt;
 
-    @Id
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @Id
     @ManyToOne
-    @JoinColumn(name="coupon_id")
+    @JoinColumn(name = "coupon_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Coupon coupon;
 
-    @Override
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
-        UserCoupon that = (UserCoupon) object;
-        return Objects.equals(user.getId(), that.user.getId()) &&
-                Objects.equals(coupon.getId(), that.coupon.getId());
+    @Builder
+    public UserCoupon(String couponCode, Boolean isUsed, LocalDateTime usedAt, User user, Coupon coupon) {
+        this.couponCode = couponCode;
+        this.isUsed = isUsed;
+        this.usedAt = usedAt;
+        this.user = user;
+        this.coupon = coupon;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(user, coupon);
+    public static UserCouponResponseDto toUserCouponResponseDto(UserCoupon userCoupon, CouponResponseDto responseDto) {
+        return UserCouponResponseDto.builder()
+                .couponCode(userCoupon.getCouponCode())
+                .isUsed(userCoupon.getIsUsed())
+                .usedAt(userCoupon.getUsedAt())
+                .coupon(responseDto)
+                .build();
     }
 
+    public static UserCoupon toUserCouponEntity(String couponCode, Boolean isUsed, LocalDateTime usedAt, User user, Coupon coupon) {
+        return UserCoupon.builder()
+                .couponCode(couponCode)
+                .isUsed(isUsed)
+                .usedAt(usedAt)
+                .user(user)
+                .coupon(coupon)
+                .build();
+    }
+
+    public void updateStatus() {
+        this.isUsed = true;
+        this.usedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+    }
 }
 
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode
-class UserCouponId implements Serializable {
-    private Long user;
-    private Long coupon;
-
-}
 
