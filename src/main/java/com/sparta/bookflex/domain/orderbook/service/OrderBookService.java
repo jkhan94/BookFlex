@@ -1,8 +1,12 @@
 package com.sparta.bookflex.domain.orderbook.service;
 
+import com.sparta.bookflex.common.exception.BusinessException;
+import com.sparta.bookflex.common.exception.ErrorCode;
 import com.sparta.bookflex.common.utill.LoggingSingleton;
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.service.BookService;
+import com.sparta.bookflex.domain.coupon.entity.Coupon;
+import com.sparta.bookflex.domain.coupon.service.CouponService;
 import com.sparta.bookflex.domain.orderbook.dto.OrderItemResponseDto;
 import com.sparta.bookflex.domain.orderbook.dto.OrderRequestDto;
 import com.sparta.bookflex.domain.orderbook.dto.OrderResponsDto;
@@ -35,7 +39,7 @@ public class OrderBookService {
     private final AuthService authService;
     private final BookService bookService;
     private final TraceOfUserLogRepository traceOfUserLogRepository;
-
+    private final CouponService couponService;
     private final PhotoImageService photoImageService;
     private final SaleRepository saleRepository;
 
@@ -89,6 +93,7 @@ public class OrderBookService {
                 .build();
             orderItemList.add(orderItem);
         }
+
 
         OrderBook orderBook = OrderBook.builder()
             .status(OrderState.PENDING_PAYMENT)
