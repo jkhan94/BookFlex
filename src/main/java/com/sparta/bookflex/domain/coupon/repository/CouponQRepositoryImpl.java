@@ -1,20 +1,14 @@
 package com.sparta.bookflex.domain.coupon.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sparta.bookflex.domain.coupon.entity.Coupon;
 import com.sparta.bookflex.domain.coupon.enums.CouponStatus;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 
 import static com.sparta.bookflex.domain.coupon.entity.QCoupon.coupon;
-import static com.sparta.bookflex.domain.coupon.entity.QUserCoupon.userCoupon;
 
 @RequiredArgsConstructor
 public class CouponQRepositoryImpl implements CouponQRepository {

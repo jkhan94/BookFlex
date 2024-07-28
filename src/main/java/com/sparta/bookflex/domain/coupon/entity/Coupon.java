@@ -2,7 +2,7 @@ package com.sparta.bookflex.domain.coupon.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.coupon.dto.CouponResponseDto;
-import com.sparta.bookflex.domain.coupon.dto.CouponStatusRequestDto;
+import com.sparta.bookflex.domain.coupon.dto.CouponUpdateRequestDto;
 import com.sparta.bookflex.domain.coupon.enums.CouponStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -59,14 +59,6 @@ public class Coupon extends Timestamped {
         this.expirationDate = expirationDate;
     }
 
-    public void updateStatus(CouponStatusRequestDto requestDto) {
-        this.couponStatus = requestDto.getCouponStatus();
-    }
-
-    public void decreaseTotalCount() {
-        this.totalCount--;
-    }
-
     public static CouponResponseDto toCouponResponseDto(Coupon coupon) {
         return CouponResponseDto.builder()
                 .couponId(coupon.getId())
@@ -81,4 +73,13 @@ public class Coupon extends Timestamped {
                 .modifiedAt(coupon.getModifiedAt())
                 .build();
     }
+
+    public void updateCount(CouponUpdateRequestDto requestDto) {
+        this.totalCount = requestDto.getTotalCount();
+    }
+
+    public void decreaseTotalCount() {
+        this.totalCount--;
+    }
+
 }

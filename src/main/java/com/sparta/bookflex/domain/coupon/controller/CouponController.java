@@ -3,10 +3,10 @@ package com.sparta.bookflex.domain.coupon.controller;
 import com.sparta.bookflex.common.aop.Envelop;
 import com.sparta.bookflex.common.exception.BusinessException;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
-import com.sparta.bookflex.domain.coupon.dto.UserCouponResponseDto;
 import com.sparta.bookflex.domain.coupon.dto.CouponRequestDto;
 import com.sparta.bookflex.domain.coupon.dto.CouponResponseDto;
-import com.sparta.bookflex.domain.coupon.dto.CouponStatusRequestDto;
+import com.sparta.bookflex.domain.coupon.dto.CouponUpdateRequestDto;
+import com.sparta.bookflex.domain.coupon.dto.UserCouponResponseDto;
 import com.sparta.bookflex.domain.coupon.service.CouponService;
 import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.enums.RoleType;
@@ -39,7 +39,7 @@ public class CouponController {
             throw new BusinessException(COUPON_CREATE_NOT_ALLOWED);
         }
 
-        if(requestDto.getStartDate().isAfter(requestDto.getExpirationDate())){
+        if (requestDto.getStartDate().isAfter(requestDto.getExpirationDate())) {
             throw new BusinessException(COUPON_CREATE_NOT_ALLOWED);
         }
 
@@ -63,40 +63,18 @@ public class CouponController {
         return ResponseEntity.status(HttpStatus.OK).body(responseList);
     }
 
-/*
-   쿠폰 상태 변경?
-   PUT /coupons/{couponId}
 
-   요청DTO
-   couponStatus	쿠폰 상태
-
-   응답DTO
-   statusCode	200
-   message	쿠폰 상태를 변경했습니다.
-   data	{
-       couponId		쿠폰ID
-       couponName	쿠폰이름
-       couponStatus	쿠폰상태
-       totalCount	발급 가능한 쿠폰 개수
-       minPrice		최소주문금액
-       discountPrice	할인금액
-       startDate		쿠폰 사용 시작일자
-       expirationDate	만료일자
-       createAt		생성일자
-       modifedAt	수정일자
-   }
-*/
     @PutMapping("/{couponId}")
-    public ResponseEntity<CouponResponseDto> updateCouponStatus(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                                @RequestBody @Valid CouponStatusRequestDto requestDto,
-                                                                @PathVariable long couponId) {
-        // ADMIN인지
+    @Envelop("쿠폰 개수를 변경했습니다.")
+    public ResponseEntity<CouponResponseDto> updateCouponCount(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                               @RequestBody @Valid CouponUpdateRequestDto requestDto,
+                                                               @PathVariable long couponId) {
         User user = authService.findByUserName(userDetails.getUser().getUsername());
         if (user.getAuth() != RoleType.ADMIN) {
             throw new BusinessException(COUPON_UPDATE_NOT_ALLOWED);
         }
 
-        CouponResponseDto responseDto = couponService.updateCouponStatus(couponId, requestDto);
+        CouponResponseDto responseDto = couponService.updateCouponCount(couponId, requestDto);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
@@ -116,17 +94,10 @@ public class CouponController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    /*모든 유저에게 쿠폰 발급
-POST /coupons/issue/all/{couponId}
-
-응답DTO
-statusCode	201
-message	쿠폰이 일괄 발급되었습니다.
-*/
     @PostMapping("/issue/all/{couponId}")
     @Envelop("쿠폰이 일괄 발급되었습니다.")
-    public ResponseEntity issueCouponToAll(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                             @PathVariable long couponId) {
+    public ResponseEntity<?> issueCouponToAll(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                              @PathVariable long couponId) {
         User user = authService.findByUserName(userDetails.getUser().getUsername());
         if (user.getAuth() != RoleType.ADMIN) {
             throw new BusinessException(COUPON_ISSUE_NOT_ALLOWED);
@@ -140,8 +111,8 @@ message	쿠폰이 일괄 발급되었습니다.
     @PostMapping("/issue/{userId}/{couponId}")
     @Envelop("사용자에게 쿠폰이 발급되었습니다.")
     public ResponseEntity<UserCouponResponseDto> issueCouponToUser(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                             @PathVariable long userId,
-                                                             @PathVariable long couponId) {
+                                                                   @PathVariable long userId,
+                                                                   @PathVariable long couponId) {
         User user = authService.findByUserName(userDetails.getUser().getUsername());
         if (user.getAuth() != RoleType.ADMIN) {
             throw new BusinessException(COUPON_ISSUE_NOT_ALLOWED);
@@ -170,8 +141,8 @@ message	쿠폰이 일괄 발급되었습니다.
     @GetMapping
     @Envelop("발급받은 모든 쿠폰을 조회했습니다.")
     public ResponseEntity<List<UserCouponResponseDto>> getMyCoupons(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                                @RequestParam(value = "page", defaultValue = "1") int page,
-                                                                @RequestParam(value = "sortBy", defaultValue = "isUsed") String sortBy) {
+                                                                    @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                    @RequestParam(value = "sortBy", defaultValue = "isUsed") String sortBy) {
         User user = authService.findByUserName(userDetails.getUser().getUsername());
         if (user.getAuth() != RoleType.USER) {
             throw new BusinessException(COUPON_VIEW_NOT_ALLOWED);
@@ -185,7 +156,7 @@ message	쿠폰이 일괄 발급되었습니다.
     @GetMapping("/use/{couponId}")
     @Envelop("사용할 쿠폰을 조회했습니다.")
     public ResponseEntity<UserCouponResponseDto> getSingleUserCoupon(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                                 @PathVariable long couponId) {
+                                                                     @PathVariable long couponId) {
         User user = authService.findByUserName(userDetails.getUser().getUsername());
         if (user.getAuth() != RoleType.USER) {
             throw new BusinessException(COUPON_VIEW_NOT_ALLOWED);

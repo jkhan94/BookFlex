@@ -1,7 +1,6 @@
 package com.sparta.bookflex.domain.coupon.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sparta.bookflex.domain.coupon.entity.Coupon;
 import com.sparta.bookflex.domain.coupon.entity.UserCoupon;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
