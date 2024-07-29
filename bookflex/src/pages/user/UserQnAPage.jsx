@@ -9,8 +9,8 @@ const QnaItem = ({ qna, onDeleteClick }) => (
         <td>{qna.qnaType}</td>
         <td>{qna.inquiry}</td>
         <td>{qna.createdAt}</td>
+        <td>{qna.reply}</td>
         <td>
-            {qna.reply}
             {qna.reply === '답변대기' && (
                 <button onClick={() => onDeleteClick(qna.qnaId)}>삭제하기</button>
             )}
@@ -40,7 +40,6 @@ const UserQnaPage = () => {
         const token = localStorage.getItem('Authorization');
 
         const fetchQnaList = async () => {
-            // const token = localStorage.getItem('Authorization');
             try {
                 const response = await axiosInstance.get('/qnas', {
                     headers: {
@@ -171,6 +170,7 @@ const UserQnaPage = () => {
                     <th>문의 내용</th>
                     <th>생성일</th>
                     <th>답변</th>
+                    <th>삭제</th> {/* 삭제 열 추가 */}
                 </tr>
                 </thead>
                 <tbody>
