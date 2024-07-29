@@ -11,6 +11,7 @@ import com.sparta.bookflex.domain.systemlog.repository.SystemLogRepository;
 import com.sparta.bookflex.domain.user.dto.LoginReqDto;
 import com.sparta.bookflex.domain.user.dto.SignUpReqDto;
 import com.sparta.bookflex.domain.user.entity.User;
+import com.sparta.bookflex.domain.user.enums.RoleType;
 import com.sparta.bookflex.domain.user.enums.UserGrade;
 import com.sparta.bookflex.domain.user.enums.UserState;
 import com.sparta.bookflex.domain.user.repository.UserRepository;
@@ -130,5 +131,13 @@ public class AuthService {
 
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    public RoleType getUserRole(String username) {
+        User user = userRepository.findByUserName(username).orElseThrow(
+            ()-> new BusinessException(ErrorCode.USER_NOT_FOUND)
+        );
+
+        return user.getAuth();
     }
 }
