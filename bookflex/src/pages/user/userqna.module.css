@@ -1,22 +1,99 @@
-.qnaitem {
+/* userqna.module.css */
+
+.qnaTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.qnaTable th,
+.qnaTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.qnaTable th {
+    background-color: #f4f4f4;
+}
+
+.pagination {
+    margin-top: 10px;
+}
+
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
-    justify-content: space-between; /* 항목들 사이에 균등한 간격 유지 */
-    padding: 10px 0;
-    border-bottom: 1px solid #ddd; /* 항목 구분을 위한 밑줄 추가 */
+    align-items: center;
+    justify-content: center;
 }
 
-.qnaspan {
-    flex: 1;
-    text-align: left;
-    font-size: 16px; /* 모든 텍스트의 글자 크기를 동일하게 설정 */
-    white-space: nowrap; /* 텍스트가 줄 바꿈되지 않도록 설정 */
-    overflow: hidden; /* 넘치는 텍스트를 숨김 */
-    text-overflow: ellipsis; /* 넘치는 텍스트에 ... 추가 */
+.popupContent {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
 }
 
-.qna-item-field {
-    flex: 1; /* 각 항목이 동일한 공간을 차지하도록 설정 */
-    text-align: center; /* 텍스트를 중앙 정렬 */
-    font-size: 16px; /* 글자 크기 설정 */
-    padding: 0 10px; /* 항목들 간의 좌우 간격 설정 */
+.formGroup {
+    margin-bottom: 15px;
+}
+
+.formGroup label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.formGroup input,
+.formGroup select,
+.formGroup textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.error {
+    color: red;
+    margin-top: 10px;
+}
+
+.confirmModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.confirmModalContent {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+}
+
+.confirmModalContent button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.confirmModalContent button:hover {
+    background-color: #0056b3;
 }
