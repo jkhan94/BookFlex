@@ -1,0 +1,22 @@
+.qnaitem {
+    display: flex;
+    justify-content: space-between; /* 항목들 사이에 균등한 간격 유지 */
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd; /* 항목 구분을 위한 밑줄 추가 */
+}
+
+.qnaspan {
+    flex: 1;
+    text-align: left;
+    font-size: 16px; /* 모든 텍스트의 글자 크기를 동일하게 설정 */
+    white-space: nowrap; /* 텍스트가 줄 바꿈되지 않도록 설정 */
+    overflow: hidden; /* 넘치는 텍스트를 숨김 */
+    text-overflow: ellipsis; /* 넘치는 텍스트에 ... 추가 */
+}
+
+.qna-item-field {
+    flex: 1; /* 각 항목이 동일한 공간을 차지하도록 설정 */
+    text-align: center; /* 텍스트를 중앙 정렬 */
+    font-size: 16px; /* 글자 크기 설정 */
+    padding: 0 10px; /* 항목들 간의 좌우 간격 설정 */
+}
