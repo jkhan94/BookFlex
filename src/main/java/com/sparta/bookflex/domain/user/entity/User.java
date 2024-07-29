@@ -71,6 +71,9 @@ public class User extends Timestamped {
     @Column()
     private String refreshToken;
 
+    @Column()
+    private Long kakaoId;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Basket basket;
 
@@ -118,14 +121,14 @@ public class User extends Timestamped {
 
     public static ProfileResDto of(User user) {
         return ProfileResDto.builder()
-            .username(user.getUsername())
-            .email(user.getEmail())
-            .address(user.getAddress())
-            .phoneNumber(user.getPhoneNumber())
-            .nickname(user.getNickname())
-            .grade(user.getGrade())
-            .createdAt(user.getCreatedAt())
-            .build();
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .address(user.getAddress())
+                .phoneNumber(user.getPhoneNumber())
+                .nickname(user.getNickname())
+                .grade(user.getGrade())
+                .createdAt(user.getCreatedAt())
+                .build();
     }
 
     public void updateRefreshToken(String refreshToken) {
@@ -151,5 +154,10 @@ public class User extends Timestamped {
 
     public void createCart() {
         this.basket = Basket.builder().user(this).build();
+    }
+
+    public User kakaoIdUpdate(Long kakaoId) {
+        this.kakaoId=kakaoId;
+        return this;
     }
 }
