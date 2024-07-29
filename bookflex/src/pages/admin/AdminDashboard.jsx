@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import styles from './AdminDashboard.module.css';
+ // 경로에 맞게 임포트
 
 const AdminDashboard = () => {
     // 로그아웃 핸들러 함수
@@ -22,6 +23,10 @@ const AdminDashboard = () => {
                     <li><Link to="/admin/payments">Payment Management</Link></li>
                     <li><Link to="/admin/shipping">Shipping Management</Link></li>
                     <li><Link to="/admin/qna">Admin Q&A</Link></li>
+                    <li><Link to="/admin/register-book">Register Book</Link></li>
+                    <li><Link to="/admin/inquiry-booklist">inquiry Booklist</Link></li>
+                    <li><Link to="/admin/inquiry-book">inquiry Book</Link></li>
+                    {/* 새로운 링크 추가 */}
                 </ul>
                 <button className={styles.logoutButton} onClick={handleLogout}>Logout</button>
             </aside>

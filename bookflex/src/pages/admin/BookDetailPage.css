@@ -1,0 +1,30 @@
+.book-detail-container {
+    padding: 20px;
+}
+
+.book-detail {
+    display: flex;
+}
+
+.book-image img {
+    width: 200px;
+    height: auto;
+}
+
+.book-info {
+    margin-left: 20px;
+}
+
+.book-info div {
+    margin-bottom: 10px;
+}
+
+.book-info label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.book-info span,
+.book-info p {
+    font-size: 16px;
+}
