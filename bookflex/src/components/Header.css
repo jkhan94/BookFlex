@@ -1,0 +1,65 @@
+/* src/components/Header.css */
+
+.header {
+    background-color: #003f5c; /* 다크 블루 배경색 */
+    color: white;
+    padding: 10px 20px;
+    position: fixed; /* 헤더를 고정시킵니다 */
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000; /* 다른 요소들 위에 위치하도록 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+    display: flex; /* 플렉스 박스 사용 */
+    justify-content: center; /* 링크들을 가운데 정렬 */
+    align-items: center; /* 세로 정렬 */
+}
+
+nav {
+    display: flex;
+    flex: 1; /* 나머지 공간을 차지하도록 */
+    justify-content: center; /* 수평 가운데 정렬 */
+}
+
+.navList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center; /* 수직 가운데 정렬 */
+    gap: 20px; /* 항목 간격 추가 */
+}
+
+.navList li {
+    margin: 0;
+}
+
+.navList a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    transition: color 0.3s ease; /* 색상 전환 효과 */
+}
+
+.navList a:hover {
+    color: #1abc9c; /* 링크 호버 시 색상 변화 */
+}
+
+.logoutButton {
+    background-color: #e74c3c; /* 빨간색 배경 */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 버튼 입체감 추가 */
+}
+
+.logoutButton:hover {
+    background-color: #c0392b; /* 어두운 빨간색 배경 */
+    transform: translateY(-2px); /* 버튼을 약간 위로 이동 */
+}
