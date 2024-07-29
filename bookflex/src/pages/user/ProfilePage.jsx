@@ -1,4 +1,5 @@
-import React from 'react'; // 스타일 모듈 (필요시)
+import React from 'react';
+import styles from './ProfilePage.module.css'; // 스타일 모듈 (필요시)
 
 const ProfilePage = () => {
     return (

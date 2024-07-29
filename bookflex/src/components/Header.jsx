@@ -18,7 +18,7 @@ const Header = ({  }) => {
                     <li><Link to="/main/order">Order</Link></li>
                     <li><Link to="/main/payment-history">Payment History</Link></li>
                     <li><Link to="/main/wishlist">Wishlist</Link></li>
-                    <li><Link to="/profile">Profile</Link></li>
+                    <li><Link to="/main/profile">Profile</Link></li>
                     <li>
                         <button className="logoutButton" onClick={handleLogout}>Logout</button>
                     </li>
