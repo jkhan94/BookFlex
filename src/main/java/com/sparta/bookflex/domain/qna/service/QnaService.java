@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.sparta.bookflex.common.exception.ErrorCode.*;
+import static com.sparta.bookflex.domain.qna.entity.Qna.toQnaResponseDto;
 
 @Service
 @RequiredArgsConstructor
@@ -40,13 +41,7 @@ public class QnaService {
 
         qnaRepository.save(qna);
 
-        return QnaResponseDto.builder()
-                .qnaId(qna.getId())
-                .qnaType(qna.getQnaType())
-                .inquiry(qna.getInquiry())
-                .createdAt(qna.getCreatedAt())
-                .reply(qna.getReply())
-                .build();
+        return toQnaResponseDto(qna);
     }
 
     @Transactional(readOnly = true)
@@ -55,13 +50,7 @@ public class QnaService {
                 () -> new BusinessException(QNA_NOT_FOUND)
         );
 
-        return QnaResponseDto.builder()
-                .qnaId(qna.getId())
-                .qnaType(qna.getQnaType())
-                .inquiry(qna.getInquiry())
-                .createdAt(qna.getCreatedAt())
-                .reply(qna.getReply())
-                .build();
+        return toQnaResponseDto(qna);
     }
 
     @Transactional(readOnly = true)
@@ -69,15 +58,7 @@ public class QnaService {
         Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
 
-        Page<QnaResponseDto> qnaPage = qnaRepository.findAllByUserId(user.getId(), pageable).map(
-                qna -> QnaResponseDto.builder()
-                        .qnaId(qna.getId())
-                        .qnaType(qna.getQnaType())
-                        .inquiry(qna.getInquiry())
-                        .createdAt(qna.getCreatedAt())
-                        .reply(qna.getReply())
-                        .build()
-        );
+        Page<QnaResponseDto> qnaPage = qnaRepository.findAllByUserId(user.getId(), pageable).map(Qna::toQnaResponseDto);
         return qnaPage.getContent();
     }
 
@@ -86,15 +67,7 @@ public class QnaService {
         Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
 
-        Page<QnaResponseDto> qnaPage = qnaRepository.findAll(pageable).map(
-                qna -> QnaResponseDto.builder()
-                        .qnaId(qna.getId())
-                        .qnaType(qna.getQnaType())
-                        .inquiry(qna.getInquiry())
-                        .createdAt(qna.getCreatedAt())
-                        .reply(qna.getReply())
-                        .build()
-        );
+        Page<QnaResponseDto> qnaPage = qnaRepository.findAll(pageable).map(Qna::toQnaResponseDto);
 
         return qnaPage.getContent();
     }
@@ -142,12 +115,6 @@ public class QnaService {
         qna.updateReply(qna, requestDto);
         qnaRepository.save(qna);
 
-        return QnaResponseDto.builder()
-                .qnaId(qna.getId())
-                .qnaType(qna.getQnaType())
-                .inquiry(qna.getInquiry())
-                .createdAt(qna.getCreatedAt())
-                .reply(qna.getReply())
-                .build();
+        return toQnaResponseDto(qna);
     }
 }

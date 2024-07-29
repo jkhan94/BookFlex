@@ -1,6 +1,7 @@
 package com.sparta.bookflex.domain.qna.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
+import com.sparta.bookflex.domain.qna.dto.QnaResponseDto;
 import com.sparta.bookflex.domain.qna.dto.ReplyRequestDto;
 import com.sparta.bookflex.domain.qna.enums.QnaTypeCode;
 import com.sparta.bookflex.domain.user.entity.User;
@@ -42,6 +43,16 @@ public class Qna extends Timestamped {
         this.inquiry = inquiry;
         this.reply = reply;
         this.user = user;
+    }
+
+    public static QnaResponseDto toQnaResponseDto(Qna qna) {
+        return QnaResponseDto.builder()
+                .qnaId(qna.getId())
+                .qnaType(qna.getQnaType())
+                .inquiry(qna.getInquiry())
+                .createdAt(qna.getCreatedAt())
+                .reply(qna.getReply())
+                .build();
     }
 
     public void updateReply(Qna qna, ReplyRequestDto requestDto) {
