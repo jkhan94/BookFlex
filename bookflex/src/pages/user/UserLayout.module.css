@@ -1,0 +1,25 @@
+/* src/pages/user/UserLayout.module.css */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* 화면 전체 높이 */
+}
+
+.header {
+    height: 60px; /* 헤더의 높이 설정 (Header.css에서 설정한 높이와 일치) */
+    flex-shrink: 0; /* 헤더가 축소되지 않도록 설정 */
+}
+
+.content {
+    flex: 1; /* 나머지 공간을 차지 */
+    padding: 20px;
+    background-color: #f5f5f5; /* 배경색 */
+    margin-top: 60px; /* 헤더 높이만큼 여백 추가 */
+}
+
+.mainContent {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
