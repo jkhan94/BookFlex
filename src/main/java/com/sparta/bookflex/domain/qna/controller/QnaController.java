@@ -133,9 +133,11 @@ public class QnaController {
 
 
     @GetMapping("/types")
+    @Envelop("문의 유형을 조회했습니다.")
     public ResponseEntity<List<String>> getQnaTypes() {
-        return ResponseEntity.status(HttpStatus.OK).body(Arrays.stream(QnaTypeCode.values())
-                .map(QnaTypeCode::getQnaTypeName)
-                .collect(Collectors.toList()));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Arrays.stream(QnaTypeCode.values())
+                        .map(QnaTypeCode::getQnaTypeName)
+                        .collect(Collectors.toList()));
     }
 }
