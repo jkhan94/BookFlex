@@ -19,10 +19,10 @@ const LoginPage = ({ onLogin }) => { // onLogin prop 추가
             });
 
             // 로그인 성공 시 처리 로직
-            console.log('Login successful!', response.data.accessToken);
+            console.log('Login successful!', response.data.data.accessToken);
 
             // 토큰을 localStorage에 저장
-            const token = response.data.accessToken;
+            const token = response.data.data.accessToken;
             localStorage.setItem('Authorization', token);
 
             console.log('Response Data:', response.data);
