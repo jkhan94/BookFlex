@@ -21,6 +21,7 @@ const AdminDashboard = () => {
                     <li><Link to="/admin/sales">Sales Report</Link></li>
                     <li><Link to="/admin/payments">Payment Management</Link></li>
                     <li><Link to="/admin/shipping">Shipping Management</Link></li>
+                    <li><Link to="/admin/qna">Admin Q&A</Link></li>
                 </ul>
                 <button className={styles.logoutButton} onClick={handleLogout}>Logout</button>
             </aside>

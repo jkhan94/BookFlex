@@ -19,8 +19,9 @@ const Header = ({  }) => {
                     <li><Link to="/main/payment-history">Payment History</Link></li>
                     <li><Link to="/main/wishlist">Wishlist</Link></li>
                     <li><Link to="/main/profile">Profile</Link></li>
+                    <li><Link to="/main/qna">User Q&A</Link></li>
                     <li>
-                        <button className="logoutButton" onClick={handleLogout}>Logout</button>
+                    <button className="logoutButton" onClick={handleLogout}>Logout</button>
                     </li>
                 </ul>
             </nav>
