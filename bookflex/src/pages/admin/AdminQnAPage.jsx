@@ -1,10 +1,205 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axiosInstance from "../../api/axiosInstance";
+import styles from "../admin/adminqna.module.css";
+
+// QnaItem 컴포넌트 정의
+const QnaItem = ({ qna, onReplyClick, onDeleteClick }) => (
+    <tr>
+        <td>{qna.qnaType}</td>
+        <td>{qna.inquiry}</td>
+        <td>{qna.createdAt}</td>
+        <td>{qna.reply}</td>
+        <td>
+            {qna.reply === '답변대기' && (
+                <div className={styles.buttonContainer}>
+                    <button onClick={() => onReplyClick(qna)}>답변하기</button>
+                    <button onClick={() => onDeleteClick(qna.qnaId)}>삭제하기</button>
+                </div>
+            )}
+        </td>
+    </tr>
+);
+
+const PAGE_SIZE = 5; // 페이지 당 QnA 항목 수
 
 const AdminQnAPage = () => {
+    const [qnaList, setQnaList] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true); // 더 많은 데이터가 있는지 확인
+    const [selectedQna, setSelectedQna] = useState(null); // 선택된 QnA 저장
+    const [replyText, setReplyText] = useState('');
+    const [isReplyModalOpen, setIsReplyModalOpen] = useState(false); // 팝업 열기/닫기 상태
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchQnaList = async () => {
+            const token = localStorage.getItem('Authorization');
+            try {
+                const response = await axiosInstance.get('/qnas/admin', {
+                    headers: {
+                        Authorization: token,
+                        'Content-Type': 'application/json',
+                    },
+                    params: {
+                        page: currentPage,
+                        size: PAGE_SIZE,
+                        sortBy: 'createdAt'
+                    }
+                });
+
+                if (Array.isArray(response.data.data)) {
+                    setQnaList(response.data.data);
+                    setHasMore(response.data.data.length === PAGE_SIZE);
+                } else {
+                    throw new Error('API response is not an array');
+                }
+            } catch (err) {
+                setError(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchQnaList();
+    }, [currentPage]);
+
+    const handlePreviousPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
+    const handleNextPage = () => {
+        if (hasMore) {
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    const handleReplyClick = (qna) => {
+        setSelectedQna(qna);
+        setReplyText(''); // 답변 텍스트 초기화
+        setIsReplyModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsReplyModalOpen(false);
+        setSelectedQna(null);
+    };
+
+    const handleReplySubmit = async (e) => {
+        e.preventDefault();
+
+        if (!replyText) {
+            setError('답변 내용을 입력해주세요.');
+            return;
+        }
+
+        const token = localStorage.getItem('Authorization');
+        try {
+            await axiosInstance.post(`/qnas/admin/${selectedQna.qnaId}`, { reply: replyText }, {
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            setQnaList(prevList =>
+                prevList.map(qna =>
+                    qna.qnaId === selectedQna.qnaId ? { ...qna, reply: replyText } : qna
+                )
+            );
+            handleCloseModal();
+        } catch (err) {
+            setError('답변 제출에 실패했습니다.');
+        }
+    };
+
+    const handleDeleteClick = (qnaId) => {
+        if (window.confirm('정말로 이 문의를 삭제하시겠습니까?')) {
+            deleteQna(qnaId);
+        }
+    };
+
+    const deleteQna = async (qnaId) => {
+        const token = localStorage.getItem('Authorization');
+        try {
+            await axiosInstance.delete(`/qnas/admin/${qnaId}`, {
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            setQnaList(prevList => prevList.filter(qna => qna.qnaId !== qnaId));
+        } catch (err) {
+            setError('문의 삭제에 실패했습니다.');
+        }
+    };
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error.message}</div>;
+    }
+
     return (
         <div>
-            <h1>Admin Q&A Page</h1>
-            {/* 관리자 Q&A 관련 내용 추가 */}
+            <h1>Admin Q&A List</h1>
+            <table className={styles.qnaTable}>
+                <thead>
+                <tr>
+                    <th>문의 유형</th>
+                    <th>문의 내용</th>
+                    <th>생성일</th>
+                    <th>답변</th>
+                    <th>작업</th> {/* 작업 열 추가 */}
+                </tr>
+                </thead>
+                <tbody>
+                {qnaList.map(qna => (
+                    <QnaItem
+                        key={qna.qnaId}
+                        qna={qna}
+                        onReplyClick={handleReplyClick}
+                        onDeleteClick={handleDeleteClick}
+                    />
+                ))}
+                </tbody>
+            </table>
+            <div className={styles.pagination}>
+                <button onClick={handlePreviousPage} disabled={currentPage === 1}>Previous</button>
+                <span>Page {currentPage}</span>
+                <button onClick={handleNextPage} disabled={!hasMore}>Next</button>
+            </div>
+
+            {isReplyModalOpen && (
+                <div className={styles.modal}>
+                    <div className={styles.modalContent}>
+                        <h2>답변 추가</h2>
+                        <p><strong>문의 내용:</strong> {selectedQna?.inquiry}</p>
+                        <form onSubmit={handleReplySubmit}>
+                            <textarea
+                                value={replyText}
+                                onChange={(e) => setReplyText(e.target.value)}
+                                placeholder="답변을 입력하세요..."
+                                rows="4"
+                                required
+                            />
+                            <div>
+                                <button type="submit">답변 제출</button>
+                                <button type="button" onClick={handleCloseModal}>닫기</button>
+                            </div>
+                        </form>
+                        {error && <div className={styles.error}>{error}</div>}
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
