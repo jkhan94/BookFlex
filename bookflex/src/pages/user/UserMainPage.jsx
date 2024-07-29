@@ -3,7 +3,8 @@ import React from 'react';
 const MainPage = () => {
     return (
         <div>
-            <h2>Main Page 유저용</h2>
+            <h2>Main Page</h2>
+            <p>Welcome to the main page.</p>
         </div>
     );
 };
