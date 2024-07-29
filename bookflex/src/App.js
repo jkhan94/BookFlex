@@ -21,6 +21,7 @@ import UserLayout from './pages/user/UserLayout'; // UserLayout 컴포넌트 임
 import ProfilePage from './pages/user/ProfilePage';
 import UserQnAPage from './pages/user/UserQnAPage'; // 유저 Q&A 페이지 임포트
 import AdminQnAPage from './pages/admin/AdminQnAPage'
+import BookDetailPage from './pages/user/BookDetailPage';
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -51,12 +52,15 @@ function App() {
                     />
                     <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
                     <Route path="/signup" element={<SignUpPage />} />
+
+                    <Route path="/books/:bookId" element={<BookDetailPage />} />
+
                     <Route path="/main" element={<UserLayout />}>
                         <Route path="dashboard" element={<UserMainPage />} />
-                        <Route path="category" element={<CategoryPage />} />
                         <Route path="cart" element={<CartPage />} />
                         <Route path="order" element={<OrderPage />} />
                         <Route path="payment-history" element={<PaymentHistoryPage />} />
+                        <Route path="category/:categoryName" element={<CategoryPage />} />
                         <Route path="wishlist" element={<WishlistPage />} />
                         <Route path="profile" element={<ProfilePage />} />
                         <Route path="qna" element={<UserQnAPage />} />
