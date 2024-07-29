@@ -20,7 +20,6 @@ import SignUpPage from './pages/common/SignUpPage'; // 수정된 이름
 import UserLayout from './pages/user/UserLayout'; // UserLayout 컴포넌트 임포트
 import ProfilePage from './pages/user/ProfilePage';
 import UserQnAPage from './pages/user/UserQnAPage'; // 유저 Q&A 페이지 임포트
-import UserCreateQnaPage from "./pages/user/UserCreateQnAPage";
 import AdminQnAPage from './pages/admin/AdminQnAPage'
 import BookDetailPage from './pages/user/BookDetailPage';
 
@@ -65,7 +64,6 @@ function App() {
                         <Route path="wishlist" element={<WishlistPage />} />
                         <Route path="profile" element={<ProfilePage />} />
                         <Route path="qna" element={<UserQnAPage />} />
-                        <Route path="/main/qna/createqna" element={<UserCreateQnaPage />} />
                         {/* 추가적인 유저 하위 라우트 설정 */}
                     </Route>
                     <Route path="/admin" element={<AdminDashboard />}>
