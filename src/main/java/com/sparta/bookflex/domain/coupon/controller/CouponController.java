@@ -37,7 +37,7 @@ public class CouponController {
     private final AuthService authService;
 
     @PostMapping
-    @Envelop("쿠폰을 생성했습니다.")
+//    @Envelop("쿠폰을 생성했습니다.")
     public ResponseEntity<CouponResponseDto> createCoupon(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                           @RequestBody @Valid CouponRequestDto requestDto) {
         User user = authService.findByUserName(userDetails.getUser().getUsername());
@@ -55,7 +55,7 @@ public class CouponController {
     }
 
     @GetMapping("/admin")
-    @Envelop("발급 가능한 모든 쿠폰을 조회했습니다.")
+//    @Envelop("발급 가능한 모든 쿠폰을 조회했습니다.")
     public ResponseEntity<List<CouponResponseDto>> getAllCoupons(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                  @RequestParam(value = "page", defaultValue = "1") int page,
                                                                  @RequestParam(value = "sortBy", defaultValue = "expirationDate") String sortBy) {
@@ -71,7 +71,7 @@ public class CouponController {
 
 
     @PutMapping("/{couponId}")
-    @Envelop("쿠폰 개수를 변경했습니다.")
+//    @Envelop("쿠폰 개수를 변경했습니다.")
     public ResponseEntity<CouponResponseDto> updateCouponCount(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                @RequestBody @Valid CouponUpdateRequestDto requestDto,
                                                                @PathVariable long couponId) {
@@ -87,7 +87,7 @@ public class CouponController {
 
 
     @DeleteMapping("/{couponId}")
-    @Envelop("쿠폰을 삭제했습니다.")
+//    @Envelop("쿠폰을 삭제했습니다.")
     public ResponseEntity<?> deleteCoupon(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                           @PathVariable long couponId) {
         User user = authService.findByUserName(userDetails.getUser().getUsername());
@@ -101,7 +101,7 @@ public class CouponController {
     }
 
     @PostMapping("/issue/all/{couponId}")
-    @Envelop("쿠폰이 일괄 발급되었습니다.")
+//    @Envelop("쿠폰이 일괄 발급되었습니다.")
     public ResponseEntity<?> issueCouponToAll(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                               @PathVariable long couponId) {
         User user = authService.findByUserName(userDetails.getUser().getUsername());
@@ -115,7 +115,7 @@ public class CouponController {
     }
 
     @PostMapping("/issue/{userId}/{couponId}")
-    @Envelop("사용자에게 쿠폰이 발급되었습니다.")
+//    @Envelop("사용자에게 쿠폰이 발급되었습니다.")
     public ResponseEntity<UserCouponResponseDto> issueCouponToUser(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                    @PathVariable long userId,
                                                                    @PathVariable long couponId) {
@@ -131,7 +131,7 @@ public class CouponController {
 
 
     @PostMapping("/issue/{couponId}")
-    @Envelop("쿠폰이 발급되었습니다.")
+//    @Envelop("쿠폰이 발급되었습니다.")
     public ResponseEntity<UserCouponResponseDto> issueCoupon(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                              @PathVariable long couponId) {
         User user = authService.findByUserName(userDetails.getUser().getUsername());
@@ -145,7 +145,7 @@ public class CouponController {
     }
 
     @GetMapping
-    @Envelop("발급받은 모든 쿠폰을 조회했습니다.")
+//    @Envelop("발급받은 모든 쿠폰을 조회했습니다.")
     public ResponseEntity<List<UserCouponResponseDto>> getMyCoupons(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                     @RequestParam(value = "page", defaultValue = "1") int page,
                                                                     @RequestParam(value = "sortBy", defaultValue = "isUsed") String sortBy) {
@@ -160,7 +160,7 @@ public class CouponController {
     }
 
     @GetMapping("/availables")
-    @Envelop("발급 가능한 모든 쿠폰을 조회했습니다.")
+//    @Envelop("발급 가능한 모든 쿠폰을 조회했습니다.")
     public ResponseEntity<List<CouponResponseDto>> getAvailableCoupons(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                     @RequestParam(value = "page", defaultValue = "1") int page,
                                                                     @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy) {
@@ -175,7 +175,7 @@ public class CouponController {
     }
 
     @GetMapping("/use/{couponId}")
-    @Envelop("사용할 쿠폰을 조회했습니다.")
+//    @Envelop("사용할 쿠폰을 조회했습니다.")
     public ResponseEntity<UserCouponResponseDto> getSingleUserCoupon(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                      @PathVariable long couponId) {
         User user = authService.findByUserName(userDetails.getUser().getUsername());
@@ -189,7 +189,7 @@ public class CouponController {
     }
 
     @GetMapping("/types")
-    @Envelop("쿠폰 종류를 조회했습니다.")
+//    @Envelop("쿠폰 종류를 조회했습니다.")
     public ResponseEntity<List<String>> getCouponType() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Arrays.stream(CouponType.values())
@@ -198,7 +198,7 @@ public class CouponController {
     }
 
     @GetMapping("/discounts")
-    @Envelop("할인 유형을 조회했습니다.")
+//    @Envelop("할인 유형을 조회했습니다.")
     public ResponseEntity<List<String>> getDiscountType() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Arrays.stream(DiscountType.values())
@@ -207,7 +207,7 @@ public class CouponController {
     }
 
     @GetMapping("/grades")
-    @Envelop("사용자 등급을 조회했습니다.")
+//    @Envelop("사용자 등급을 조회했습니다.")
     public ResponseEntity<List<String>> getUserGrade() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Arrays.stream(UserGrade.values())

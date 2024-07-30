@@ -164,7 +164,7 @@ const UserQnaPage = () => {
                     'Content-Type': 'application/json',
                 },
             });
-            setSuccessMessage(response.data.message || '문의가 성공적으로 제출되었습니다.');
+            setSuccessMessage('문의가 성공적으로 제출되었습니다.');
             setEmail('');
             setQnaType('');
             setInquiry('');

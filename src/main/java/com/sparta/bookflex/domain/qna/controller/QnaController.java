@@ -33,7 +33,7 @@ public class QnaController {
     private final AuthService authService;
 
     @PostMapping
-    @Envelop("문의가 접수되었습니다.")
+//    @Envelop("문의가 접수되었습니다.")
     public ResponseEntity<QnaResponseDto> createQna(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                     @RequestBody @Valid QnaRequestDto requestDto) {
 
@@ -48,7 +48,7 @@ public class QnaController {
 
 
     @GetMapping("/{qnaId}")
-    @Envelop("문의를 조회했습니다.")
+//    @Envelop("문의를 조회했습니다.")
     public ResponseEntity<QnaResponseDto> getSingleQna(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                        @PathVariable long qnaId) {
 
@@ -59,7 +59,7 @@ public class QnaController {
     }
 
     @GetMapping
-    @Envelop("문의를 조회했습니다.")
+//    @Envelop("문의를 조회했습니다.")
     public ResponseEntity<List<QnaResponseDto>> getUserQnas(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                             @RequestParam(value = "page", defaultValue = "1") int page,
                                                             @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy) {
@@ -74,7 +74,7 @@ public class QnaController {
     }
 
     @GetMapping("/admin")
-    @Envelop("문의를 조회했습니다.")
+//    @Envelop("문의를 조회했습니다.")
     public ResponseEntity<List<QnaResponseDto>> getAllQnas(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                            @RequestParam(value = "page", defaultValue = "1") int page,
                                                            @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy) {
@@ -89,7 +89,7 @@ public class QnaController {
     }
 
     @DeleteMapping("/{qnaId}")
-    @Envelop("문의를 삭제했습니다.")
+//    @Envelop("문의를 삭제했습니다.")
     public ResponseEntity deleteQna(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                     @PathVariable long qnaId) {
 
@@ -103,7 +103,7 @@ public class QnaController {
     }
 
     @DeleteMapping("/admin/{qnaId}")
-    @Envelop("문의를 삭제했습니다.")
+//    @Envelop("문의를 삭제했습니다.")
     public ResponseEntity deleteQnaAdmin(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                          @PathVariable long qnaId) {
 
@@ -117,7 +117,7 @@ public class QnaController {
     }
 
     @PostMapping("/admin/{qnaId}")
-    @Envelop("답변을 등록했습니다.")
+//    @Envelop("답변을 등록했습니다.")
     public ResponseEntity<QnaResponseDto> createQnaReply(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                          @PathVariable long qnaId,
                                                          @RequestBody @Valid ReplyRequestDto requestDto) {
@@ -133,7 +133,7 @@ public class QnaController {
 
 
     @GetMapping("/types")
-    @Envelop("문의 유형을 조회했습니다.")
+//    @Envelop("문의 유형을 조회했습니다.")
     public ResponseEntity<List<String>> getQnaTypes() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Arrays.stream(QnaTypeCode.values())
