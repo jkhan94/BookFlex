@@ -2,8 +2,8 @@ package com.sparta.bookflex.domain.coupon.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.bookflex.domain.coupon.entity.Coupon;
-import com.sparta.bookflex.domain.coupon.entity.UserCoupon;
 import com.sparta.bookflex.domain.coupon.enums.CouponStatus;
+import com.sparta.bookflex.domain.coupon.enums.CouponType;
 import com.sparta.bookflex.domain.user.enums.UserGrade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,7 +16,6 @@ import java.time.ZoneId;
 import java.util.List;
 
 import static com.sparta.bookflex.domain.coupon.entity.QCoupon.coupon;
-import static com.sparta.bookflex.domain.coupon.entity.QUserCoupon.userCoupon;
 
 @RequiredArgsConstructor
 public class CouponQRepositoryImpl implements CouponQRepository {
@@ -29,6 +28,7 @@ public class CouponQRepositoryImpl implements CouponQRepository {
                 .where(coupon.eligibleGrade.eq(grade)
                         .and(coupon.couponStatus.eq(CouponStatus.Available))
                         .and(coupon.totalCount.gt(0))
+                        .and(coupon.couponType.ne(CouponType.BIRTHDAY))
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -39,6 +39,7 @@ public class CouponQRepositoryImpl implements CouponQRepository {
                 .where(coupon.eligibleGrade.eq(grade)
                         .and(coupon.couponStatus.eq(CouponStatus.Available))
                         .and(coupon.totalCount.gt(0))
+                        .and(coupon.couponType.ne(CouponType.BIRTHDAY))
                 )
                 .fetch();
 

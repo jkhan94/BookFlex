@@ -1,9 +1,13 @@
 package com.sparta.bookflex.domain.coupon.service;
 
+import com.sparta.bookflex.domain.coupon.entity.Coupon;
+import com.sparta.bookflex.domain.coupon.enums.CouponType;
 import com.sparta.bookflex.domain.coupon.repository.CouponRepository;
 import com.sparta.bookflex.domain.coupon.repository.UserCouponRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -11,6 +15,7 @@ public class CouponScheduleService {
 
     private final CouponRepository couponRepository;
     private final UserCouponRepository userCouponRepository;
+    private final CouponService couponService;
 
     public void deleteExpiredCoupon() {
         couponRepository.deleteExpiredCoupon();
@@ -22,9 +27,18 @@ public class CouponScheduleService {
 
     public void updateGradeCoupon() {
         userCouponRepository.updateGradeCoupon();
+        List<Coupon> coupons = couponRepository.findByCouponType(CouponType.GRADE);
+        for(Coupon coupon : coupons){
+            couponService.issueCouponToAll(coupon.getId());
+        }
     }
 
     public void updateBirthdayCoupon() {
         userCouponRepository.updateBirthdayCoupon();
+        List<Coupon> coupons = couponRepository.findByCouponType(CouponType.BIRTHDAY);
+        for(Coupon coupon : coupons){
+            couponService.issueCouponToAll(coupon.getId());
+        }
     }
+
 }

@@ -24,15 +24,16 @@ public class CouponScheduler {
         couponScheduleService.updateIssuedCoupon();
     }
 
-    @Scheduled(cron = "0 0 0 1 * *") // 매달 1일 오전 12시
+    @Scheduled(cron = "0 0 0 * * *") // 매달 오전 12시
     public void updateGradeCoupon() throws InterruptedException {
         log.info("등급 쿠폰 수량, 발급시작일, 발급만료일 변경");
         couponScheduleService.updateGradeCoupon();
     }
 
-    @Scheduled(cron = "0 0 0 1 * *") // 매달 1일 오전 12시
+    @Scheduled(cron = "0 0 0 * * *") // 매달 오전 12시
     public void updateBirthdayCoupon() throws InterruptedException {
         log.info("생일 쿠폰 수량, 발급시작일, 발급만료일 변경");
         couponScheduleService.updateBirthdayCoupon();
     }
+
 }

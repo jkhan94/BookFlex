@@ -45,8 +45,6 @@ public class UserCouponQRepositoryImpl implements UserCouponQRepository {
     @Override
     @Transactional
     public void updateGradeCoupon() {
-        List<User> count = queryFactory.select(user).from(user).fetch();
-
         LocalDate start = YearMonth.now().atDay(1);
         LocalDate end = YearMonth.now().atEndOfMonth();
 
@@ -61,8 +59,6 @@ public class UserCouponQRepositoryImpl implements UserCouponQRepository {
     @Override
     @Transactional
     public void updateBirthdayCoupon() {
-        List<User> count = queryFactory.select(user).from(user).where(user.birthDay.isNotNull()).fetch();
-
         LocalDate start = YearMonth.now().atDay(1);
         LocalDate end = YearMonth.now().atEndOfMonth();
 
