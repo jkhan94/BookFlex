@@ -24,23 +24,33 @@ public class QPayment extends EntityPathBase<Payment> {
 
     public final com.sparta.bookflex.common.utill.QTimestamped _super = new com.sparta.bookflex.common.utill.QTimestamped(this);
 
+    public final StringPath cancelReason = createString("cancelReason");
+
+    public final BooleanPath cancelYN = createBoolean("cancelYN");
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
-    public final NumberPath<Long> Id = createNumber("Id", Long.class);
+    public final StringPath failReason = createString("failReason");
+
+    public final NumberPath<Long> id = createNumber("id", Long.class);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 
     public final com.sparta.bookflex.domain.orderbook.entity.QOrderBook orderBook;
 
-    public final StringPath paymentMethod = createString("paymentMethod");
+    public final BooleanPath paySuccessYN = createBoolean("paySuccessYN");
 
-    public final NumberPath<java.math.BigDecimal> price = createNumber("price", java.math.BigDecimal.class);
+    public final StringPath payToken = createString("payToken");
 
-    public final NumberPath<java.math.BigDecimal> refundAmount = createNumber("refundAmount", java.math.BigDecimal.class);
+    public final EnumPath<com.sparta.bookflex.domain.payment.enums.PayType> payType = createEnum("payType", com.sparta.bookflex.domain.payment.enums.PayType.class);
 
     public final EnumPath<com.sparta.bookflex.domain.payment.enums.PaymentStatus> status = createEnum("status", com.sparta.bookflex.domain.payment.enums.PaymentStatus.class);
+
+    public final NumberPath<Integer> total = createNumber("total", Integer.class);
+
+    public final com.sparta.bookflex.domain.user.entity.QUser user;
 
     public QPayment(String variable) {
         this(Payment.class, forVariable(variable), INITS);
@@ -61,6 +71,7 @@ public class QPayment extends EntityPathBase<Payment> {
     public QPayment(Class<? extends Payment> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.orderBook = inits.isInitialized("orderBook") ? new com.sparta.bookflex.domain.orderbook.entity.QOrderBook(forProperty("orderBook"), inits.get("orderBook")) : null;
+        this.user = inits.isInitialized("user") ? new com.sparta.bookflex.domain.user.entity.QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

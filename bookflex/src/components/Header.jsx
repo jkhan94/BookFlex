@@ -14,8 +14,8 @@ const Header = () => {
         const fetchCategories = async () => {
             try {
                 const response = await axiosInstance.get('/categories');
-                if (response.data && Array.isArray(response.data.data)) {
-                    setCategories(response.data.data);
+                if (response.data && Array.isArray(response.data)) {
+                    setCategories(response.data);
                     //console.log('Categories fetched:', response.data.data);
                 } else {
                     console.error('Invalid response structure:', response);

@@ -15,12 +15,18 @@ public class ShipmentResDto {
     private ShipmentEnum status;
 
     public ShipmentResDto(String time, String name) {
-        String cleanedDateTimeString = time.replace("T", " ").substring(0, time.indexOf("+"));
+        String cleanedDateTimeString;
+        if(time.contains("+")){
+            cleanedDateTimeString = time.replace("T", " ").substring(0, time.indexOf("+"));
+        }
+        else {
+            cleanedDateTimeString = time.replace("T", " ").replace("Z","");
+        }
         shippedAt = LocalDateTime.parse(cleanedDateTimeString, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
-        if(name.equals("DELIVERED")) {
+        if(name.equalsIgnoreCase("DELIVERED")) {
             status = ShipmentEnum.DELIVERED;
         }
-        else if(name.equals("IN_TRANSIT")) {
+        else if(name.equalsIgnoreCase("IN_TRANSIT") || name.equalsIgnoreCase("In Transit")) {
             status = ShipmentEnum.IN_TRANSIT;
         }
         else {

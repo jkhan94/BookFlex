@@ -121,14 +121,15 @@ public class User extends Timestamped {
 
     public static ProfileResDto of(User user) {
         return ProfileResDto.builder()
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .address(user.getAddress())
-                .phoneNumber(user.getPhoneNumber())
-                .nickname(user.getNickname())
-                .grade(user.getGrade())
-                .createdAt(user.getCreatedAt())
-                .build();
+            .username(user.getUsername())
+            .email(user.getEmail())
+            .address(user.getAddress())
+            .phoneNumber(user.getPhoneNumber())
+            .nickname(user.getNickname())
+            .grade(user.getGrade())
+            .birthday(user.birthDay)
+            .createdAt(user.getCreatedAt())
+            .build();
     }
 
     public void updateRefreshToken(String refreshToken) {
@@ -139,7 +140,7 @@ public class User extends Timestamped {
         this.state = state;
     }
 
-    public void updateGrade(UserGrade grade){
+    public void updateGrade(UserGrade grade) {
         this.grade = grade;
     }
 
@@ -157,7 +158,7 @@ public class User extends Timestamped {
     }
 
     public User kakaoIdUpdate(Long kakaoId) {
-        this.kakaoId=kakaoId;
+        this.kakaoId = kakaoId;
         return this;
     }
 }
