@@ -50,7 +50,5 @@ public class OrderBookController {
                 .status(HttpStatus.OK)
                 .body(new CommonDto<>(HttpStatus.OK.value(), "주문조회에 성공했습니다.", orderResponseDto));
     }
-
-
-
+    
 }
