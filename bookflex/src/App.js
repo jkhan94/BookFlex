@@ -69,7 +69,7 @@ function App() {
                         <Route path="payment-history" element={<PaymentHistoryPage/>}/>
                         <Route path="category/:categoryName" element={<CategoryPage/>}/>
                         <Route path="wishlist" element={<WishlistPage/>}/>
-                        <Route path="profile/:userId" element={<ProfilePage/>}/>
+                        <Route path="profile" element={<ProfilePage/>}/>
                         <Route path="qna" element={<UserQnAPage/>}/>
                         {/* 추가적인 유저 하위 라우트 설정 */}
                     </Route>

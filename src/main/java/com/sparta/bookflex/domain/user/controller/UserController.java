@@ -23,19 +23,19 @@ public class UserController {
     private final UserService userService;
 
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<ProfileResDto> getProfile(@PathVariable long userId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    @GetMapping()
+    public ResponseEntity<ProfileResDto> getProfile(@AuthenticationPrincipal UserDetailsImpl userDetails){
 
-        ProfileResDto resDto = userService.getProfile(userId, userDetails.getUser());
+        ProfileResDto resDto = userService.getProfile(userDetails.getUser());
         return ResponseEntity.ok().body(resDto);
     }
 
     @Envelop("프로필 수정에 성공하였습니다.")
-    @PutMapping("/{userId}")
-    public ResponseEntity<ProfileResDto> updateProfile(@PathVariable long userId, @AuthenticationPrincipal UserDetailsImpl userDetails
+    @PutMapping()
+    public ResponseEntity<ProfileResDto> updateProfile(@AuthenticationPrincipal UserDetailsImpl userDetails
     ,@Valid @RequestBody ProfileReqDto reqDto) {
 
-        ProfileResDto resDto = userService.updateProfile(userId, userDetails.getUser(),
+        ProfileResDto resDto = userService.updateProfile(userDetails.getUser(),
             reqDto);
 
         return ResponseEntity.ok().body(resDto);

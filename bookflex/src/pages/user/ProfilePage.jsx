@@ -1,12 +1,12 @@
 import React, {useState, useEffect } from 'react';
-import {useNavigate, useParams} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import styles from './ProfilePage.module.css'; // CSS 모듈 임포트
 import axiosInstance from "../../api/axiosInstance"; // 수정된 Axios 인스턴스 임포트
 
 const ProfilePage = () => {
-    const { userId } = useParams();
-    const token = localStorage.getItem("Authorization");
-    console.log(token);
+
+    // const token = localStorage.getItem("Authorization");
+    // console.log(token);
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [address, setAddress] = useState('');
@@ -20,10 +20,10 @@ const ProfilePage = () => {
     useEffect(() => {
         const getProfileResDto = async () => {
             try {
-                const response = await axiosInstance.get(`/users/${userId}`, {
-                    headers: {
-                        Authorization: `${token}`
-                    },
+                const response = await axiosInstance.get(`/users`, {
+                    // headers: {
+                    //     Authorization: `${token}`
+                    // },
                 });
                 setUsername(response.data.username);
                 setEmail(response.data.email);
@@ -40,7 +40,7 @@ const ProfilePage = () => {
         };
 
         getProfileResDto();
-    }, [userId, token, navigate]);
+    }, [navigate]);
 
     return (
         <div className={styles.container}>
