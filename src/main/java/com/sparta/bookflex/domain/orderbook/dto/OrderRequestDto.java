@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderRequestDto {
     private List<OrderItemDto> items;
-
+    private Long couponId;
     @Getter
     @NoArgsConstructor
     public static class OrderItemDto {
