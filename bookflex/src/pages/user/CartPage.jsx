@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../api/axiosInstance';
-import './CartPage.css'; // 스타일을 위한 CSS 파일 임포트
+import styles from './CartPage.module.css'; // 스타일을 위한 CSS 모듈 임포트
 
 const CartPage = () => {
     const [cartItems, setCartItems] = useState([]);
@@ -57,23 +57,23 @@ const CartPage = () => {
     if (loading) return <div>Loading...</div>;
 
     return (
-        <div className="cart-page">
-            <div className="cart-card">
-                <h1>나의 예쁜 장바구니</h1>
-                <div className="cart-items">
+        <div className={styles.cartPage}>
+            <div className={styles.cartCard}>
+                <h1 className={styles.title}>나의 예쁜 장바구니</h1>
+                <div className={styles.cartItems}>
                     {cartItems.length === 0 ? (
                         <p>No items in the cart.</p>
                     ) : (
                         cartItems.map(item => (
-                            <div key={item.baskeItemid} className={`cart-item ${item.removing ? 'removing' : ''}`}>
-                                <img src={item.photoImagePath} alt={item.bookName} className="item-image" />
-                                <div className="item-details">
-                                    <div className="item-title">{item.bookName}</div>
-                                    <div className="item-price">₩{item.price.toLocaleString()}</div>
+                            <div key={item.baskeItemid} className={`${styles.cartItem} ${item.removing ? styles.cartItemRemoving : ''}`}>
+                                <img src={item.photoImagePath} alt={item.bookName} className={styles.itemImage} />
+                                <div className={styles.itemDetails}>
+                                    <div className={styles.itemTitle}>{item.bookName}</div>
+                                    <div className={styles.itemPrice}>₩{item.price.toLocaleString()}</div>
                                 </div>
-                                <div className="item-actions">
+                                <div className={styles.itemActions}>
                                     <button
-                                        className="quantity-btn"
+                                        className={styles.quantityBtn}
                                         onClick={() => handleQuantityChange(item.baskeItemid, item.quantity - 1)}
                                         disabled={item.quantity <= 1}
                                     >
@@ -81,19 +81,19 @@ const CartPage = () => {
                                     </button>
                                     <input
                                         type="number"
-                                        className="quantity-input"
+                                        className={styles.quantityInput}
                                         value={item.quantity}
                                         min="1"
                                         onChange={(e) => handleQuantityChange(item.baskeItemid, parseInt(e.target.value))}
                                     />
                                     <button
-                                        className="quantity-btn"
+                                        className={styles.quantityBtn}
                                         onClick={() => handleQuantityChange(item.baskeItemid, item.quantity + 1)}
                                     >
                                         +
                                     </button>
                                     <button
-                                        className="remove-btn"
+                                        className={styles.removeBtn}
                                         onClick={() => handleRemoveItem(item.baskeItemid)}
                                     >
                                         ×
@@ -103,12 +103,12 @@ const CartPage = () => {
                         ))
                     )}
                 </div>
-                <div className="cart-total">
+                <div className={styles.cartTotal}>
                     <span>총 금액:</span>
                     <span>₩{calculateTotal().toLocaleString()}</span>
                 </div>
-                <div className="checkout-container">
-                    <button className="checkout-btn" onClick={() => alert('주문이 완료되었습니다. 감사합니다!')}>주문하기</button>
+                <div className={styles.checkoutContainer}>
+                    <button className={styles.checkoutBtn} onClick={() => alert('주문이 완료되었습니다. 감사합니다!')}>주문하기</button>
                 </div>
             </div>
         </div>

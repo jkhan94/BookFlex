@@ -1,9 +1,8 @@
-/* CartPage.css */
-
-body {
+/* CartPage.module.css */
+.container {
     font-family: 'Nanum Gothic', sans-serif;
     background-color: #f7f1e3;
-    margin: 0;
+    margin: 50px;
     padding: 20px;
     display: flex;
     justify-content: center;
@@ -11,43 +10,40 @@ body {
     min-height: 100vh;
 }
 
-.cart-page {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-}
-
-.cart-card {
+.cartPage {
     background-color: #ffffff;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     padding: 30px;
-    width: 90%;
-    max-width: 2500px; /* 카드 너비를 2배로 넓힘 */
+    width: 70%;
+    margin: 0 auto;
 }
 
-h1 {
+.title {
     color: #2c3e50;
     text-align: center;
     margin-bottom: 30px;
 }
 
-.cart-item {
+.cartItems {
+    width: 100%;
+}
+
+.cartItem {
     display: flex;
     align-items: center;
-    margin-bottom: 30px; /* 항목 간 간격을 넓힘 */
+    margin-bottom: 20px;
     padding-bottom: 20px;
     border-bottom: 1px solid #ecf0f1;
     animation: fadeIn 0.5s ease-out forwards;
     justify-content: space-between;
 }
 
-.cart-item:last-child {
+.cartItem:last-child {
     border-bottom: none;
 }
 
-.item-image {
+.itemImage {
     width: 80px;
     height: 80px;
     border-radius: 10px;
@@ -55,64 +51,61 @@ h1 {
     margin-right: 20px;
 }
 
-.item-details {
+.itemDetails {
     flex-grow: 1;
-    margin-right: 30px; /* 버튼과 제목 간 간격을 넓힘 */
 }
 
-.item-title {
+.itemTitle {
     font-weight: bold;
     color: #34495e;
-    margin-bottom: 10px;
-    font-size: 1.3em; /* 책 제목을 더 크게 */
+    margin-bottom: 5px;
 }
 
-.item-price {
+.itemPrice {
     color: #e74c3c;
 }
 
-.item-actions {
+.itemActions {
     display: flex;
     align-items: center;
-    justify-content: flex-end; /* 오른쪽으로 정렬 */
 }
 
-.quantity-btn, .remove-btn {
+.quantityBtn, .removeBtn {
     background-color: #3498db;
     color: white;
     border: none;
-    width: 0px; /* 버튼 너비 */
-    height: 20px; /* 버튼 높이 */
-    border-radius: 100%; /* 동그랗게 만들기 */
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
     cursor: pointer;
-    font-size: 15px;
+    font-size: 18px;
     display: flex;
     justify-content: center;
     align-items: center;
     transition: background-color 0.3s;
-    margin-left: 10px; /* 버튼 사이 간격 */
+    margin-left: 10px;
 }
 
-.quantity-btn:hover, .remove-btn:hover {
+.quantityBtn:hover {
     background-color: #2980b9;
 }
 
-.remove-btn {
+.removeBtn {
     background-color: #e74c3c;
 }
 
-.remove-btn:hover {
+.removeBtn:hover {
     background-color: #c0392b;
 }
 
-.quantity-input {
-    width: 60px; /* 수량 입력 필드 너비 */
+.quantityInput {
+    width: 60px;
     text-align: center;
-    margin: 0 15px; /* 버튼과의 간격 */
+    margin: 0 10px;
     font-weight: bold;
 }
 
-.cart-total {
+.cartTotal {
     text-align: right;
     font-size: 1.2em;
     font-weight: bold;
@@ -120,7 +113,12 @@ h1 {
     color: #2c3e50;
 }
 
-.checkout-btn {
+.checkoutContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.checkoutBtn {
     display: block;
     width: 100%;
     padding: 15px;
@@ -135,7 +133,7 @@ h1 {
     margin-top: 20px;
 }
 
-.checkout-btn:hover {
+.checkoutBtn:hover {
     background-color: #27ae60;
 }
 
@@ -149,6 +147,6 @@ h1 {
     to { opacity: 0; transform: translateY(-20px); }
 }
 
-.cart-item.removing {
+.cartItemRemoving {
     animation: fadeOut 0.5s ease-out forwards;
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../api/axiosInstance';
 import { useParams } from 'react-router-dom';
-import './CategoryPage.css'; // 스타일을 위한 CSS 파일 임포트
+import './CategoryPage.module.css'; // 스타일을 위한 CSS 파일 임포트
 
 const CategoryPage = () => {
     const { categoryName } = useParams();
