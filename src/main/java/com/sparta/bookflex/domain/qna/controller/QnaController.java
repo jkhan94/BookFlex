@@ -137,7 +137,7 @@ public class QnaController {
     public ResponseEntity<List<String>> getQnaTypes() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Arrays.stream(QnaTypeCode.values())
-                        .map(QnaTypeCode::getQnaTypeName)
+                        .map(QnaTypeCode::getTypeName)
                         .collect(Collectors.toList()));
     }
 }
