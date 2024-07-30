@@ -26,6 +26,7 @@ const AdminDashboard = () => {
                     <li><Link to="/admin/register-book">Register Book</Link></li>
                     <li><Link to="/admin/inquiry-booklist">inquiry Booklist</Link></li>
                     <li><Link to="/admin/inquiry-book">inquiry Book</Link></li>
+                    <li><Link to="/admin/modify-book-info">modify bookinfo</Link></li>
                     {/* 새로운 링크 추가 */}
                 </ul>
                 <button className={styles.logoutButton} onClick={handleLogout}>Logout</button>

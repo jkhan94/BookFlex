@@ -1,27 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import './BookDetailPage.css';
-import axiosInstance from "../../api/axiosInstance"; // 필요한 CSS 파일을 가져옵니다.
+import { useParams, useNavigate } from 'react-router-dom';
+import axiosInstance from '../../api/axiosInstance';
+import './BookDetailPages.css';
 
 const BookDetailPage = () => {
-    const { productId } = useParams();
+    const { bookId } = useParams();
+    const navigate = useNavigate();
     const [book, setBook] = useState(null);
     const [error, setError] = useState('');
-    const [accessToken, setAccessToken] = useState(''); // 액세스 토큰 상태 추가
-
-
 
     useEffect(() => {
         const fetchBook = async () => {
             try {
-                const token = localStorage.getItem('Authorization');
-                setAccessToken(token);
-                const response = await axiosInstance.get('/books/1', {
-                    headers: {
-                        Authorization: accessToken, // 액세스 토큰을 Authorization 헤더에 추가합니다
-                    },
-                });
+                const response = await axiosInstance.get(`/books/${bookId}`);
                 setBook(response.data.data);
             } catch (error) {
                 console.error('There was an error!', error);
@@ -30,7 +21,7 @@ const BookDetailPage = () => {
         };
 
         fetchBook();
-    }, [productId]);
+    }, [bookId]);
 
     if (error) {
         return <p>{error}</p>;
@@ -39,6 +30,10 @@ const BookDetailPage = () => {
     if (!book) {
         return <p>Loading...</p>;
     }
+
+    const handleEditClick = () => {
+        navigate(`/admin/books/${bookId}/edit`, { state: { book } });
+    };
 
     return (
         <div className="book-detail-container">
@@ -53,22 +48,6 @@ const BookDetailPage = () => {
                         <span>{book.bookName}</span>
                     </div>
                     <div>
-                        <label>카테고리:</label>
-                        <span>{book.mainCategoryName} / {book.subCategoryName}</span>
-                    </div>
-                    <div>
-                        <label>상품가격:</label>
-                        <span>{book.price.toLocaleString()}원</span>
-                    </div>
-                    <div>
-                        <label>할인여부(%):</label>
-                        <span>{book.discountRate}%</span>
-                    </div>
-                    <div>
-                        <label>재고:</label>
-                        <span>{book.stock}</span>
-                    </div>
-                    <div>
                         <label>출판사:</label>
                         <span>{book.publisher}</span>
                     </div>
@@ -77,9 +56,30 @@ const BookDetailPage = () => {
                         <span>{book.author}</span>
                     </div>
                     <div>
+                        <label>카테고리:</label>
+                        <span>{book.mainCategoryName} / {book.subCategoryName}</span>
+                    </div>
+                    <div>
+                        <label>상품가격:</label>
+                        <span>{book.price.toLocaleString()}원</span>
+                    </div>
+                    <div>
+                        <label>재고:</label>
+                        <span>{book.stock}권</span>
+                    </div>
+                    <div>
                         <label>상품 설명:</label>
                         <p>{book.bookDescription}</p>
                     </div>
+                    <div>
+                        <label>상품 상태:</label>
+                        <p>{book.status}</p>
+                    </div>
+                    <div>
+                        <label>등록 일자:</label>
+                        <p>{book.createdAt}</p>
+                    </div>
+                    <button onClick={handleEditClick}>수정</button>
                 </div>
             </div>
         </div>

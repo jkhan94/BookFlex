@@ -21,7 +21,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-    @Envelop("모든 카테고리 조회에 성공하였습니다.")
+
     public ResponseEntity<List<CategoryAllResponseDto>> getAllCategories() {
 
         List<CategoryAllResponseDto> responseList = categoryService.getAllCategories();
@@ -29,7 +29,7 @@ public class CategoryController {
     }
 
     @GetMapping("/main")
-    @Envelop("메인 카테고리 조회에 성공하였습니다.")
+
     public ResponseEntity<List<CategoryNameResponseDto>> getAllMainCategories() {
 
         List<CategoryNameResponseDto> responseList = categoryService.getAllMainCategories();
@@ -37,7 +37,7 @@ public class CategoryController {
     }
 
     @GetMapping("/sub")
-    @Envelop("서브 카테고리 목록 조회에 성공하였습니다.")
+
     public ResponseEntity<List<CategoryNameResponseDto>> getAllSubCategories(@RequestParam(value = "mainCategory", defaultValue = "카테고리") String mainCategory) {
 
         List<CategoryNameResponseDto> responseList = categoryService.getAllSubCategories(mainCategory);

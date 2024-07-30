@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './BookList.css';
-import axiosInstance from "../../api/axiosInstance"; // 필요한 CSS 파일을 가져옵니다.
+import { useNavigate } from 'react-router-dom';
+import axiosInstance from "../../api/axiosInstance";
+import './BookList.css'; // 필요한 CSS 파일을 가져옵니다.
 
 const BookList = () => {
     const [books, setBooks] = useState([]);
@@ -15,8 +15,9 @@ const BookList = () => {
     const [message, setMessage] = useState('');
     const [accessToken, setAccessToken] = useState(''); // 액세스 토큰 상태 추가
 
+    const navigate = useNavigate();
+
     useEffect(() => {
-        // 실제로 액세스 토큰을 가져오는 로직 추가
         const token = localStorage.getItem('Authorization');
         setAccessToken(token);
 
@@ -65,6 +66,14 @@ const BookList = () => {
         }
     };
 
+    const handleRegisterClick = () => {
+        navigate('/register-book');
+    };
+
+    const handleBookDetailClick = (bookId) => {
+        navigate(`/admin/books/${bookId}`);
+    };
+
     return (
         <div className="book-list-container">
             <nav className="navbar">
@@ -84,6 +93,8 @@ const BookList = () => {
                 </div>
             </nav>
 
+            <button onClick={handleRegisterClick} className="register-button">상품 등록</button>
+
             <table className="book-table">
                 <thead>
                 <tr>
@@ -99,7 +110,14 @@ const BookList = () => {
                 {books.map((book) => (
                     <tr key={book.id}>
                         <td><input type="checkbox"/><img src={book.photoImagePath} alt={book.name}/></td>
-                        <td>{book.bookName}</td>
+                        <td>
+                            <span
+                                className="book-name"
+                                onClick={() => handleBookDetailClick(book.bookId)}
+                            >
+                                {book.bookName}
+                            </span>
+                        </td>
                         <td>{book.mainCategoryName}</td>
                         <td>{book.subCategoryName}</td>
                         <td>{book.price.toLocaleString()}</td>
@@ -113,7 +131,6 @@ const BookList = () => {
                 <span>{page} / {totalPages}</span>
                 <button onClick={handleNextPage} disabled={page === totalPages - 1}>다음</button>
             </div>
-
         </div>
     );
 };

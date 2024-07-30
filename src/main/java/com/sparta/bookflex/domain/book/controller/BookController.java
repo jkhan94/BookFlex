@@ -1,15 +1,21 @@
 package com.sparta.bookflex.domain.book.controller;
 
 import com.sparta.bookflex.common.dto.CommonDto;
+import com.sparta.bookflex.common.exception.BusinessException;
+import com.sparta.bookflex.common.exception.ErrorCode;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
 import com.sparta.bookflex.domain.book.dto.BookRequestDto;
 import com.sparta.bookflex.domain.book.dto.BookResponseDto;
+import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.entity.BookStatus;
 import com.sparta.bookflex.domain.book.service.BookService;
+import com.sparta.bookflex.domain.category.enums.Category;
 import com.sparta.bookflex.domain.sale.dto.SaleResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -74,7 +80,7 @@ public class BookController {
     @PutMapping("/{booksId}")
     public ResponseEntity<CommonDto<BookResponseDto>> modifyBookInfo(@PathVariable(value = "booksId") Long bookId,
                                                                      @RequestPart(value = "request") @Valid BookRequestDto bookRequestDto,
-                                                                     @RequestPart(value = "multipartFile") MultipartFile multipartFile) throws IOException {
+                                                                     @RequestPart(value = "multipartFile", required = false) MultipartFile multipartFile) throws IOException {
 
         BookResponseDto bookResponseDto = bookService.modifyBookInfo(bookId, bookRequestDto, multipartFile);
 
@@ -103,6 +109,23 @@ public class BookController {
     public void increaseStock(@PathVariable Long bookId, @PathVariable int quantity) {
 
         bookService.increaseStock(bookId, quantity);
+    }
+
+    @GetMapping("/category/{category}")
+    public ResponseEntity<CommonDto<Page<BookResponseDto>>> getBooksByCategory(
+            @PathVariable (name = "category") String categoryName,
+            Pageable pageable) {
+
+        Page<BookResponseDto> bookPage = bookService.getBooksBySubCategory(categoryName, pageable);
+
+        if (bookPage.isEmpty()) {
+            throw new BusinessException(ErrorCode.BOOK_NOT_FOUND);
+        }
+
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new CommonDto<>(HttpStatus.OK.value(), "상품 조회에 성공하였습니다.", bookPage));
     }
 
 

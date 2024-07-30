@@ -1,7 +1,12 @@
-import React, {useEffect, useState} from 'react';
-import axiosInstance from "../../api/axiosInstance"; // axiosInstance는 Axios 인스턴스를 설정한 파일입니다.
+import React, {useState, useEffect} from 'react';
+import {useParams, useLocation} from 'react-router-dom';
+import axiosInstance from '../../api/axiosInstance';
 
-function RegisterBookPage() {
+
+const BookUpdatePage = () => {
+    const {productId} = useParams();
+    const location = useLocation();
+    const initialBook = location.state?.book;
     const [bookRequestDto, setBookRequestDto] = useState({
         bookName: '',
         publisher: '',
@@ -12,6 +17,7 @@ function RegisterBookPage() {
         status: '',
         mainCategory: '',
         subCategory: '',
+
     });
     const [multipartFile, setMultipartFile] = useState(null);
     const [responseMessage, setResponseMessage] = useState('');
@@ -56,12 +62,29 @@ function RegisterBookPage() {
         fetchSubCategories();
     }, [bookRequestDto.mainCategory]);
 
+    useEffect(() => {
+        if (initialBook) {
+            setBookRequestDto(initialBook);
+        } else {
+            const fetchBook = async () => {
+                try {
+                    const response = await axiosInstance.get(`/books/${productId}`);
+                    setBookRequestDto(response.data.data);
+                } catch (error) {
+                    console.error('There was an error!', error);
+                    setResponseMessage('상품 조회에 실패하였습니다.');
+                }
+            };
+            fetchBook();
+        }
+    }, [initialBook, productId]);
+
     const handleChange = (e) => {
         const {name, value} = e.target;
-        setBookRequestDto({
-            ...bookRequestDto,
+        setBookRequestDto((prevBook) => ({
+            ...prevBook,
             [name]: value,
-        });
+        }));
     };
 
     const handleFileChange = (e) => {
@@ -70,36 +93,35 @@ function RegisterBookPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         const formData = new FormData();
         formData.append('request', new Blob([JSON.stringify(bookRequestDto)], {type: 'application/json'}));
         formData.append('multipartFile', multipartFile);
 
         try {
-            const response = await axiosInstance.post('/books', formData, {
+            const response = await axiosInstance.put(`/books/${productId}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            setResponseMessage(response.data.message);
-            navigate(`/admin/books/${response.data.bookId}`); // 상품 상세 페이지로 이동
+            setResponseMessage('상품 정보 수정에 성공하였습니다.');
         } catch (error) {
             console.error('There was an error!', error);
-            setResponseMessage('상품 등록에 실패하였습니다.');
+            setResponseMessage('상품 정보 수정에 실패하였습니다.');
         }
     };
 
     return (
-        <div>
-            <h1>상품 등록</h1>
-            <form onSubmit={handleSubmit}>
+        <div className="book-update-container">
+            <h1>상품 정보 수정</h1>
+            <form onSubmit={handleSubmit} className="book-update-form">
                 <div>
-                    <label>책 이름:</label>
+                    <label>상품명:</label>
                     <input
                         type="text"
                         name="bookName"
                         value={bookRequestDto.bookName}
                         onChange={handleChange}
-                        required
                     />
                 </div>
                 <div>
@@ -109,49 +131,17 @@ function RegisterBookPage() {
                         name="publisher"
                         value={bookRequestDto.publisher}
                         onChange={handleChange}
-                        required
                     />
                 </div>
                 <div>
-                    <label>작가명:</label>
+                    <label>작가:</label>
                     <input
                         type="text"
                         name="author"
                         value={bookRequestDto.author}
                         onChange={handleChange}
-                        required
                     />
                 </div>
-                <div>
-                    <label>가격:</label>
-                    <input
-                        type="number"
-                        name="price"
-                        value={bookRequestDto.price}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>재고량:</label>
-                    <input
-                        type="number"
-                        name="stock"
-                        value={bookRequestDto.stock}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>책 설명:</label>
-                    <textarea
-                        name="bookDescription"
-                        value={bookRequestDto.bookDescription}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
-
                 <div>
                     <label>주요 카테고리:</label>
                     <select
@@ -186,6 +176,32 @@ function RegisterBookPage() {
                     </select>
                 </div>
                 <div>
+                    <label>상품가격:</label>
+                    <input
+                        type="number"
+                        name="price"
+                        value={bookRequestDto.price}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div>
+                    <label>재고:</label>
+                    <input
+                        type="number"
+                        name="stock"
+                        value={bookRequestDto.stock}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div>
+                    <label>상품 설명:</label>
+                    <textarea
+                        name="bookDescription"
+                        value={bookRequestDto.bookDescription}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div>
                     <label>상품 상태:</label>
                     <select
                         name="status"
@@ -194,23 +210,24 @@ function RegisterBookPage() {
                         required
                     >
                         <option value="" disabled>상태 선택</option>
-                        <option value="판매 중">판매 중</option>
-                        <option value="품절">품절</option>
+                        <option value="ONSALE">판매 중</option>
+                        <option value="SOLDOUT">품절</option>
                     </select>
                 </div>
+
                 <div>
-                    <label>파일 업로드:</label>
+                    <label>이미지:</label>
                     <input
                         type="file"
+                        name="photoImagePath"
                         onChange={handleFileChange}
-                        required
                     />
                 </div>
-                <button type="submit">등록</button>
+                <button type="submit">수정 완료</button>
             </form>
             {responseMessage && <p>{responseMessage}</p>}
         </div>
     );
-}
+};
 
-export default RegisterBookPage;
+export default BookUpdatePage;

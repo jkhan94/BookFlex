@@ -8,10 +8,12 @@ import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.entity.BookStatus;
 import com.sparta.bookflex.domain.book.repository.BookCustomRepositoryImpl;
 import com.sparta.bookflex.domain.book.repository.BookRepository;
+import com.sparta.bookflex.domain.category.enums.Category;
 import com.sparta.bookflex.domain.category.service.CategoryService;
 import com.sparta.bookflex.domain.photoimage.entity.PhotoImage;
 import com.sparta.bookflex.domain.photoimage.service.PhotoImageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -87,7 +89,9 @@ public class BookService {
 
         Book book = getBookByBookId(bookId);
 
-        PhotoImage photoImage = photoImageService.updatePhotoImage(multipartFile, book.getId());
+        if (!(multipartFile == null)) {
+            PhotoImage photoImage = photoImageService.updatePhotoImage(multipartFile, book.getId());
+        }
 
         book.update(bookRequestDto);
 
@@ -136,4 +140,34 @@ public class BookService {
         book.increaseStock(quantity);
     }
 
+
+    @Transactional
+    public Page<BookResponseDto> getBooksBySubCategory(String categoryName, Pageable pageable) {
+
+        if (categoryName == null) {
+            throw new BusinessException(ErrorCode.CATEGORY_NOT_FOUND);
+        }
+
+        if (pageable.getSort().isEmpty()) {
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("id"));
+        }
+
+        Category category = categoryService.getCategoryByCategoryName(categoryName);
+
+        Page<Book> bookPage = bookRepository.findBySubCategory(category, pageable);
+
+        if (bookPage.isEmpty()) {
+            throw new BusinessException(ErrorCode.BOOK_NOT_FOUND);
+        }
+
+
+        return bookPage.map(book -> {
+            String photoImageUrl = book.getPhotoImage() != null ? photoImageService.getPhotoImageUrl(book.getPhotoImage().getFilePath()) : null;
+            return book.toResponseDto(photoImageUrl);
+        });
+
+    }
 }
+
+
+

@@ -3,47 +3,50 @@ import { useNavigate } from 'react-router-dom';
 import styles from './login.module.css'; // CSS 모듈 임포트
 import axiosInstance from "../../api/axiosInstance"; // 수정된 Axios 인스턴스 임포트
 
-const LoginPage = ({ onLogin }) => { // onLogin prop 추가
+const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const handleLogin = async (e) => {
-        e.preventDefault(); // 폼 제출 기본 동작 방지
+    const onLogin = (username, password) => {
+        const data = {
+            username,
+            password,
+        };
 
-        try {
-            const response = await axiosInstance.post('/auth/login', {
-                username,
-                password,
+        axiosInstance.post('auth/login', data)
+            .then(response => {
+                const { accessToken } = response.data.data;
+
+                // 로그인 성공 후, 모든 axios 요청에 accessToken을 자동으로 포함시키기 위해 설정
+                axiosInstance.defaults.headers.common['Authorization'] = accessToken;
+                console.log('Login successful!', accessToken);
+                // 토큰을 localStorage에 저장 (선택 사항)
+                localStorage.setItem('Authorization', accessToken);
+
+                console.log('Authorization header after login:', axiosInstance.defaults.headers.common['Authorization']);
+
+                // 추가적인 처리 (예: 역할에 따라 리디렉션)
+                const { auth } = response.data.data; // 역할 정보
+                if (auth === 'ADMIN') {
+                    navigate('/admin');
+                } else {
+                    navigate('/main');
+                }
+
+            })
+            .catch(error => {
+                // 에러 처리
+                console.error('Login error:', error);
+                const errorMessage = error.response?.data?.message || '로그인에 실패하였습니다. 사용자 이름 또는 비밀번호를 확인하세요.';
+                setError(errorMessage);
             });
+    };
 
-            // 로그인 성공 시 처리 로직
-            console.log('Login successful!', response.data.data.accessToken);
-
-            // 토큰을 localStorage에 저장
-            const token = response.data.data.accessToken;
-            localStorage.setItem('Authorization', token);
-
-            console.log('Response Data:', response.data);
-            // 응답에서 역할 정보 추출
-            const { auth } = response.data.data;
-            console.log(auth);
-
-            // 역할에 따라 리디렉션
-            if (auth === 'ADMIN') {
-                onLogin('admin'); // onLogin prop 호출
-                navigate('/admin');
-            } else {
-                onLogin('user'); // onLogin prop 호출
-                navigate('/main');
-            }
-        } catch (err) {
-            // 로그인 실패 시 에러 처리
-            console.error('Login failed:', err);
-            const errorMessage = err.response?.data?.message || '로그인에 실패하였습니다. 사용자 이름 또는 비밀번호를 확인하세요.';
-            setError(errorMessage);
-        }
+    const handleLogin = (e) => {
+        e.preventDefault(); // 폼 제출 기본 동작 방지
+        onLogin(username, password);
     };
 
     const handleSignUp = () => {
