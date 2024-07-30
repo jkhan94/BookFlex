@@ -51,9 +51,9 @@ const AdminQnAPage = () => {
                 }
             });
 
-            if (Array.isArray(response.data.data)) {
-                setQnaList(response.data.data);
-                setHasMore(response.data.data.length === PAGE_SIZE);
+            if (Array.isArray(response.data)) {
+                setQnaList(response.data);
+                setHasMore(response.data.length === PAGE_SIZE);
             } else {
                 throw new Error('API response is not an array');
             }
