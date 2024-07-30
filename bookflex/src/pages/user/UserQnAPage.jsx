@@ -51,9 +51,9 @@ const UserQnaPage = () => {
                     }
                 });
 
-                if (Array.isArray(response.data.data)) {
-                    setQnaList(response.data.data);
-                    setHasMore(response.data.data.length === PAGE_SIZE);
+                if (Array.isArray(response.data)) {
+                    setQnaList(response.data);
+                    setHasMore(response.data.length === PAGE_SIZE);
                 } else {
                     throw new Error('API response is not an array');
                 }
@@ -72,7 +72,7 @@ const UserQnaPage = () => {
                         'Content-Type': 'application/json',
                     },
                 });
-                setQnaTypes(response.data.data);
+                setQnaTypes(response.data);
             } catch (err) {
                 console.error('Failed to fetch Qna Types', err);
                 setError('문의 유형을 불러오지 못했습니다.');
@@ -99,9 +99,9 @@ const UserQnaPage = () => {
                 }
             });
 
-            if (Array.isArray(response.data.data)) {
-                setQnaList(response.data.data);
-                setHasMore(response.data.data.length === PAGE_SIZE);
+            if (Array.isArray(response.data)) {
+                setQnaList(response.data);
+                setHasMore(response.data.length === PAGE_SIZE);
             } else {
                 throw new Error('API response is not an array');
             }
