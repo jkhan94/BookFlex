@@ -29,6 +29,12 @@ public class UserCoupon extends Timestamped {
     private String couponCode;
 
     @Column(nullable = false)
+    private LocalDateTime issuedAt;
+
+    @Column(nullable = false)
+    private LocalDateTime expirationDate;
+
+    @Column(nullable = false)
     private Boolean isUsed;
 
     @Column
@@ -44,8 +50,10 @@ public class UserCoupon extends Timestamped {
     private Coupon coupon;
 
     @Builder
-    public UserCoupon(String couponCode, Boolean isUsed, LocalDateTime usedAt, User user, Coupon coupon) {
+    public UserCoupon(String couponCode, LocalDateTime issuedAt, LocalDateTime expirationDate, Boolean isUsed, LocalDateTime usedAt, User user, Coupon coupon) {
         this.couponCode = couponCode;
+        this.issuedAt = issuedAt;
+        this.expirationDate = expirationDate;
         this.isUsed = isUsed;
         this.usedAt = usedAt;
         this.user = user;
@@ -55,15 +63,19 @@ public class UserCoupon extends Timestamped {
     public static UserCouponResponseDto toUserCouponResponseDto(UserCoupon userCoupon, CouponResponseDto responseDto) {
         return UserCouponResponseDto.builder()
                 .couponCode(userCoupon.getCouponCode())
+                .issuedAt(userCoupon.getIssuedAt())
+                .expirationDate(userCoupon.getExpirationDate())
                 .isUsed(userCoupon.getIsUsed())
                 .usedAt(userCoupon.getUsedAt())
                 .coupon(responseDto)
                 .build();
     }
 
-    public static UserCoupon toUserCouponEntity(String couponCode, Boolean isUsed, LocalDateTime usedAt, User user, Coupon coupon) {
+    public static UserCoupon toUserCouponEntity(String couponCode, LocalDateTime issuedAt, LocalDateTime expirationDate, Boolean isUsed, LocalDateTime usedAt, User user, Coupon coupon) {
         return UserCoupon.builder()
                 .couponCode(couponCode)
+                .issuedAt(issuedAt)
+                .expirationDate(expirationDate)
                 .isUsed(isUsed)
                 .usedAt(usedAt)
                 .user(user)

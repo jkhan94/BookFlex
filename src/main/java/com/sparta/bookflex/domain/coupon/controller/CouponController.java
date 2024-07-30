@@ -7,9 +7,13 @@ import com.sparta.bookflex.domain.coupon.dto.CouponRequestDto;
 import com.sparta.bookflex.domain.coupon.dto.CouponResponseDto;
 import com.sparta.bookflex.domain.coupon.dto.CouponUpdateRequestDto;
 import com.sparta.bookflex.domain.coupon.dto.UserCouponResponseDto;
+import com.sparta.bookflex.domain.coupon.enums.CouponType;
+import com.sparta.bookflex.domain.coupon.enums.DiscountType;
 import com.sparta.bookflex.domain.coupon.service.CouponService;
+import com.sparta.bookflex.domain.qna.enums.QnaTypeCode;
 import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.enums.RoleType;
+import com.sparta.bookflex.domain.user.enums.UserGrade;
 import com.sparta.bookflex.domain.user.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +22,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.sparta.bookflex.common.exception.ErrorCode.*;
 
@@ -153,6 +159,21 @@ public class CouponController {
         return ResponseEntity.status(HttpStatus.OK).body(responseList);
     }
 
+    @GetMapping("/availables")
+    @Envelop("발급 가능한 모든 쿠폰을 조회했습니다.")
+    public ResponseEntity<List<CouponResponseDto>> getAvailableCoupons(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                                    @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                    @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy) {
+        User user = authService.findByUserName(userDetails.getUser().getUsername());
+        if (user.getAuth() != RoleType.USER) {
+            throw new BusinessException(COUPON_VIEW_NOT_ALLOWED);
+        }
+
+        List<CouponResponseDto> responseList = couponService.getAvailableCoupons(user, page - 1, sortBy);
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseList);
+    }
+
     @GetMapping("/use/{couponId}")
     @Envelop("사용할 쿠폰을 조회했습니다.")
     public ResponseEntity<UserCouponResponseDto> getSingleUserCoupon(@AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -167,5 +188,30 @@ public class CouponController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
-}
+    @GetMapping("/types")
+    @Envelop("쿠폰 종류를 조회했습니다.")
+    public ResponseEntity<List<String>> getCouponType() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Arrays.stream(CouponType.values())
+                        .map(CouponType::getCouponType)
+                        .collect(Collectors.toList()));
+    }
 
+    @GetMapping("/discounts")
+    @Envelop("할인 유형을 조회했습니다.")
+    public ResponseEntity<List<String>> getDiscountType() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Arrays.stream(DiscountType.values())
+                        .map(DiscountType::getDiscountType)
+                        .collect(Collectors.toList()));
+    }
+
+    @GetMapping("/grades")
+    @Envelop("사용자 등급을 조회했습니다.")
+    public ResponseEntity<List<String>> getUserGrade() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Arrays.stream(UserGrade.values())
+                        .map(UserGrade::getUserGrade)
+                        .collect(Collectors.toList()));
+    }
+}
