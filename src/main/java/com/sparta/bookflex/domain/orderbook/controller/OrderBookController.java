@@ -6,10 +6,13 @@ import com.sparta.bookflex.domain.orderbook.dto.OrderRequestDto;
 import com.sparta.bookflex.domain.orderbook.dto.OrderResponsDto;
 import com.sparta.bookflex.domain.orderbook.dto.OrderStatusRequestDto;
 import com.sparta.bookflex.domain.orderbook.service.OrderBookService;
+import jakarta.mail.MessagingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.UnsupportedEncodingException;
 
 @RestController
 @RequestMapping("/orders")
@@ -33,7 +36,7 @@ public class OrderBookController {
     @PutMapping("/{orderId}/status")
     public ResponseEntity<CommonDto<OrderResponsDto>> updateOrderStatus(@PathVariable Long orderId,
                                                        @RequestBody OrderStatusRequestDto statusUpdate,
-                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
+                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) throws MessagingException, UnsupportedEncodingException {
         OrderResponsDto updatedOrder = orderBookService.updateOrderStatus(orderId, userDetails.getUser(), statusUpdate);
         return ResponseEntity
                 .status(HttpStatus.OK)

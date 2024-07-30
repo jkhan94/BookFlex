@@ -1,0 +1,37 @@
+/* CategoryPage.css */
+.category-page {
+    padding: 20px;
+}
+
+.book-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.book-card {
+    border: 1px solid #ddd;
+    padding: 16px;
+    margin: 8px;
+    display: flex;
+    flex-direction: column;
+    width: calc(33.333% - 16px);
+    box-sizing: border-box;
+}
+
+.book-card img {
+    max-width: 100%;
+    height: auto;
+}
+
+.book-info {
+    margin-top: 8px;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+}
+
+.loading {
+    font-size: 18px;
+}

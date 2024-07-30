@@ -1,6 +1,5 @@
 package com.sparta.bookflex.domain.user.controller;
 
-import com.amazonaws.services.ec2.model.LaunchTemplateHibernationOptions;
 import com.sparta.bookflex.common.aop.Envelop;
 import com.sparta.bookflex.common.config.JwtConfig;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
@@ -26,6 +25,7 @@ import java.util.List;
 public class AuthController {
 
     private final AuthService authService;
+//    private final SocialService socialService;
 
     @Envelop("가입되었습니다.")
     @PostMapping("/signup")
@@ -80,4 +80,14 @@ public class AuthController {
 
         return ResponseEntity.ok().body(null);
     }
+
+//    @GetMapping("kakao/callback")
+//    public ResponseEntity<String> kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+//        List<String> tokens = socialService.kakaoLogin(code);
+//        response.addHeader(JwtConfig.ACCESS_TOKEN_HEADER, tokens.get(0));
+//        response.addHeader(JwtConfig.REFRESH_TOKEN_HEADER,tokens.get(1));// response header에 access token 넣기
+//
+//
+//        return ResponseEntity.status(HttpStatus.OK).body("카카오 로그인 하였습니다.");
+//    }
 }
