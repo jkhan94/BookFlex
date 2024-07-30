@@ -2,6 +2,7 @@ package com.sparta.bookflex.domain.orderbook.controller;
 
 import com.sparta.bookflex.common.dto.CommonDto;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
+import com.sparta.bookflex.domain.orderbook.dto.OrderCreateResponseDto;
 import com.sparta.bookflex.domain.orderbook.dto.OrderRequestDto;
 import com.sparta.bookflex.domain.orderbook.dto.OrderResponsDto;
 import com.sparta.bookflex.domain.orderbook.dto.OrderStatusRequestDto;
@@ -25,12 +26,14 @@ public class OrderBookController {
     }
 
     @PostMapping("")
-    public ResponseEntity<CommonDto<Void>> createOrder(@RequestBody OrderRequestDto orderRequestDto,
-                                                 @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        orderBookService.createOrder(orderRequestDto, userDetails.getUser());
+    public ResponseEntity<OrderCreateResponseDto> createOrder(@RequestBody OrderRequestDto orderRequestDto,
+                                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        OrderCreateResponseDto responseDto = OrderCreateResponseDto.builder()
+                .orderId(orderBookService.createOrder(orderRequestDto, userDetails.getUser()).getId())
+                .build();
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new CommonDto<>(HttpStatus.CREATED.value(), "주문이 완료되었습니다.", null));
+                .body(responseDto);
     }
 
     @PutMapping("/{orderId}/status")
@@ -43,12 +46,12 @@ public class OrderBookController {
                 .body(new CommonDto<>(HttpStatus.OK.value(),  "주문상태가 변경되었습니다.",updatedOrder));
     }
     @GetMapping("/{orderId}")
-    public ResponseEntity<CommonDto<OrderResponsDto>> getOrderById(@PathVariable Long orderId,
+    public ResponseEntity<OrderResponsDto> getOrderById(@PathVariable Long orderId,
                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         OrderResponsDto orderResponseDto = orderBookService.getOrderById(orderId, userDetails.getUser());
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new CommonDto<>(HttpStatus.OK.value(), "주문조회에 성공했습니다.", orderResponseDto));
+                .body(orderResponseDto);
     }
     
 }
