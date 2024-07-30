@@ -1,0 +1,154 @@
+/* CartPage.css */
+
+body {
+    font-family: 'Nanum Gothic', sans-serif;
+    background-color: #f7f1e3;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.cart-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.cart-card {
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 90%;
+    max-width: 2500px; /* 카드 너비를 2배로 넓힘 */
+}
+
+h1 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px; /* 항목 간 간격을 넓힘 */
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ecf0f1;
+    animation: fadeIn 0.5s ease-out forwards;
+    justify-content: space-between;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+.item-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 10px;
+    object-fit: cover;
+    margin-right: 20px;
+}
+
+.item-details {
+    flex-grow: 1;
+    margin-right: 30px; /* 버튼과 제목 간 간격을 넓힘 */
+}
+
+.item-title {
+    font-weight: bold;
+    color: #34495e;
+    margin-bottom: 10px;
+    font-size: 1.3em; /* 책 제목을 더 크게 */
+}
+
+.item-price {
+    color: #e74c3c;
+}
+
+.item-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* 오른쪽으로 정렬 */
+}
+
+.quantity-btn, .remove-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    width: 0px; /* 버튼 너비 */
+    height: 20px; /* 버튼 높이 */
+    border-radius: 100%; /* 동그랗게 만들기 */
+    cursor: pointer;
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s;
+    margin-left: 10px; /* 버튼 사이 간격 */
+}
+
+.quantity-btn:hover, .remove-btn:hover {
+    background-color: #2980b9;
+}
+
+.remove-btn {
+    background-color: #e74c3c;
+}
+
+.remove-btn:hover {
+    background-color: #c0392b;
+}
+
+.quantity-input {
+    width: 60px; /* 수량 입력 필드 너비 */
+    text-align: center;
+    margin: 0 15px; /* 버튼과의 간격 */
+    font-weight: bold;
+}
+
+.cart-total {
+    text-align: right;
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-top: 20px;
+    color: #2c3e50;
+}
+
+.checkout-btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+}
+
+.checkout-btn:hover {
+    background-color: #27ae60;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-20px); }
+}
+
+.cart-item.removing {
+    animation: fadeOut 0.5s ease-out forwards;
+}
