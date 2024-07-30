@@ -17,7 +17,7 @@ const LoginPage = () => {
 
         axiosInstance.post('auth/login', data)
             .then(response => {
-                const { accessToken } = response.data.accessToken;
+                const { accessToken, auth } = response.data;
 
                 // 로그인 성공 후, 모든 axios 요청에 accessToken을 자동으로 포함시키기 위해 설정
                 axiosInstance.defaults.headers.common['Authorization'] = accessToken;
@@ -28,7 +28,6 @@ const LoginPage = () => {
                 console.log('Authorization header after login:', axiosInstance.defaults.headers.common['Authorization']);
 
                 // 추가적인 처리 (예: 역할에 따라 리디렉션)
-                const { auth } = response.data.auth; // 역할 정보
                 if (auth === 'ADMIN') {
                     navigate('/admin');
                 } else {

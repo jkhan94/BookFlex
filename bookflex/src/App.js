@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 import Header from './components/Header'; // 경로 확인
 import Sidebar from './components/Sidebar'; // 경로 확인
@@ -22,11 +22,18 @@ import ProfilePage from './pages/user/ProfilePage';
 import UserQnAPage from './pages/user/UserQnAPage'; // 유저 Q&A 페이지 임포트
 import AdminQnAPage from './pages/admin/AdminQnAPage'
 import BookDetailPage from './pages/user/BookDetailPage';
+import axiosInstance from './api/axiosInstance';
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [userRole, setUserRole] = useState(null);
 
+    useEffect(() => {
+        const accessToken = localStorage.getItem('Authorization');
+        if (accessToken) {
+            axiosInstance.defaults.headers.common['Authorization'] = accessToken;
+        }
+    }, []);
     const handleLogin = (role) => {
         setIsLoggedIn(true);
         setUserRole(role);
