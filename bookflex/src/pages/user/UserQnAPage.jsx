@@ -31,15 +31,13 @@ const UserQnaPage = () => {
     const [qnaType, setQnaType] = useState('');
     const [inquiry, setInquiry] = useState('');
     const [qnaTypes, setQnaTypes] = useState([]); // 문의 유형 데이터
-    const [selectedQna, setSelectedQna] = useState(null); // 선택된 QnA 저장
     const [successMessage, setSuccessMessage] = useState(''); // 성공 메시지
-
-    const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem('Authorization');
 
         const fetchQnaList = async () => {
+            setLoading(true);
             try {
                 const response = await axiosInstance.get('/qnas', {
                     headers: {
@@ -74,15 +72,45 @@ const UserQnaPage = () => {
                         'Content-Type': 'application/json',
                     },
                 });
-                setQnaTypes(response.data);
+                setQnaTypes(response.data.data);
             } catch (err) {
                 console.error('Failed to fetch Qna Types', err);
                 setError('문의 유형을 불러오지 못했습니다.');
             }
         };
+
         fetchQnaList();
         fetchQnaTypes();
     }, [currentPage]);
+
+    const fetchQnaList = async () => {
+        const token = localStorage.getItem('Authorization');
+        setLoading(true);
+        try {
+            const response = await axiosInstance.get('/qnas', {
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json',
+                },
+                params: {
+                    page: currentPage,
+                    size: PAGE_SIZE,
+                    sortBy: 'createdAt'
+                }
+            });
+
+            if (Array.isArray(response.data.data)) {
+                setQnaList(response.data.data);
+                setHasMore(response.data.data.length === PAGE_SIZE);
+            } else {
+                throw new Error('API response is not an array');
+            }
+        } catch (err) {
+            setError(err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handlePreviousPage = () => {
         if (currentPage > 1) {
@@ -141,6 +169,7 @@ const UserQnaPage = () => {
             setQnaType('');
             setInquiry('');
             setError('');
+            fetchQnaList(); // 새로운 문의가 성공적으로 제출된 후 QnA 목록을 새로 고침
         } catch (err) {
             setError('문의 제출에 실패했습니다.');
         } finally {
