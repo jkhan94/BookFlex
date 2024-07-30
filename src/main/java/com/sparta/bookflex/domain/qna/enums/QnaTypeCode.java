@@ -12,11 +12,7 @@ public enum QnaTypeCode {
 
     final private String typeName;
 
-    public String getQnaTypeName() {
-        return typeName;
-    }
-
-    private QnaTypeCode(String typeName) {
+    QnaTypeCode(String typeName) {
         this.typeName = typeName;
     }
 
