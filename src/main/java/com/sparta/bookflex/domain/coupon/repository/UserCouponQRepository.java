@@ -7,8 +7,7 @@ import org.springframework.data.domain.Pageable;
 public interface UserCouponQRepository {
     Page<UserCoupon> findAllByUserId(long userId, Pageable pageable);
 
-    void updateGradeCoupon();
+    void deleteUserCoupon();
 
-    void updateBirthdayCoupon();
 }
 

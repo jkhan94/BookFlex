@@ -26,17 +26,19 @@ public class CouponScheduleService {
     }
 
     public void updateGradeCoupon() {
-        userCouponRepository.updateGradeCoupon();
+        userCouponRepository.deleteUserCoupon();
+        couponRepository.updateGradeCoupon();
         List<Coupon> coupons = couponRepository.findByCouponType(CouponType.GRADE);
-        for(Coupon coupon : coupons){
+        for (Coupon coupon : coupons) {
             couponService.issueCouponToAll(coupon.getId());
         }
     }
 
     public void updateBirthdayCoupon() {
-        userCouponRepository.updateBirthdayCoupon();
+        userCouponRepository.deleteUserCoupon();
+        couponRepository.updateBirthdayCoupon();
         List<Coupon> coupons = couponRepository.findByCouponType(CouponType.BIRTHDAY);
-        for(Coupon coupon : coupons){
+        for (Coupon coupon : coupons) {
             couponService.issueCouponToAll(coupon.getId());
         }
     }
