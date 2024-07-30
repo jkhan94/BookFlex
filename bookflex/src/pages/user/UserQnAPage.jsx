@@ -140,7 +140,7 @@ const UserQnaPage = () => {
                 }
             });
 
-            setQnaList(prevList => prevList.filter(qna => qna.qnaId !== qnaId));
+            fetchQnaList(); // 삭제 후 QnA 목록을 새로 고침
         } catch (err) {
             setError('문의 삭제에 실패했습니다.');
         }

@@ -35,35 +35,36 @@ const AdminQnAPage = () => {
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchQnaList = async () => {
-            const token = localStorage.getItem('Authorization');
-            try {
-                const response = await axiosInstance.get('/qnas/admin', {
-                    headers: {
-                        Authorization: token,
-                        'Content-Type': 'application/json',
-                    },
-                    params: {
-                        page: currentPage,
-                        size: PAGE_SIZE,
-                        sortBy: 'createdAt'
-                    }
-                });
-
-                if (Array.isArray(response.data.data)) {
-                    setQnaList(response.data.data);
-                    setHasMore(response.data.data.length === PAGE_SIZE);
-                } else {
-                    throw new Error('API response is not an array');
+    const fetchQnaList = async () => {
+        const token = localStorage.getItem('Authorization');
+        setLoading(true);
+        try {
+            const response = await axiosInstance.get('/qnas/admin', {
+                headers: {
+                    Authorization: token,
+                    'Content-Type': 'application/json',
+                },
+                params: {
+                    page: currentPage,
+                    size: PAGE_SIZE,
+                    sortBy: 'createdAt'
                 }
-            } catch (err) {
-                setError(err);
-            } finally {
-                setLoading(false);
-            }
-        };
+            });
 
+            if (Array.isArray(response.data.data)) {
+                setQnaList(response.data.data);
+                setHasMore(response.data.data.length === PAGE_SIZE);
+            } else {
+                throw new Error('API response is not an array');
+            }
+        } catch (err) {
+            setError(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         fetchQnaList();
     }, [currentPage]);
 
@@ -107,12 +108,8 @@ const AdminQnAPage = () => {
                 }
             });
 
-            setQnaList(prevList =>
-                prevList.map(qna =>
-                    qna.qnaId === selectedQna.qnaId ? { ...qna, reply: replyText } : qna
-                )
-            );
             handleCloseModal();
+            fetchQnaList(); // 답변 후 QnA 목록 새로 고침
         } catch (err) {
             setError('답변 제출에 실패했습니다.');
         }
@@ -134,7 +131,7 @@ const AdminQnAPage = () => {
                 }
             });
 
-            setQnaList(prevList => prevList.filter(qna => qna.qnaId !== qnaId));
+            fetchQnaList(); // 삭제 후 QnA 목록 새로 고침
         } catch (err) {
             setError('문의 삭제에 실패했습니다.');
         }
