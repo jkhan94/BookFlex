@@ -28,7 +28,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static com.sparta.bookflex.common.exception.ErrorCode.*;
 import static com.sparta.bookflex.domain.coupon.entity.Coupon.toCouponResponseDto;

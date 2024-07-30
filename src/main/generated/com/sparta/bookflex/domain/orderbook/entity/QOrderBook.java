@@ -27,7 +27,7 @@ public class QOrderBook extends EntityPathBase<OrderBook> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
-    public final NumberPath<java.math.BigDecimal> discountPrice = createNumber("discountPrice", java.math.BigDecimal.class);
+    public final NumberPath<java.math.BigDecimal> discount = createNumber("discount", java.math.BigDecimal.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 

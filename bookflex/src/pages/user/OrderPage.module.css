@@ -1,94 +1,76 @@
-/* OrderPage.module.css */
 .container {
-    font-family: 'Nanum Gothic', sans-serif;
-    background-color: #f7f1e3;
-    margin: 0;
     padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
 }
 
 .orderContainer {
-    background-color: #ffffff;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    padding: 30px;
-    width: 90%;
-    max-width: 600px;
-    animation: fadeIn 0.5s ease-out forwards;
-}
-
-h1, h2 {
-    color: #2c3e50;
-    text-align: center;
-    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 5px;
 }
 
 .orderItem {
     display: flex;
-    align-items: center;
     margin-bottom: 15px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #ecf0f1;
-}
-
-.orderItem:last-child {
-    border-bottom: none;
 }
 
 .itemImage {
-    width: 80px;
-    height: 80px;
-    border-radius: 8px;
+    width: 100px;
+    height: 100px;
     object-fit: cover;
     margin-right: 15px;
 }
 
 .itemDetails {
-    flex-grow: 1;
+    flex: 1;
 }
 
 .itemName {
+    font-size: 16px;
     font-weight: bold;
-    color: #34495e;
-    margin-bottom: 5px;
 }
 
-.itemPrice, .itemQuantity {
-    color: #7f8c8d;
-    font-size: 0.9em;
+.itemPrice {
+    color: #555;
 }
 
 .total, .finalTotal {
-    text-align: right;
-    font-size: 1.2em;
-    font-weight: bold;
-    margin-top: 20px;
-    color: #2c3e50;
+    font-size: 18px;
+    margin-top: 15px;
 }
 
 .payBtn {
-    display: block;
-    width: 100%;
-    padding: 15px;
-    background-color: #2ecc71;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 8px;
-    font-size: 1.1em;
-    font-weight: bold;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
-    margin-top: 20px;
 }
 
-.payBtn:hover {
-    background-color: #27ae60;
+.couponList {
+    list-style-type: none;
+    padding: 0;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+.couponItem {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.couponName {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.couponDetails {
+    font-size: 14px;
+    color: #555;
+}
+
+.couponValidity {
+    font-size: 12px;
+    color: #777;
 }
