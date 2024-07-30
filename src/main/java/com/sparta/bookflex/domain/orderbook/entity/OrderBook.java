@@ -32,8 +32,8 @@ public class OrderBook extends Timestamped {
     private String orderNo;
 
 
-    @Column(name = "discountPrice",precision = 10, scale = 2)
-    private BigDecimal discountPrice;
+    @Column(name = "discount",precision = 10, scale = 2)
+    private BigDecimal discount;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -51,8 +51,8 @@ public class OrderBook extends Timestamped {
     public OrderBook(OrderState status, BigDecimal total, User user, BigDecimal discountPrice,String orderNo) {
         this.status = status;
         this.user = user;
-        this.discountPrice = discountPrice != null ? discountPrice : BigDecimal.ZERO;
-        this.total = total != null ? total.subtract(this.discountPrice) : BigDecimal.ZERO;
+        this.discount = discountPrice != null ? discountPrice : BigDecimal.ZERO;
+        this.total = total != null ? total.subtract(this.discount) : BigDecimal.ZERO;
     }
 
     public void updateSaleList(List<OrderItem> orderItemList) {
@@ -61,5 +61,10 @@ public class OrderBook extends Timestamped {
 
     public void updateStatus(OrderState status) {
         this.status = status;
+    }
+
+    public void updateDiscount(BigDecimal discount) {
+        this.discount = discount;
+        this.total = total.subtract(discount);
     }
 }

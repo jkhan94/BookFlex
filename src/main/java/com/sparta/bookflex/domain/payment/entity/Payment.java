@@ -55,9 +55,12 @@ public class Payment extends Timestamped {
     @Column(name = "cancel_reason")
     private String cancelReason;
 
+    @Column(name = "discount")
+    private BigDecimal discount;
+
     @Builder
-    public Payment(int total, PayType payType, PaymentStatus status, OrderBook orderBook, boolean paySuccessYN, User user, String payToken, String failReason, boolean cancelYN, String cancelReason) {
-        this.total = total;
+    public Payment(int total, PayType payType, PaymentStatus status, OrderBook orderBook, boolean paySuccessYN, User user, String payToken, String failReason, boolean cancelYN, String cancelReason, BigDecimal discount) {
+        this.discount = discount != null ? discount : BigDecimal.ZERO;
         this.payType = payType;
         this.status = status;
         this.orderBook = orderBook;
@@ -67,6 +70,7 @@ public class Payment extends Timestamped {
         this.failReason = failReason;
         this.cancelYN = cancelYN;
         this.cancelReason = cancelReason;
+        this.total = total-discount.intValue();
     }
 
     public void updateStatus(PaymentStatus status) {
