@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../api/axiosInstance';
+import { useNavigate } from 'react-router-dom'; // useNavigate 훅을 임포트
 import styles from './CartPage.module.css'; // 스타일을 위한 CSS 모듈 임포트
 
 const CartPage = () => {
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate(); // useNavigate 훅을 사용하여 리다이렉트
 
     useEffect(() => {
         const fetchCartItems = async () => {
@@ -52,6 +54,26 @@ const CartPage = () => {
 
     const calculateTotal = () => {
         return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    };
+
+    const handleCheckout = async () => {
+        try {
+            const orderRequestDto = {
+                items: cartItems.map(item => ({
+                    bookId: item.bookId,
+                    price: item.price,
+                    quantity: item.quantity
+                }))
+            };
+
+            const response = await axiosInstance.post('/orders', orderRequestDto);
+            const orderId = response.data.orderId; // 응답에서 주문 ID를 추출
+
+            // 주문 페이지로 리다이렉트
+            navigate(`/main/order/${orderId}`);
+        } catch (error) {
+            console.error('Error creating order:', error);
+        }
     };
 
     if (loading) return <div>Loading...</div>;
@@ -108,7 +130,7 @@ const CartPage = () => {
                     <span>₩{calculateTotal().toLocaleString()}</span>
                 </div>
                 <div className={styles.checkoutContainer}>
-                    <button className={styles.checkoutBtn} onClick={() => alert('주문이 완료되었습니다. 감사합니다!')}>주문하기</button>
+                    <button className={styles.checkoutBtn} onClick={handleCheckout}>주문하기</button>
                 </div>
             </div>
         </div>

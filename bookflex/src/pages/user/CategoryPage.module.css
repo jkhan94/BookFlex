@@ -1,37 +1,60 @@
-
-.category-page {
+/* 전체 페이지에 여백을 추가합니다. */
+.categoryPage {
     padding: 20px;
 }
 
-.book-list {
+/* 책 카드 목록을 Flexbox로 배치하여 카드가 여러 행에 걸쳐 표시되도록 합니다. */
+.bookCards {
     display: flex;
     flex-wrap: wrap;
+    gap: 16px; /* 카드 간의 간격을 조정합니다. */
 }
 
-.book-card {
+/* 책 카드 디자인을 정의합니다. */
+.bookCard {
     border: 1px solid #ddd;
     padding: 16px;
-    margin: 8px;
     display: flex;
     flex-direction: column;
-    width: calc(33.333% - 16px);
-    box-sizing: border-box;
+    width: calc(33.333% - 16px); /* 카드 너비를 설정합니다. */
+    box-sizing: border-box; /* padding과 border를 포함하여 너비를 계산합니다. */
+    background-color: #fff; /* 카드 배경 색상 추가 */
 }
 
-.book-card img {
-    max-width: 100%;
-    height: auto;
+/* 책 카드 내 이미지 스타일을 정의합니다. */
+.bookImage {
+    max-width: 100%; /* 이미지의 너비가 카드의 너비를 넘지 않도록 합니다. */
+    height: auto; /* 이미지의 비율을 유지하면서 높이를 자동으로 조절합니다. */
+    margin-bottom: 8px; /* 이미지와 정보 사이의 간격을 추가합니다. */
 }
 
-.book-info {
-    margin-top: 8px;
+/* 책 정보 스타일을 정의합니다. */
+.bookDetails {
+    display: flex;
+    flex-direction: column; /* 정보 요소를 수직으로 배치합니다. */
 }
 
+.CategoryBookTitle  {
+    margin: 0; /* 제목과 저자 정보 사이의 기본 여백을 제거합니다. */
+    font-size: 16px; /* 제목 폰트 크기 조정 */
+    text-align: left;
+}
+
+.bookAuthor,
+.bookPrice {
+    margin: 4px 0 0; /* 정보 항목 간의 간격 조정 */
+    font-size: 14px; /* 저자와 가격 폰트 크기 조정 */
+    color: #555; /* 색상 조정 */
+}
+
+/* 오류 메시지 스타일을 정의합니다. */
 .error {
     color: red;
     font-weight: bold;
 }
 
+/* 로딩 상태 글자 스타일을 정의합니다. */
 .loading {
     font-size: 18px;
+    font-weight: normal; /* 기본 폰트 두께를 설정합니다. */
 }

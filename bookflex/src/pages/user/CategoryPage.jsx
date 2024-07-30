@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../api/axiosInstance';
 import { useParams } from 'react-router-dom';
-import './CategoryPage.module.css'; // 스타일을 위한 CSS 파일 임포트
+import styles from './CategoryPage.module.css'; // CSS 모듈 사용
 
 const CategoryPage = () => {
     const { categoryName } = useParams();
@@ -29,22 +29,22 @@ const CategoryPage = () => {
         fetchBooks();
     }, [categoryName]);
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <div className={styles.loading}>Loading...</div>;
 
     return (
-        <div className="category-page">
+        <div className={styles.categoryPage}>
             <h1>{categoryName} Books</h1>
             {books.length === 0 ? (
                 <p>No books found.</p>
             ) : (
-                <div className="book-cards">
+                <div className={styles.bookCards}>
                     {books.map(book => (
-                        <div key={book.bookId} className="book-card">
-                            <img src={book.photoImagePath} alt={book.bookName} className="book-image" />
-                            <div className="book-details">
-                                <h2 className="book-title">{book.bookName}</h2>
-                                <p className="book-author">Author: {book.author}</p>
-                                <p className="book-price">Price: ${book.price.toFixed(2)}</p>
+                        <div key={book.bookId} className={styles.bookCard}>
+                            <img src={book.photoImagePath} alt={book.bookName} className={styles.bookImage} />
+                            <div className={styles.bookDetails}>
+                                <h2 className={styles.CategoryBookTitle }>{book.bookName}</h2>
+                                <p className={styles.bookAuthor}>Author: {book.author}</p>
+                                <p className={styles.bookPrice}>Price: ${book.price.toFixed(2)}</p>
                             </div>
                         </div>
                     ))}
