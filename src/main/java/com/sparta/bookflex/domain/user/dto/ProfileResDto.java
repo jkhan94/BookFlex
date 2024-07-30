@@ -4,6 +4,7 @@ import com.sparta.bookflex.domain.user.enums.UserGrade;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -16,5 +17,6 @@ public class ProfileResDto {
     private String phoneNumber;
     private String nickname;
     private UserGrade grade;
+    private LocalDate birthday;
     private LocalDateTime createdAt;
 }
