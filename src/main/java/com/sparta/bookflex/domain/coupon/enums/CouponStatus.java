@@ -16,9 +16,9 @@ public enum CouponStatus {
     }
 
     @JsonCreator
-    public static CouponStatus toJson(String qnaType) {
+    public static CouponStatus toJson(String couponStatus) {
         for (CouponStatus type : CouponStatus.values()) {
-            if (type.getStatus().equals(qnaType)) {
+            if (type.getStatus().equals(couponStatus)) {
                 return type;
             }
         }
