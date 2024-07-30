@@ -45,6 +45,8 @@ public class OrderBookService {
     private final PhotoImageService photoImageService;
     private final SaleRepository saleRepository;
 
+    private final CouponService couponService;
+
     @Autowired
     public OrderBookService(OrderItemRepository orderItemRepository,
                             OrderBookRepository orderBookRepository,

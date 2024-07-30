@@ -4,6 +4,7 @@ import com.sparta.bookflex.common.dto.CommonDto;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
 import com.sparta.bookflex.domain.payment.dto.*;
 import com.sparta.bookflex.domain.payment.service.PaymentService;
+import jakarta.mail.MessagingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.UnsupportedEncodingException;
 
 @RestController
 @RequestMapping("/payements")
@@ -29,7 +32,7 @@ public class PaymentController {
     }
 
     @PostMapping("/success")
-    public ResponseEntity<CommonDto<Void>> handlePaymentSuccess(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody TossResultRequestDto resultRequestDto) {
+    public ResponseEntity<CommonDto<Void>> handlePaymentSuccess(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody TossResultRequestDto resultRequestDto) throws MessagingException, UnsupportedEncodingException {
 
         paymentService.processPayment(userDetails.getUser(), resultRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(new CommonDto<>(HttpStatus.CREATED.value(), "결제가 완료되었습니다.", null));

@@ -16,6 +16,7 @@ import com.sparta.bookflex.domain.payment.enums.PaymentStatus;
 import com.sparta.bookflex.domain.payment.repository.PaymentRepository;
 import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.service.AuthService;
+import jakarta.mail.MessagingException;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +28,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -184,7 +186,7 @@ public class PaymentService {
 
 
     @Transactional
-    public void processPayment(User user, TossResultRequestDto tossResultRequestDto) {
+    public void processPayment(User user, TossResultRequestDto tossResultRequestDto) throws MessagingException, UnsupportedEncodingException {
         Payment payment = paymentRepository.findByPayToken(tossResultRequestDto.getPayToken());
         payment.updateStatus(PaymentStatus.PAY_COMPLETE);
         payment.updateIsSuccessYN(true);
