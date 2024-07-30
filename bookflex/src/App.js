@@ -65,7 +65,7 @@ function App() {
                     <Route path="/main" element={<UserLayout/>}>
                         <Route path="dashboard" element={<UserMainPage/>}/>
                         <Route path="cart" element={<CartPage/>}/>
-                        <Route path="order" element={<OrderPage/>}/>
+                        <Route path="order/:orderId" element={<OrderPage/>}/>
                         <Route path="payment-history" element={<PaymentHistoryPage/>}/>
                         <Route path="category/:categoryName" element={<CategoryPage/>}/>
                         <Route path="wishlist" element={<WishlistPage/>}/>
