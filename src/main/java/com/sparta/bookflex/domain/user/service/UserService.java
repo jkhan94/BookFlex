@@ -9,6 +9,7 @@ import com.sparta.bookflex.domain.user.dto.StateReqDto;
 import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public ProfileResDto getProfile(User user) {
 
@@ -29,8 +31,8 @@ public class UserService {
     public ProfileResDto updateProfile(User user, ProfileReqDto reqDto) {
 
         User currentUser = getUser(user);
-
-        currentUser.updateProfile(reqDto.getPassword(), reqDto.getNickname(), reqDto.getPhoneNumber(), reqDto.getAddress());
+        String password = passwordEncoder.encode(reqDto.getPassword());
+        currentUser.updateProfile(password, reqDto.getNickname(), reqDto.getPhoneNumber(), reqDto.getAddress());
 
         return User.of(currentUser);
     }

@@ -55,7 +55,7 @@ public enum ErrorCode {
     NOT_LEAF_CATEGORY(HttpStatus.BAD_REQUEST, "하위 카테고리를 선택해주세요."),
 
     // 토큰
-    EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "이미 만료된 토큰입니다"),
+    EXPIRED_TOKEN(HttpStatus.PAYMENT_REQUIRED, "이미 만료된 토큰입니다"),
 
     // 고객문의
     QNA_CREATE_NOT_ALLOWED(HttpStatus.FORBIDDEN, "문의를 남길 수 없습니다."),

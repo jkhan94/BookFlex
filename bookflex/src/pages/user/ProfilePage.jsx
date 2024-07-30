@@ -1,12 +1,9 @@
-import React, {useEffect, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './ProfilePage.module.css'; // CSS 모듈 임포트
 import axiosInstance from "../../api/axiosInstance";
 
 const ProfilePage = () => {
-
-    // const token = localStorage.getItem("Authorization");
-    // console.log(token);
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [address, setAddress] = useState('');
@@ -32,6 +29,9 @@ const ProfilePage = () => {
             } catch (error) {
                 console.error("Profile Check error", error.response ? error.response.data : error.message);
                 alert('프로필 조회에 실패하였습니다. 다시 시도해 주세요.');
+                if (error.response?.status === 401) {
+                    navigate('/login'); // 토큰이 만료되어 재발급에도 실패한 경우 로그인 페이지로 리디렉션
+                }
             }
         };
 
