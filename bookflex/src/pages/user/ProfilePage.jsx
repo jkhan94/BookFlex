@@ -1,7 +1,7 @@
-import React, {useState, useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import styles from './ProfilePage.module.css'; // CSS 모듈 임포트
-import axiosInstance from "../../api/axiosInstance"; // 수정된 Axios 인스턴스 임포트
+import axiosInstance from "../../api/axiosInstance";
 
 const ProfilePage = () => {
 
@@ -20,11 +20,7 @@ const ProfilePage = () => {
     useEffect(() => {
         const getProfileResDto = async () => {
             try {
-                const response = await axiosInstance.get(`/users`, {
-                    // headers: {
-                    //     Authorization: `${token}`
-                    // },
-                });
+                const response = await axiosInstance.get(`/users`, {});
                 setUsername(response.data.username);
                 setEmail(response.data.email);
                 setAddress(response.data.address);
@@ -41,6 +37,10 @@ const ProfilePage = () => {
 
         getProfileResDto();
     }, [navigate]);
+
+    const modifyBtnClick = (e) => {
+        navigate('/main/profile-modify');
+    }
 
     return (
         <div className={styles.container}>
@@ -80,6 +80,7 @@ const ProfilePage = () => {
                     <span className={styles.value}>{createdAt}</span>
                 </div>
             </div>
+            <button className="modify-button" onClick={modifyBtnClick}>Profile Modify</button>
         </div>
     );
 };
