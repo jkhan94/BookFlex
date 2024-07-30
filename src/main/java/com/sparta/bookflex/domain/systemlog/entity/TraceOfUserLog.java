@@ -34,17 +34,16 @@ public class TraceOfUserLog {
     private LocalDateTime createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @ManyToOne
     @JoinColumn(name = "book_id")
     private Book book;
+
+    @Column
+    String username;
 
     public TraceOfUserLog(ActionType action, String description, User user, Book book) {
         this.activityType = action;
         this.description = description;
-        this.user = user;
         this.book = book;
+        username = user.getUsername();
     }
 }
