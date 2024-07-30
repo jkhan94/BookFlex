@@ -4,6 +4,7 @@ import com.sparta.bookflex.common.aop.Envelop;
 import com.sparta.bookflex.common.config.JwtConfig;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
 import com.sparta.bookflex.domain.user.dto.LoginReqDto;
+import com.sparta.bookflex.domain.user.dto.LoginResDto;
 import com.sparta.bookflex.domain.user.dto.SignUpReqDto;
 import com.sparta.bookflex.domain.user.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,6 +25,7 @@ import java.util.List;
 public class AuthController {
 
     private final AuthService authService;
+//    private final SocialService socialService;
 
     @Envelop("가입되었습니다.")
     @PostMapping("/signup")
@@ -34,12 +36,18 @@ public class AuthController {
 
     @Envelop("로그인에 성공하였습니다.")
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@Valid @RequestBody LoginReqDto loginReqDto, HttpServletResponse response) {
+    public ResponseEntity<LoginResDto> login(@Valid @RequestBody LoginReqDto loginReqDto, HttpServletResponse response) {
         List<String> tokens = authService.login(loginReqDto);
-        response.addHeader(JwtConfig.ACCESS_TOKEN_HEADER, tokens.get(0));
-        response.addHeader(JwtConfig.REFRESH_TOKEN_HEADER,tokens.get(1));
+        String accessToken = tokens.get(0);
+        String refreshToken = tokens.get(1);
+        response.addHeader(JwtConfig.ACCESS_TOKEN_HEADER, accessToken);
+        response.addHeader(JwtConfig.REFRESH_TOKEN_HEADER,refreshToken);
 
-        return ResponseEntity.ok().body(null);
+        LoginResDto loginResDto = LoginResDto.builder()
+                .auth(authService.getUserRole(loginReqDto.getUsername()))
+                .accessToken(accessToken)
+                .build();
+        return ResponseEntity.ok().body(loginResDto);
     }
 
     @Envelop("탈퇴했습니다. 그동안 이용해주셔서 감사합니다.")
@@ -72,4 +80,14 @@ public class AuthController {
 
         return ResponseEntity.ok().body(null);
     }
+
+//    @GetMapping("kakao/callback")
+//    public ResponseEntity<String> kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+//        List<String> tokens = socialService.kakaoLogin(code);
+//        response.addHeader(JwtConfig.ACCESS_TOKEN_HEADER, tokens.get(0));
+//        response.addHeader(JwtConfig.REFRESH_TOKEN_HEADER,tokens.get(1));// response header에 access token 넣기
+//
+//
+//        return ResponseEntity.status(HttpStatus.OK).body("카카오 로그인 하였습니다.");
+//    }
 }

@@ -23,10 +23,12 @@ import com.sparta.bookflex.domain.systemlog.enums.ActionType;
 import com.sparta.bookflex.domain.systemlog.repository.TraceOfUserLogRepository;
 import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.service.AuthService;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +41,9 @@ public class OrderBookService {
     private final AuthService authService;
     private final BookService bookService;
     private final TraceOfUserLogRepository traceOfUserLogRepository;
-    private final CouponService couponService;
+
     private final PhotoImageService photoImageService;
     private final SaleRepository saleRepository;
-
 
     @Autowired
     public OrderBookService(OrderItemRepository orderItemRepository,
@@ -94,8 +95,7 @@ public class OrderBookService {
                 .build();
             orderItemList.add(orderItem);
         }
-
-
+//만든 orderitemList를 기반으로 orderbook을 만든다.
         OrderBook orderBook = OrderBook.builder()
             .status(OrderState.PENDING_PAYMENT)
             .total(total)
@@ -106,7 +106,7 @@ public class OrderBookService {
         for (OrderItem orderItem : orderItemList) {
             orderItem.updateOrderBook(orderBook);
         }
-
+// 로그를 남긴다.
         for (OrderItem orderItem : orderItemList) {
             String bookName = orderItem.getBook().getBookName();
             traceOfUserLogRepository.save(
@@ -127,17 +127,23 @@ public class OrderBookService {
 
 
     @Transactional
-    public OrderResponsDto updateOrderStatus(Long orderId, User user, OrderStatusRequestDto statusUpdate) {
+    public OrderResponsDto updateOrderStatus(Long orderId, User user, OrderStatusRequestDto statusUpdate) throws MessagingException, UnsupportedEncodingException {
         OrderBook orderBook = getOrderBook(orderId);
 
         OrderState status = statusUpdate.getStatus();
         if (orderBook.getStatus().equals(status)) {
-            throw new BusinessException(ErrorCode.ORDER_STATUS_NOT_CHANGED);
+            throw new IllegalArgumentException("변경 전과 후가 동일한 상태입니다.");
         }
 
         orderBook.updateStatus(status);
-        boolean isOrderCancelled = status.equals(OrderState.ORDER_CANCELLED) || status.equals(OrderState.SALE_COMPLETED) || status.equals(OrderState.REFUND_PROCESSING );
+        boolean isOrderCancelled = status.equals(OrderState.ORDER_CANCELLED) || status.equals(OrderState.SALE_COMPLETED) || status.equals(OrderState.REFUND_PROCESSING);
 
+//        EmailMessage emailMessage = EmailMessage.builder()
+//                .to(user.getEmail())
+//                .subject("[bookFlex] 배송현황안내")
+//                .message("배송 현황을 아래와 같이 안내드립니다.").build();
+//
+//        emailService.sendEmail(emailMessage, orderBook);
         if (isOrderCancelled) {
             for (Sale sale : orderBook.getSaleList()) {
                 sale.updateStatus(statusUpdate.getStatus());
@@ -147,28 +153,28 @@ public class OrderBookService {
         List<OrderItemResponseDto> orderItemResponseDtoList = new ArrayList<>();
         for (OrderItem orderItem : orderBook.getOrderItemList()) {
             Book book = orderItem.getBook();
-            if(isOrderCancelled) {
+            if (isOrderCancelled) {
                 book.increaseStock(orderItem.getQuantity());
             }
             OrderItemResponseDto orderItemResponseDto = OrderItemResponseDto.builder()
-                .orderItemId(orderItem.getOrderBook().getId())
-                .price(orderItem.getPrice())
-                .total(orderItem.getPrice())
-                .createdAt(orderItem.getCreatedAt())
-                .bookName(orderItem.getBook().getBookName())
-                .quantity(orderItem.getQuantity())
-                .photoImagePath(photoImageService.getPhotoImageUrl(orderItem.getBook().getPhotoImage().getFilePath()))
-                .build();
+                    .orderItemId(orderItem.getOrderBook().getId())
+                    .price(orderItem.getPrice())
+                    .total(orderItem.getPrice())
+                    .createdAt(orderItem.getCreatedAt())
+                    .bookName(orderItem.getBook().getBookName())
+                    .quantity(orderItem.getQuantity())
+                    .photoImagePath(photoImageService.getPhotoImageUrl(orderItem.getBook().getPhotoImage().getFilePath()))
+                    .build();
 
             orderItemResponseDtoList.add(orderItemResponseDto);
         }
 
         return OrderResponsDto.builder()
-            .orderId(orderId)
-            .status(status.toString())
-            .total(orderBook.getTotal())
-            .orderItemResponseDtoList(orderItemResponseDtoList)
-            .build();
+                .orderId(orderId)
+                .status(status.toString())
+                .total(orderBook.getTotal())
+                .orderItemResponseDtoList(orderItemResponseDtoList)
+                .build();
 
     }
 
