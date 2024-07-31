@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 public class UserCouponResponseDto {
+    private Long userCouponId;
     private String couponCode;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
@@ -26,9 +27,9 @@ public class UserCouponResponseDto {
     private CouponResponseDto coupon;
 
     @Builder
-
-    public UserCouponResponseDto(String couponCode, LocalDateTime issuedAt, LocalDateTime expirationDate, Boolean isUsed,
-                                 LocalDateTime usedAt, CouponResponseDto coupon) {
+    public UserCouponResponseDto(Long userCouponId, String couponCode, LocalDateTime issuedAt, LocalDateTime expirationDate,
+                                 Boolean isUsed, LocalDateTime usedAt, CouponResponseDto coupon) {
+        this.userCouponId = userCouponId;
         this.couponCode = couponCode;
         this.issuedAt = issuedAt;
         this.expirationDate = expirationDate;
