@@ -22,11 +22,17 @@ public class OrderBook extends Timestamped {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="status")
+    @Column(name = "status")
     private OrderState status;
 
-    @Column(name = "total",precision = 10, scale = 2)
+    @Column(name = "total", precision = 10, scale = 2)
     private BigDecimal total;
+
+    @Column(name = "order_no")
+    private String orderNo;
+
+    @Column(name = "discountPrice", precision = 10, scale = 2)
+    private BigDecimal discountPrice;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -39,12 +45,13 @@ public class OrderBook extends Timestamped {
     private List<Sale> saleList;
 
 
-
     @Builder
-    public OrderBook(OrderState status, BigDecimal total, User user) {
+    public OrderBook(OrderState status, BigDecimal total, User user, boolean isCoupon, BigDecimal discountPrice, String orderNo) {
         this.status = status;
-        this.total = total;
         this.user = user;
+
+        this.discountPrice = discountPrice;
+        this.total = total.subtract(discountPrice);
     }
 
     public void updateSaleList(List<OrderItem> orderItemList) {

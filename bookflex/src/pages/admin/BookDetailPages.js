@@ -7,6 +7,9 @@ const BookDetailPage = () => {
     const { bookId } = useParams();
     const navigate = useNavigate();
     const [book, setBook] = useState(null);
+    const [reviews, setReviews] = useState([]);
+    const [reviewPage, setReviewPage] = useState(1);
+    const [reviewTotalPages, setReviewTotalPages] = useState(10);
     const [error, setError] = useState('');
 
     useEffect(() => {
@@ -23,6 +26,44 @@ const BookDetailPage = () => {
         fetchBook();
     }, [bookId]);
 
+    useEffect(() => {
+        const fetchReviews = async () => {
+            try {
+                const response = await axiosInstance.get(`/reviews/book/${bookId}`, {
+                    params: {
+                        page: reviewPage,
+                        size: 5,
+                        direction: true,
+                        sortBy: 'createdAt',
+                    },
+                });
+                setReviews(response.data.data.content);
+                setReviewTotalPages(response.data.data.totalPages);
+            } catch (error) {
+                console.error('There was an error!', error);
+                setError('리뷰 조회에 실패하였습니다.');
+            }
+        };
+
+        fetchReviews();
+    }, [bookId, reviewPage]);
+
+    const handleEditClick = () => {
+        navigate(`/admin/books/${bookId}/edit`, { state: { book } });
+    };
+
+    const handlePreviousReviewPage = () => {
+        if (reviewPage > 1) {
+            setReviewPage(reviewPage - 1);
+        }
+    };
+
+    const handleNextReviewPage = () => {
+        if (reviewPage < reviewTotalPages) {
+            setReviewPage(reviewPage + 1);
+        }
+    };
+
     if (error) {
         return <p>{error}</p>;
     }
@@ -30,10 +71,6 @@ const BookDetailPage = () => {
     if (!book) {
         return <p>Loading...</p>;
     }
-
-    const handleEditClick = () => {
-        navigate(`/admin/books/${bookId}/edit`, { state: { book } });
-    };
 
     return (
         <div className="book-detail-container">
@@ -77,10 +114,39 @@ const BookDetailPage = () => {
                     </div>
                     <div>
                         <label>등록 일자:</label>
-                        <p>{book.createdAt}</p>
+                        <p>{new Date(book.createdAt).toLocaleString()}</p>
                     </div>
                     <button onClick={handleEditClick}>수정</button>
                 </div>
+            </div>
+
+            <div className="reviews-section">
+                <h2>상품 리뷰</h2>
+                {reviews.length > 0 ? (
+                    <>
+                        <ul className="reviews-list">
+                            {reviews.map((review) => (
+                                <li key={review.createdAt}>
+                                    <h3>{review.title}</h3>
+                                    <p>{review.content}</p>
+                                    <p>별점: {review.star}</p>
+                                    <p>작성자: {review.username}</p>
+                                    <p>작성일: {new Date(review.createdAt).toLocaleString()}</p>
+                                    {review.createdAt !== review.modifiedAt && (
+                                        <p>수정일: {new Date(review.modifiedAt).toLocaleString()}</p>
+                                    )}
+                                </li>
+                            ))}
+                        </ul>
+                        <div className="pagination">
+                            <button onClick={handlePreviousReviewPage} disabled={reviewPage === 1}>이전</button>
+                            <span>{reviewPage} / {reviewTotalPages}</span>
+                            <button onClick={handleNextReviewPage} disabled={reviewPage === reviewTotalPages}>다음</button>
+                        </div>
+                    </>
+                ) : (
+                    <p>리뷰가 없습니다.</p>
+                )}
             </div>
         </div>
     );

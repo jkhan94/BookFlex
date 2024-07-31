@@ -1,18 +1,18 @@
 .book-list-container {
     font-family: Arial, sans-serif;
+    padding: 20px;
 }
 
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: #f4f4f4;
     padding: 10px;
-    background-color: #f8f8f8;
-    border-bottom: 1px solid #ddd;
 }
 
 .nav-links {
-    list-style: none;
+    list-style-type: none;
     display: flex;
     gap: 15px;
 }
@@ -24,6 +24,7 @@
 .search-login {
     display: flex;
     gap: 10px;
+    align-items: center;
 }
 
 .search-login input {
@@ -32,44 +33,96 @@
 
 .search-login button {
     padding: 5px 10px;
-    border: 1px solid #ddd;
-    background-color: #fff;
+}
+
+.filter-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.register-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
     cursor: pointer;
+}
+
+.sort-options {
+    display: flex;
+    gap: 10px;
+}
+
+.sort-by-dropdown, .sort-direction-dropdown {
+    padding: 5px;
 }
 
 .book-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
 }
 
 .book-table th, .book-table td {
-    padding: 10px;
     border: 1px solid #ddd;
+    padding: 8px;
     text-align: center;
 }
 
-.book-table img {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
+.book-table th {
+    background-color: #f4f4f4;
+}
+
+.book-image {
+    max-width: 100px; /* 사진 크기를 1/20로 줄입니다 */
+    height: auto;
+}
+
+.book-name {
+    cursor: pointer;
+    color: #007bff;
 }
 
 .pagination {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.message {
+    color: red;
+    font-weight: bold;
+}
+
+/* 기존 스타일 유지 */
+
+.filter-container {
+    display: flex;
+    flex-direction: column;
     gap: 10px;
+    margin-bottom: 20px;
 }
 
-.pagination button {
-    padding: 5px 10px;
-    border: 1px solid #ddd;
-    background-color: #fff;
-    cursor: pointer;
+.sort-options {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
 }
 
-.pagination span {
-    margin: 0 10px;
+.sort-options label {
+    display: flex;
+    align-items: center;
 }
+
+.sort-options input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+
+}
+/* 기타 스타일 유지 */
+
+

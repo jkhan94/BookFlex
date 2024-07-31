@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import axiosInstance from "../../api/axiosInstance"; // axiosInstance는 Axios 인스턴스를 설정한 파일입니다.
+import axiosInstance from "../../api/axiosInstance";
+import {useNavigate} from "react-router-dom"; // axiosInstance는 Axios 인스턴스를 설정한 파일입니다.
 
 function RegisterBookPage() {
     const [bookRequestDto, setBookRequestDto] = useState({
@@ -14,9 +15,12 @@ function RegisterBookPage() {
         subCategory: '',
     });
     const [multipartFile, setMultipartFile] = useState(null);
+    const [thumbnail, setThumbnail] = useState(''); // 이미지 썸네일 상태 추가
     const [responseMessage, setResponseMessage] = useState('');
     const [mainCategories, setMainCategories] = useState([]);
     const [subCategories, setSubCategories] = useState([]);
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         // 주요 카테고리 로드
@@ -65,7 +69,15 @@ function RegisterBookPage() {
     };
 
     const handleFileChange = (e) => {
-        setMultipartFile(e.target.files[0]);
+        const file = e.target.files[0];
+        setMultipartFile(file);
+
+        // 이미지 썸네일 미리보기 설정
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setThumbnail(reader.result);
+        };
+        reader.readAsDataURL(file);
     };
 
     const handleSubmit = async (e) => {
@@ -81,7 +93,7 @@ function RegisterBookPage() {
                 },
             });
             setResponseMessage(response.data.message);
-            navigate(`/admin/books/${response.data.bookId}`); // 상품 상세 페이지로 이동
+            navigate(`/admin/books/${response.data.data.bookId}`); // 상품 상세 페이지로 이동
         } catch (error) {
             console.error('There was an error!', error);
             setResponseMessage('상품 등록에 실패하였습니다.');
@@ -93,6 +105,20 @@ function RegisterBookPage() {
             <h1>상품 등록</h1>
             <form onSubmit={handleSubmit}>
                 <div>
+                    <label>이미지:</label>
+                    {thumbnail && ( // 썸네일 미리보기 추가
+                        <div>
+                            <img src={thumbnail} alt="Thumbnail" style={{width: '200px', height: 'auto'}}/>
+                        </div>
+                    )}
+                    <input
+                        type="file"
+                        onChange={handleFileChange}
+                        required
+                    />
+                </div>
+
+                <div>
                     <label>책 이름:</label>
                     <input
                         type="text"
@@ -101,6 +127,39 @@ function RegisterBookPage() {
                         onChange={handleChange}
                         required
                     />
+                </div>
+                <div>
+                    <label>대분류:</label>
+                    <select
+                        name="mainCategory"
+                        value={bookRequestDto.mainCategory}
+                        onChange={handleChange}
+                        required
+                    >
+                        <option value="" disabled>주요 카테고리 선택</option>
+                        {mainCategories.map((category) => (
+                            <option key={category.categoryName} value={category.categoryName}>
+                                {category.categoryName}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div>
+                    <label>소분류:</label>
+                    <select
+                        name="subCategory"
+                        value={bookRequestDto.subCategory}
+                        onChange={handleChange}
+                        required
+                        disabled={!bookRequestDto.mainCategory}
+                    >
+                        <option value="" disabled>부 카테고리 선택</option>
+                        {subCategories.map((subCategory) => (
+                            <option key={subCategory.categoryName} value={subCategory.categoryName}>
+                                {subCategory.categoryName}
+                            </option>
+                        ))}
+                    </select>
                 </div>
                 <div>
                     <label>출판사:</label>
@@ -113,7 +172,7 @@ function RegisterBookPage() {
                     />
                 </div>
                 <div>
-                    <label>작가명:</label>
+                    <label>저자:</label>
                     <input
                         type="text"
                         name="author"
@@ -148,61 +207,6 @@ function RegisterBookPage() {
                         name="bookDescription"
                         value={bookRequestDto.bookDescription}
                         onChange={handleChange}
-                        required
-                    />
-                </div>
-
-                <div>
-                    <label>주요 카테고리:</label>
-                    <select
-                        name="mainCategory"
-                        value={bookRequestDto.mainCategory}
-                        onChange={handleChange}
-                        required
-                    >
-                        <option value="" disabled>주요 카테고리 선택</option>
-                        {mainCategories.map((category) => (
-                            <option key={category.categoryName} value={category.categoryName}>
-                                {category.categoryName}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div>
-                    <label>부 카테고리:</label>
-                    <select
-                        name="subCategory"
-                        value={bookRequestDto.subCategory}
-                        onChange={handleChange}
-                        required
-                        disabled={!bookRequestDto.mainCategory}
-                    >
-                        <option value="" disabled>부 카테고리 선택</option>
-                        {subCategories.map((subCategory) => (
-                            <option key={subCategory.categoryName} value={subCategory.categoryName}>
-                                {subCategory.categoryName}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div>
-                    <label>상품 상태:</label>
-                    <select
-                        name="status"
-                        value={bookRequestDto.status}
-                        onChange={handleChange}
-                        required
-                    >
-                        <option value="" disabled>상태 선택</option>
-                        <option value="판매 중">판매 중</option>
-                        <option value="품절">품절</option>
-                    </select>
-                </div>
-                <div>
-                    <label>파일 업로드:</label>
-                    <input
-                        type="file"
-                        onChange={handleFileChange}
                         required
                     />
                 </div>

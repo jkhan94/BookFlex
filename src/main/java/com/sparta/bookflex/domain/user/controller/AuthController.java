@@ -34,7 +34,6 @@ public class AuthController {
         return ResponseEntity.ok().body(null);
     }
 
-    @Envelop("로그인에 성공하였습니다.")
     @PostMapping("/login")
     public ResponseEntity<LoginResDto> login(@Valid @RequestBody LoginReqDto loginReqDto, HttpServletResponse response) {
         List<String> tokens = authService.login(loginReqDto);
@@ -46,6 +45,7 @@ public class AuthController {
         LoginResDto loginResDto = LoginResDto.builder()
                 .auth(authService.getUserRole(loginReqDto.getUsername()))
                 .accessToken(accessToken)
+                .refreshToken(refreshToken)
                 .build();
         return ResponseEntity.ok().body(loginResDto);
     }

@@ -56,7 +56,7 @@ public class BookController {
     }
 
     @GetMapping
-    public ResponseEntity<CommonDto<List<BookResponseDto>>> getBookList(@RequestParam(name = "page") int page,
+    public ResponseEntity<CommonDto<Page<BookResponseDto>>> getBookList(@RequestParam(name = "page") int page,
                                                                         @RequestParam(name = "size") int size,
                                                                         @RequestParam(name = "direction") boolean isAsc,
                                                                         @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
@@ -64,7 +64,7 @@ public class BookController {
                                                                         @RequestParam(name = "bookName", required = false) String bookName
     ) {
 
-        List<BookResponseDto> bookResponseDtoList = bookService.getBookList(page, size, isAsc, sortBy, status, bookName);
+        Page<BookResponseDto> bookResponseDtoList = bookService.getBookList(page, size, isAsc, sortBy, status, bookName);
 
         if (bookResponseDtoList.isEmpty()) {
             return ResponseEntity
@@ -90,7 +90,7 @@ public class BookController {
     }
 
     @DeleteMapping("/{booksId}")
-    public ResponseEntity<CommonDto<String>> DeleteBook(@PathVariable(value = "productId") Long bookId) {
+    public ResponseEntity<CommonDto<String>> DeleteBook(@PathVariable(value = "booksId") Long bookId) {
 
         String bookName = bookService.deleteBook(bookId);
 

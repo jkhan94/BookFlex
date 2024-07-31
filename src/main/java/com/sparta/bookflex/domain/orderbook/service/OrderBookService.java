@@ -1,8 +1,12 @@
 package com.sparta.bookflex.domain.orderbook.service;
 
+import com.sparta.bookflex.common.exception.BusinessException;
+import com.sparta.bookflex.common.exception.ErrorCode;
 import com.sparta.bookflex.common.utill.LoggingSingleton;
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.service.BookService;
+import com.sparta.bookflex.domain.coupon.entity.Coupon;
+import com.sparta.bookflex.domain.coupon.service.CouponService;
 import com.sparta.bookflex.domain.orderbook.dto.OrderItemResponseDto;
 import com.sparta.bookflex.domain.orderbook.dto.OrderRequestDto;
 import com.sparta.bookflex.domain.orderbook.dto.OrderResponsDto;
@@ -41,13 +45,16 @@ public class OrderBookService {
     private final PhotoImageService photoImageService;
     private final SaleRepository saleRepository;
 
+    private final CouponService couponService;
+
     @Autowired
     public OrderBookService(OrderItemRepository orderItemRepository,
                             OrderBookRepository orderBookRepository,
                             AuthService authService, BookService bookService,
                             TraceOfUserLogRepository traceOfUserLogRepository,
                             PhotoImageService photoImageService,
-                            SaleRepository saleRepository) {
+                            SaleRepository saleRepository,
+                            CouponService couponService) {
 
 
         this.authService = authService;
@@ -57,15 +64,16 @@ public class OrderBookService {
         this.orderItemRepository = orderItemRepository;
         this.photoImageService = photoImageService;
         this.saleRepository = saleRepository;
+        this.couponService = couponService;
     }
 
     private Book getBook(Long bookId) {
         return bookService.getBookByBookId(bookId);
     }
 
-    private OrderBook getOrderBook(Long orderId) {
+    public OrderBook getOrderBook(Long orderId) {
         return orderBookRepository.findById(orderId)
-            .orElseThrow(() -> new IllegalArgumentException("주문 내역이 없습니다."));
+            .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
 
     }
 
@@ -89,7 +97,7 @@ public class OrderBookService {
                 .build();
             orderItemList.add(orderItem);
         }
-
+//만든 orderitemList를 기반으로 orderbook을 만든다.
         OrderBook orderBook = OrderBook.builder()
             .status(OrderState.PENDING_PAYMENT)
             .total(total)
@@ -100,7 +108,7 @@ public class OrderBookService {
         for (OrderItem orderItem : orderItemList) {
             orderItem.updateOrderBook(orderBook);
         }
-
+// 로그를 남긴다.
         for (OrderItem orderItem : orderItemList) {
             String bookName = orderItem.getBook().getBookName();
             traceOfUserLogRepository.save(
@@ -176,7 +184,7 @@ public class OrderBookService {
     public OrderResponsDto getOrderById(Long orderId, User user) {
         // 주문과 관련된 판매 항목을 포함하여 주문 내역을 조회합니다.
         OrderBook orderBook = orderBookRepository.findByIdAndUser(orderId, user)
-            .orElseThrow(() -> new IllegalArgumentException("Order not found or you don't have access to this order."));
+            .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
 
         List<OrderItemResponseDto> orderItemResponseDtoList = new ArrayList<>();
         for (OrderItem orderItem : orderBook.getOrderItemList()) {

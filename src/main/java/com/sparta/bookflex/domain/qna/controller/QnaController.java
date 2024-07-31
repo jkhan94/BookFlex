@@ -6,6 +6,7 @@ import com.sparta.bookflex.common.security.UserDetailsImpl;
 import com.sparta.bookflex.domain.qna.dto.QnaRequestDto;
 import com.sparta.bookflex.domain.qna.dto.QnaResponseDto;
 import com.sparta.bookflex.domain.qna.dto.ReplyRequestDto;
+import com.sparta.bookflex.domain.qna.enums.QnaTypeCode;
 import com.sparta.bookflex.domain.qna.service.QnaService;
 import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.enums.RoleType;
@@ -17,7 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.sparta.bookflex.common.exception.ErrorCode.*;
 
@@ -128,4 +131,13 @@ public class QnaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
+
+    @GetMapping("/types")
+    @Envelop("문의 유형을 조회했습니다.")
+    public ResponseEntity<List<String>> getQnaTypes() {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Arrays.stream(QnaTypeCode.values())
+                        .map(QnaTypeCode::getQnaTypeName)
+                        .collect(Collectors.toList()));
+    }
 }

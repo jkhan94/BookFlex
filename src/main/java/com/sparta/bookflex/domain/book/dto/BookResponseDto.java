@@ -1,5 +1,6 @@
 package com.sparta.bookflex.domain.book.dto;
 
+import com.sparta.bookflex.domain.book.entity.Book;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -58,5 +59,8 @@ public class BookResponseDto {
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
 
+    }
+
+    public BookResponseDto(Book book) {
     }
 }

@@ -7,6 +7,11 @@ const axiosInstance = axios.create({
     },
 });
 
+const accessToken = localStorage.getItem('accessToken');
+if (accessToken) {
+    axiosInstance.defaults.headers.common['Authorization'] = accessToken;
+}
+
 
 
 export default axiosInstance;
