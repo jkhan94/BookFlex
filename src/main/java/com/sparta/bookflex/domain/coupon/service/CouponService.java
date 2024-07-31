@@ -73,12 +73,11 @@ public class CouponService {
 
 
     @Transactional(readOnly = true)
-    public List<CouponResponseDto> getAllCoupons(int page, String sortBy) {
-        Sort sort = Sort.by(Sort.Direction.ASC, sortBy);
+    public Page<CouponResponseDto> getAllCoupons(int page, String sortBy) {
+        Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
 
-        Page<CouponResponseDto> couponPage = couponRepository.findAll(pageable).map(Coupon::toCouponResponseDto);
-        return couponPage.getContent();
+        return couponRepository.findAll(pageable).map(Coupon::toCouponResponseDto);
     }
 
 
@@ -253,23 +252,26 @@ public class CouponService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserCouponResponseDto> getMyCoupons(User user, int page, String sortBy) {
+    public Page<UserCouponResponseDto> getMyCoupons(User user, int page, String sortBy) {
         Sort sort = Sort.by(Sort.Direction.ASC, sortBy);
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
 
-        Page<UserCouponResponseDto> couponPage = userCouponRepository.findAllByUserId(user.getId(), pageable).map(
+        return userCouponRepository.findAllByUserId(user.getId(), pageable).map(
                 userCoupon -> toUserCouponResponseDto(userCoupon, toCouponResponseDto(userCoupon.getCoupon()))
         );
-        return couponPage.getContent();
     }
 
     @Transactional(readOnly = true)
-    public List<CouponResponseDto> getAvailableCoupons(User user, int page, String sortBy) {
-        Sort sort = Sort.by(Sort.Direction.ASC, sortBy);
+    public Page<CouponResponseDto> getAvailableCoupons(User user, int page, String sortBy) {
+        Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
 
-        Page<CouponResponseDto> couponPage = couponRepository.findAvailableByUserGrade(user, pageable).map(Coupon::toCouponResponseDto);
-        return couponPage.getContent();
+        List<Long> issuedCouponIds = userCouponRepository.findAllByUserId(user.getId())
+                .stream()
+                .map(uc -> uc.getCoupon().getId())
+                .toList();
+
+        return couponRepository.findAvailableByUserGrade(user, pageable, issuedCouponIds).map(Coupon::toCouponResponseDto);
     }
 
     @Transactional(readOnly = true)
