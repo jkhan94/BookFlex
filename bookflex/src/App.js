@@ -23,6 +23,7 @@ import UserQnAPage from './pages/user/UserQnAPage'; // 유저 Q&A 페이지 임�
 import AdminQnAPage from './pages/admin/AdminQnAPage'
 import BookDetailPage from './pages/user/BookDetailPage';
 import axiosInstance from './api/axiosInstance';
+import CouponPage from "./pages/user/CouponPage";
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -66,6 +67,7 @@ function App() {
                         <Route path="dashboard" element={<UserMainPage/>}/>
                         <Route path="cart" element={<CartPage/>}/>
                         <Route path="order" element={<OrderPage/>}/>
+                        <Route path="coupon" element={<CouponPage/>}/>
                         <Route path="payment-history" element={<PaymentHistoryPage/>}/>
                         <Route path="category/:categoryName" element={<CategoryPage/>}/>
                         <Route path="wishlist" element={<WishlistPage/>}/>
