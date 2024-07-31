@@ -26,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
@@ -66,7 +65,7 @@ public class CouponService {
                 .eligibleGrade(requestDto.getEligibleGrade())
                 .couponStatus(status)
                 .startDate(requestDto.getStartDate().atStartOfDay())
-                .expirationDate(requestDto.getExpirationDate().atTime(23,59,59))
+                .expirationDate(requestDto.getExpirationDate().atTime(23, 59, 59))
                 .build();
 
         couponRepository.save(coupon);
@@ -271,7 +270,7 @@ public class CouponService {
         Sort sort = Sort.by(Sort.Direction.ASC, sortBy);
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
 
-        Page<CouponResponseDto> couponPage = couponRepository.findAvailableByUserGrade(user.getGrade(), pageable).map(Coupon::toCouponResponseDto);
+        Page<CouponResponseDto> couponPage = couponRepository.findAvailableByUserGrade(user, pageable).map(Coupon::toCouponResponseDto);
         return couponPage.getContent();
     }
 

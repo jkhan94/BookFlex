@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class CouponScheduler {
     private final CouponScheduleService couponScheduleService;
 
-    @Scheduled(cron = "0 0 0/1 * * *") // 1시간마다
+    @Scheduled(cron = "0 0 0 * * *") //  매일 오전 12시
     public void deleteExpiredCoupon() throws InterruptedException {
         log.info("만료된 쿠폰 삭제");
         couponScheduleService.deleteExpiredCoupon();
@@ -24,15 +24,16 @@ public class CouponScheduler {
         couponScheduleService.updateIssuedCoupon();
     }
 
-    @Scheduled(cron = "0 0 0 1 * *") // 매달 1일 오전 12시
+    @Scheduled(cron = "0 0 0 * * *") // 매일 오전 12시
     public void updateGradeCoupon() throws InterruptedException {
-        log.info("등급 쿠폰 수량, 발급시작일, 발급만료일 변경");
+        log.info("발급된 등급 쿠폰들 삭제. 등급 쿠폰 수량, 발급시작일, 발급만료일 변경 후 재발급");
         couponScheduleService.updateGradeCoupon();
     }
 
-    @Scheduled(cron = "0 0 0 1 * *") // 매달 1일 오전 12시
+    @Scheduled(cron = "0 0 0 * * *") // 매일 오전 12시
     public void updateBirthdayCoupon() throws InterruptedException {
-        log.info("생일 쿠폰 수량, 발급시작일, 발급만료일 변경");
+        log.info("발급된 생일 쿠폰들 삭제. 생일 쿠폰 수량, 발급시작일, 발급만료일 변경 후 재발급");
         couponScheduleService.updateBirthdayCoupon();
     }
+
 }

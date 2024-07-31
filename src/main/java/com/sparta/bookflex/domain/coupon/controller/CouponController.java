@@ -1,6 +1,5 @@
 package com.sparta.bookflex.domain.coupon.controller;
 
-import com.sparta.bookflex.common.aop.Envelop;
 import com.sparta.bookflex.common.exception.BusinessException;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
 import com.sparta.bookflex.domain.coupon.dto.CouponRequestDto;
@@ -10,7 +9,6 @@ import com.sparta.bookflex.domain.coupon.dto.UserCouponResponseDto;
 import com.sparta.bookflex.domain.coupon.enums.CouponType;
 import com.sparta.bookflex.domain.coupon.enums.DiscountType;
 import com.sparta.bookflex.domain.coupon.service.CouponService;
-import com.sparta.bookflex.domain.qna.enums.QnaTypeCode;
 import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.enums.RoleType;
 import com.sparta.bookflex.domain.user.enums.UserGrade;
@@ -162,8 +160,8 @@ public class CouponController {
     @GetMapping("/availables")
 //    @Envelop("발급 가능한 모든 쿠폰을 조회했습니다.")
     public ResponseEntity<List<CouponResponseDto>> getAvailableCoupons(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                                    @RequestParam(value = "page", defaultValue = "1") int page,
-                                                                    @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy) {
+                                                                       @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                       @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy) {
         User user = authService.findByUserName(userDetails.getUser().getUsername());
         if (user.getAuth() != RoleType.USER) {
             throw new BusinessException(COUPON_VIEW_NOT_ALLOWED);

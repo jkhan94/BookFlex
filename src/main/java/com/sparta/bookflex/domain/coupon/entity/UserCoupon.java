@@ -62,6 +62,7 @@ public class UserCoupon extends Timestamped {
 
     public static UserCouponResponseDto toUserCouponResponseDto(UserCoupon userCoupon, CouponResponseDto responseDto) {
         return UserCouponResponseDto.builder()
+                .userCouponId(userCoupon.getId())
                 .couponCode(userCoupon.getCouponCode())
                 .issuedAt(userCoupon.getIssuedAt())
                 .expirationDate(userCoupon.getExpirationDate())
