@@ -17,13 +17,14 @@ const LoginPage = () => {
 
         axiosInstance.post('auth/login', data)
             .then(response => {
-                const { accessToken, auth } = response.data;
+                const { accessToken, refreshToken, auth } = response.data;
 
                 // 로그인 성공 후, 모든 axios 요청에 accessToken을 자동으로 포함시키기 위해 설정
-                axiosInstance.defaults.headers.common['Authorization'] = accessToken;
+                //axiosInstance.defaults.headers.common['Authorization'] = accessToken;
                 console.log('Login successful!', accessToken);
                 // 토큰을 localStorage에 저장 (선택 사항)
                 localStorage.setItem('Authorization', accessToken);
+                localStorage.setItem('refreshToken', refreshToken);
 
                 console.log('Authorization header after login:', axiosInstance.defaults.headers.common['Authorization']);
 
