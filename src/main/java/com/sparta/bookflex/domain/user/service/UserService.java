@@ -9,6 +9,7 @@ import com.sparta.bookflex.domain.user.dto.StateReqDto;
 import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,46 +18,49 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public ProfileResDto getProfile(long userId, User user) {
+    public ProfileResDto getProfile(User user) {
 
-        User inputUser = getUser(userId, user);
+        User currentUser = getUser(user);
 
-        return User.of(inputUser);
+        return User.of(currentUser);
     }
 
     @Transactional
-    public ProfileResDto updateProfile(long userId, User user, ProfileReqDto reqDto) {
+    public ProfileResDto updateProfile(User user, ProfileReqDto reqDto) {
 
-        User inputUser = getUser(userId, user);
+        User currentUser = getUser(user);
+        String password = passwordEncoder.encode(reqDto.getPassword());
+        currentUser.updateProfile(password, reqDto.getNickname(), reqDto.getPhoneNumber(), reqDto.getAddress());
 
-        inputUser.updateProfile(reqDto.getPassword(), reqDto.getNickname(), reqDto.getPhoneNumber(), reqDto.getAddress());
-
-        return User.of(inputUser);
+        return User.of(currentUser);
     }
 
     @Transactional
     public void updateGrade(long userId, User user, GradeReqDto reqDto) {
-        User inputUser = getUser(userId, user);
+        User inputUser = getUser(userId);
 
         inputUser.updateGrade(reqDto.getUserGrade());
     }
 
     @Transactional
     public void updateState(long userId, User user, StateReqDto reqDto) {
-
-        User inputUser = userRepository.findById(userId).orElseThrow(() ->
-            new BusinessException(ErrorCode.USER_NOT_FOUND));
+        User inputUser = getUser(userId);
 
         inputUser.updateState(reqDto.getState());
     }
 
-    private User getUser(long userId, User user) {
-        User inputUser = userRepository.findById(userId).orElseThrow(() ->
+    private User getUser(User user) {
+        User curUser = userRepository.findById(user.getId()).orElseThrow(() ->
             new BusinessException(ErrorCode.USER_NOT_FOUND));
-        if (!inputUser.getUsername().equals(user.getUsername())) {
-            throw new BusinessException(ErrorCode.USER_NOT_AUTHENTICATED);
-        }
-        return inputUser;
+
+        return curUser;
+    }
+
+    private User getUser(long userId) {
+        User curUser = userRepository.findById(userId).orElseThrow(() ->
+            new BusinessException(ErrorCode.USER_NOT_FOUND));
+        return curUser;
     }
 }

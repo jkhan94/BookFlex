@@ -42,6 +42,8 @@ public class BookService {
 
         Book book = bookRequestDto.toEntity(photoImage);
 
+        book.checkStock();
+
         book = bookRepository.save(book);
 
         photoImage.updateBookId(book.getId());
@@ -64,7 +66,7 @@ public class BookService {
     }
 
     @Transactional
-    public List<BookResponseDto> getBookList(int page,
+    public Page<BookResponseDto> getBookList(int page,
                                              int size,
                                              boolean isAsc,
                                              String sortBy,
@@ -77,9 +79,14 @@ public class BookService {
 
         Pageable pageble = PageRequest.of(page - 1, size, sort);
 
-        return bookCustomRepositoryImpl.findBooks(bookName, bookStatus, pageble).stream()
-                .map(book -> book.toResponseDto(photoImageService.getPhotoImageUrl(book.getPhotoImage().getFilePath())))
-                .toList();
+//        return bookCustomRepositoryImpl.findBooks(bookName, bookStatus, pageble).stream()
+//                .map(book -> book.toResponseDto(photoImageService.getPhotoImageUrl(book.getPhotoImage().getFilePath())))
+//                .toList();
+
+        Page<Book> bookList = bookCustomRepositoryImpl.findBooks(bookName, bookStatus, pageble);
+
+        return bookList.map((book -> book.toResponseDto(photoImageService.getPhotoImageUrl(book.getPhotoImage().getFilePath()))));
+
     }
 
     @Transactional
@@ -89,7 +96,9 @@ public class BookService {
 
         Book book = getBookByBookId(bookId);
 
-        PhotoImage photoImage = photoImageService.updatePhotoImage(multipartFile, book.getId());
+        if (!(multipartFile == null)) {
+            PhotoImage photoImage = photoImageService.updatePhotoImage(multipartFile, book.getId());
+        }
 
         book.update(bookRequestDto);
 
@@ -140,7 +149,7 @@ public class BookService {
 
 
     @Transactional
-    public Page<BookResponseDto> getBooksBySubCategory(String categoryName , Pageable pageable) {
+    public Page<BookResponseDto> getBooksBySubCategory(String categoryName, Pageable pageable) {
 
         if (categoryName == null) {
             throw new BusinessException(ErrorCode.CATEGORY_NOT_FOUND);

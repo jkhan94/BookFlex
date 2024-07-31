@@ -1,9 +1,13 @@
-package com.sparta.bookflex.domain.reveiw;
+package com.sparta.bookflex.domain.reveiw.dto;
 
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Setter
+@Getter
 public class ReviewResponseDto {
 
     private String title;

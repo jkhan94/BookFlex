@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 import Header from './components/Header'; // 경로 확인
 import Sidebar from './components/Sidebar'; // 경로 확인
@@ -19,9 +19,15 @@ import LoginPage from './pages/common/LoginPage';
 import SignUpPage from './pages/common/SignUpPage'; // 수정된 이름
 import UserLayout from './pages/user/UserLayout'; // UserLayout 컴포넌트 임포트
 import ProfilePage from './pages/user/ProfilePage';
+import ProfileModifyPage from "./pages/user/ProfileModifyPage";
 import UserQnAPage from './pages/user/UserQnAPage'; // 유저 Q&A 페이지 임포트
 import AdminQnAPage from './pages/admin/AdminQnAPage'
 import BookDetailPage from './pages/user/BookDetailPage';
+import BookDetailPages from './pages/admin/BookDetailPages';
+import RegisterBookPage from "./pages/admin/RegisterBookPage";
+import BookListPage from "./pages/admin/BookListPage";
+import ModifyBookDetail from "./pages/admin/BookUpdatePage";
+import BookUpdatePage from "./pages/admin/BookUpdatePage";
 import axiosInstance from './api/axiosInstance';
 import CouponPage from "./pages/user/CouponPage";
 
@@ -71,18 +77,31 @@ function App() {
                         <Route path="payment-history" element={<PaymentHistoryPage/>}/>
                         <Route path="category/:categoryName" element={<CategoryPage/>}/>
                         <Route path="wishlist" element={<WishlistPage/>}/>
-                        <Route path="profile/:userId" element={<ProfilePage/>}/>
+                        <Route path="profile" element={<ProfilePage/>}/>
                         <Route path="qna" element={<UserQnAPage/>}/>
                         {/* 추가적인 유저 하위 라우트 설정 */}
+                        <Route path="profile-modify" element={<ProfileModifyPage/>}/>
                     </Route>
+
+
                     <Route path="/admin" element={<AdminDashboard/>}>
-                        <Route path="orders" element={<OrderManagement/>}/>
+                        <Route path="RegisterBook" element={<RegisterBookPage/>}/>
                         <Route path="products" element={<ProductManagement/>}/>
                         <Route path="coupons" element={<CouponManagement/>}/>
                         <Route path="sales" element={<SalesReport/>}/>
                         <Route path="payments" element={<PaymentManagement/>}/>
                         <Route path="shipping" element={<ShippingManagement/>}/>
                         <Route path="qna" element={<AdminQnAPage/>}/>
+                        <Route path="inquiry-book" element={<BookDetailPages/>}/>
+                        <Route path="register-book" element={<RegisterBookPage/>}/>
+                        <Route path="inquiry-booklist" element={<BookListPage/>}/>
+                        <Route path="modify-book-info" element={<BookUpdatePage/>}/>
+                        <Route path="/admin/books/:bookId" element={<BookDetailPages/>}/>
+                        <Route path="books/:productId/edit" element={<BookUpdatePage/>}/>
+                        <Route path="" element={<BookListPage/>}/>
+                        <Route path="register-book" element={<RegisterBookPage/>}/>
+                        <Route path="register-book" element={<RegisterBookPage/>}/>
+
                         {/* 추가적인 관리자 하위 라우트 설정 */}
                     </Route>
                 </Routes>

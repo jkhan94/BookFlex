@@ -93,9 +93,6 @@ public class User extends Timestamped {
     private List<Review> reviewList;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TraceOfUserLog> copyOfSystemLogList;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Shipment> shipmentList;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
