@@ -2,8 +2,8 @@ package com.sparta.bookflex.domain.reveiw.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.book.entity.Book;
-import com.sparta.bookflex.domain.reveiw.ReviewRequestDto;
-import com.sparta.bookflex.domain.reveiw.ReviewResponseDto;
+import com.sparta.bookflex.domain.reveiw.dto.ReviewRequestDto;
+import com.sparta.bookflex.domain.reveiw.dto.ReviewResponseDto;
 import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;

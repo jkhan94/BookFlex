@@ -25,10 +25,16 @@ public class QCoupon extends EntityPathBase<Coupon> {
 
     public final EnumPath<com.sparta.bookflex.domain.coupon.enums.CouponStatus> couponStatus = createEnum("couponStatus", com.sparta.bookflex.domain.coupon.enums.CouponStatus.class);
 
+    public final EnumPath<com.sparta.bookflex.domain.coupon.enums.CouponType> couponType = createEnum("couponType", com.sparta.bookflex.domain.coupon.enums.CouponType.class);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
     public final NumberPath<java.math.BigDecimal> discountPrice = createNumber("discountPrice", java.math.BigDecimal.class);
+
+    public final EnumPath<com.sparta.bookflex.domain.coupon.enums.DiscountType> discountType = createEnum("discountType", com.sparta.bookflex.domain.coupon.enums.DiscountType.class);
+
+    public final EnumPath<com.sparta.bookflex.domain.user.enums.UserGrade> eligibleGrade = createEnum("eligibleGrade", com.sparta.bookflex.domain.user.enums.UserGrade.class);
 
     public final DateTimePath<java.time.LocalDateTime> expirationDate = createDateTime("expirationDate", java.time.LocalDateTime.class);
 
@@ -42,6 +48,8 @@ public class QCoupon extends EntityPathBase<Coupon> {
     public final DateTimePath<java.time.LocalDateTime> startDate = createDateTime("startDate", java.time.LocalDateTime.class);
 
     public final NumberPath<Integer> totalCount = createNumber("totalCount", Integer.class);
+
+    public final NumberPath<Integer> validityDays = createNumber("validityDays", Integer.class);
 
     public QCoupon(String variable) {
         super(Coupon.class, forVariable(variable));

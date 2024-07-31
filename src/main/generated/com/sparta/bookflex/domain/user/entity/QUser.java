@@ -32,8 +32,6 @@ public class QUser extends EntityPathBase<User> {
 
     public final DatePath<java.time.LocalDate> birthDay = createDate("birthDay", java.time.LocalDate.class);
 
-    public final ListPath<com.sparta.bookflex.domain.systemlog.entity.TraceOfUserLog, com.sparta.bookflex.domain.systemlog.entity.QTraceOfUserLog> copyOfSystemLogList = this.<com.sparta.bookflex.domain.systemlog.entity.TraceOfUserLog, com.sparta.bookflex.domain.systemlog.entity.QTraceOfUserLog>createList("copyOfSystemLogList", com.sparta.bookflex.domain.systemlog.entity.TraceOfUserLog.class, com.sparta.bookflex.domain.systemlog.entity.QTraceOfUserLog.class, PathInits.DIRECT2);
-
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 

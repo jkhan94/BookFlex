@@ -1,5 +1,6 @@
 package com.sparta.bookflex.domain.book.dto;
 
+import com.sparta.bookflex.domain.book.entity.Book;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,7 @@ public class BookResponseDto {
     private String status;
     private String mainCategoryName;
     private String subCategoryName;
-    private int discountRate;
+
     private String photoImagePath;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
@@ -41,8 +42,8 @@ public class BookResponseDto {
                            String subCategoryName,
                            String photoImagePath,
                            LocalDateTime createdAt,
-                           LocalDateTime modifiedAt,
-                           int discountRate) {
+                           LocalDateTime modifiedAt
+                           ) {
 
         this.bookId = bookId;
         this.bookName = bookName;
@@ -57,6 +58,9 @@ public class BookResponseDto {
         this.photoImagePath = photoImagePath;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
-        this.discountRate = discountRate;
+
+    }
+
+    public BookResponseDto(Book book) {
     }
 }
