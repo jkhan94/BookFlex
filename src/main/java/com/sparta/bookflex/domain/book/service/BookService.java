@@ -13,16 +13,14 @@ import com.sparta.bookflex.domain.category.service.CategoryService;
 import com.sparta.bookflex.domain.photoimage.entity.PhotoImage;
 import com.sparta.bookflex.domain.photoimage.service.PhotoImageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -159,10 +157,15 @@ public class BookService {
         }
 
 
-        return bookPage.map(book -> {
-            String photoImageUrl = book.getPhotoImage() != null ? photoImageService.getPhotoImageUrl(book.getPhotoImage().getFilePath()) : null;
-            return book.toResponseDto(photoImageUrl);
-        });
+        List<BookResponseDto> bookResponseDtos = bookPage.stream()
+                .filter(book -> !book.getStatus().equals(BookStatus.SOLDOUT))
+                .map(book -> {
+                    String photoImageUrl = book.getPhotoImage() != null ? photoImageService.getPhotoImageUrl(book.getPhotoImage().getFilePath()) : null;
+                    return book.toResponseDto(photoImageUrl);
+                })
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(bookResponseDtos, pageable, bookPage.getTotalElements());
 
     }
 }

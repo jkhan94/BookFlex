@@ -32,7 +32,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain) throws ServletException, IOException {
 
         String token = jwtProvider.getJwtFromHeader(req, JwtConfig.AUTHORIZATION_HEADER);
-
+        String url = req.getRequestURI();
+        if(url.equals("/auth/login")) {
+            token = "";
+        }
         if (!StringUtils.hasText(token)) {
             log.info("토큰 아예 없는 경우");
             filterChain.doFilter(req, res);

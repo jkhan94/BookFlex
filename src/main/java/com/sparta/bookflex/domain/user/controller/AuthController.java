@@ -5,6 +5,7 @@ import com.sparta.bookflex.common.config.JwtConfig;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
 import com.sparta.bookflex.domain.user.dto.LoginReqDto;
 import com.sparta.bookflex.domain.user.dto.LoginResDto;
+import com.sparta.bookflex.domain.user.dto.RefreshResDto;
 import com.sparta.bookflex.domain.user.dto.SignUpReqDto;
 import com.sparta.bookflex.domain.user.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -73,12 +74,13 @@ public class AuthController {
 
     @Envelop("토큰을 재발급 하였습니다.")
     @PostMapping("/refresh")
-    public ResponseEntity<Void> refreshToken(@AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletResponse response, HttpServletRequest request)
+    public ResponseEntity<RefreshResDto> refreshToken(@AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletResponse response, HttpServletRequest request)
     {
         String accessToken = authService.refreshToken(userDetails.getUser(), request.getHeader(JwtConfig.AUTHORIZATION_HEADER));
+        RefreshResDto resDto = new RefreshResDto(accessToken);
         response.setHeader(JwtConfig.ACCESS_TOKEN_HEADER, accessToken);
 
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.ok().body(resDto);
     }
 
 //    @GetMapping("kakao/callback")

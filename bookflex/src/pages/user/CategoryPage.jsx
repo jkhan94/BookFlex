@@ -7,9 +7,13 @@ const CategoryPage = () => {
     const { categoryName } = useParams();
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null); // 에러 상태 추가
 
     useEffect(() => {
         const fetchBooks = async () => {
+            setLoading(true);
+            setError(null); // 에러 상태 초기화
+
             try {
                 const response = await axiosInstance.get(`/books/category/${encodeURIComponent(categoryName)}`, {
                     params: {
@@ -18,18 +22,27 @@ const CategoryPage = () => {
                         direction: 'asc'
                     }
                 });
-                setBooks(response.data.data.content); // API 응답에서 책 목록을 추출
+
+                const books = response.data.data.content;
+                setBooks(books); // API 응답에서 책 목록을 추출
             } catch (error) {
                 console.error('Error fetching books:', error);
+                setError('재고가 존재 하지 않습니다.'); // 에러 상태 설정
             } finally {
                 setLoading(false);
             }
         };
 
         fetchBooks();
+
+        return () => {
+            // 컴포넌트 언마운트 시 클린업 코드 (필요시 추가)
+        };
     }, [categoryName]);
 
     if (loading) return <div className={styles.loading}>Loading...</div>;
+
+    if (error) return <div className={styles.error}>{error}</div>; // 에러 메시지 표시
 
     return (
         <div className={styles.categoryPage}>
@@ -42,7 +55,7 @@ const CategoryPage = () => {
                         <div key={book.bookId} className={styles.bookCard}>
                             <img src={book.photoImagePath} alt={book.bookName} className={styles.bookImage} />
                             <div className={styles.bookDetails}>
-                                <h2 className={styles.CategoryBookTitle }>{book.bookName}</h2>
+                                <h2 className={styles.CategoryBookTitle}>{book.bookName}</h2>
                                 <p className={styles.bookAuthor}>Author: {book.author}</p>
                                 <p className={styles.bookPrice}>Price: ${book.price.toFixed(2)}</p>
                             </div>

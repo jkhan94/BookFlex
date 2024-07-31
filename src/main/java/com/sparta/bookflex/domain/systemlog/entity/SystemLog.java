@@ -32,13 +32,12 @@ public class SystemLog {
     @CreatedDate
     private LocalDateTime createdAt;
 
-    @ManyToOne
-    @JoinColumn(name="user_id")
-    private User user;
+    @Column
+    String username;
 
     public SystemLog(ActionType action, String description, User user) {
         this.action = action;
         this.description = description;
-        this.user = user;
+        username = user.getUsername();
     }
 }
