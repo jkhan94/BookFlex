@@ -1,76 +1,84 @@
 .container {
-    padding: 20px;
+    /* 기존 스타일 */
 }
 
 .orderContainer {
-    border: 1px solid #ddd;
-    padding: 20px;
-    border-radius: 5px;
+    /* 기존 스타일 */
 }
 
 .orderItem {
-    display: flex;
-    margin-bottom: 15px;
+    /* 기존 스타일 */
 }
 
 .itemImage {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    margin-right: 15px;
+    /* 기존 스타일 */
 }
 
 .itemDetails {
-    flex: 1;
+    /* 기존 스타일 */
 }
 
 .itemName {
-    font-size: 16px;
-    font-weight: bold;
+    /* 기존 스타일 */
 }
 
 .itemPrice {
-    color: #555;
+    /* 기존 스타일 */
 }
 
-.total, .finalTotal {
-    font-size: 18px;
-    margin-top: 15px;
+.total {
+    /* 기존 스타일 */
 }
 
-.payBtn {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+.finalTotal {
+    /* 기존 스타일 */
 }
 
 .couponList {
-    list-style-type: none;
+    list-style: none;
     padding: 0;
+    margin: 0;
 }
 
 .couponItem {
-    border: 1px solid #ddd;
-    border-radius: 5px;
     padding: 10px;
     margin-bottom: 10px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    transition: transform 0.3s, background-color 0.3s;
+}
+
+.couponItem:hover {
+    transform: translateY(-5px);
+}
+
+.couponDisabled {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
 }
 
 .couponName {
-    font-size: 16px;
     font-weight: bold;
 }
 
 .couponDetails {
-    font-size: 14px;
+    margin-top: 5px;
+}
+
+.couponMinPrice {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.9em;
     color: #555;
 }
 
 .couponValidity {
-    font-size: 12px;
-    color: #777;
+    display: block;
+    margin-top: 5px;
+    font-size: 0.8em;
+    color: #888;
+}
+
+.payBtn {
+    /* 기존 스타일 */
 }

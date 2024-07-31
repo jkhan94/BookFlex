@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Entity
@@ -35,6 +36,12 @@ public class OrderBook extends Timestamped {
     @Column(name = "discount",precision = 10, scale = 2)
     private BigDecimal discount;
 
+    @Column(name = "discount_total",precision = 10, scale = 2)
+    private BigDecimal discountTotal;
+
+    @Column(name = "is_coupon")
+    private boolean isCoupon;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
@@ -45,6 +52,8 @@ public class OrderBook extends Timestamped {
     @OneToMany(mappedBy = "orderBook")
     private List<Sale> saleList;
 
+    private final String PREFIX = "BookFlexA";
+
 
 
     @Builder
@@ -52,7 +61,10 @@ public class OrderBook extends Timestamped {
         this.status = status;
         this.user = user;
         this.discount = discountPrice != null ? discountPrice : BigDecimal.ZERO;
-        this.total = total != null ? total.subtract(this.discount) : BigDecimal.ZERO;
+        this.total = total ;
+        this.orderNo = orderNo;
+        this.discountTotal = total.subtract(discountPrice != null ? discountPrice : BigDecimal.ZERO);
+        this.isCoupon = false;
     }
 
     public void updateSaleList(List<OrderItem> orderItemList) {
@@ -65,6 +77,13 @@ public class OrderBook extends Timestamped {
 
     public void updateDiscount(BigDecimal discount) {
         this.discount = discount;
-        this.total = total.subtract(discount);
+        this.discountTotal = this.total.subtract(discount);
+        this.isCoupon = true;
+    }
+
+    public void generateOrderNo() {
+        if (this.id != null) {
+            this.orderNo = String.format("%s-%d", PREFIX, this.id);
+        }
     }
 }

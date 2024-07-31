@@ -73,6 +73,13 @@ const CartPage = () => {
             navigate(`/main/order/${orderId}`);
         } catch (error) {
             console.error('Error creating order:', error);
+
+            // 에러 응답에서 메시지를 추출하여 알림 창을 띄움
+            if (error.response && error.response.data && error.response.data.message) {
+                alert(error.response.data.message);
+            } else {
+                alert('An error occurred while creating the order.');
+            }
         }
     };
 

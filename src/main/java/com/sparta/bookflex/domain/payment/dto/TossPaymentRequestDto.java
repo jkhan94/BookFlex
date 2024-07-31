@@ -13,6 +13,7 @@ public class TossPaymentRequestDto {
 
    // private String orderNo;
     private Long orderId;                      // 주문 번호(필수)
+    private String orderNo;
     private int amount;                        // 결제 금액(필수)
     private int amountTaxFree;                 // 비과세 금액(필수)
     private String productDesc;                // 상품 설명(필수)

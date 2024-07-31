@@ -32,7 +32,7 @@ public class QTraceOfUserLog extends EntityPathBase<TraceOfUserLog> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final com.sparta.bookflex.domain.user.entity.QUser user;
+    public final StringPath username = createString("username");
 
     public QTraceOfUserLog(String variable) {
         this(TraceOfUserLog.class, forVariable(variable), INITS);
@@ -53,7 +53,6 @@ public class QTraceOfUserLog extends EntityPathBase<TraceOfUserLog> {
     public QTraceOfUserLog(Class<? extends TraceOfUserLog> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.book = inits.isInitialized("book") ? new com.sparta.bookflex.domain.book.entity.QBook(forProperty("book"), inits.get("book")) : null;
-        this.user = inits.isInitialized("user") ? new com.sparta.bookflex.domain.user.entity.QUser(forProperty("user"), inits.get("user")) : null;
     }
 
 }

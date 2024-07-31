@@ -124,6 +124,8 @@ public class OrderBookService {
         }
 
         orderBookRepository.save(orderBook);
+        orderBook.generateOrderNo();
+        orderBookRepository.save(orderBook);
         return orderBook;
     }
 

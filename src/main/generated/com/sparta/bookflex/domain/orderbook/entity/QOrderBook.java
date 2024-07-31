@@ -29,7 +29,11 @@ public class QOrderBook extends EntityPathBase<OrderBook> {
 
     public final NumberPath<java.math.BigDecimal> discount = createNumber("discount", java.math.BigDecimal.class);
 
+    public final NumberPath<java.math.BigDecimal> discountTotal = createNumber("discountTotal", java.math.BigDecimal.class);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final BooleanPath isCoupon = createBoolean("isCoupon");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
@@ -37,6 +41,8 @@ public class QOrderBook extends EntityPathBase<OrderBook> {
     public final ListPath<OrderItem, QOrderItem> orderItemList = this.<OrderItem, QOrderItem>createList("orderItemList", OrderItem.class, QOrderItem.class, PathInits.DIRECT2);
 
     public final StringPath orderNo = createString("orderNo");
+
+    public final StringPath PREFIX = createString("PREFIX");
 
     public final ListPath<com.sparta.bookflex.domain.sale.entity.Sale, com.sparta.bookflex.domain.sale.entity.QSale> saleList = this.<com.sparta.bookflex.domain.sale.entity.Sale, com.sparta.bookflex.domain.sale.entity.QSale>createList("saleList", com.sparta.bookflex.domain.sale.entity.Sale.class, com.sparta.bookflex.domain.sale.entity.QSale.class, PathInits.DIRECT2);
 

@@ -49,7 +49,7 @@ public class PaymentService {
     @Value("${payment.toss.fail_url}")
     private String failUrl;
 
-    private final String PREFIX = "BookFlexAB-";
+
 
     @Autowired
     public PaymentService(AuthService authService, PaymentRepository paymentRepository,
@@ -119,7 +119,7 @@ public class PaymentService {
 
     private JSONObject getJsonObject(TossPaymentRequestDto requestDto) {
         JSONObject jsonBody = new JSONObject();
-        jsonBody.put("orderNo", PREFIX+requestDto.getOrderId());
+        jsonBody.put("orderNo", requestDto.getOrderNo());
         jsonBody.put("amount", requestDto.getAmount());
         jsonBody.put("amountTaxFree", requestDto.getAmountTaxFree());
         jsonBody.put("productDesc", requestDto.getProductDesc());

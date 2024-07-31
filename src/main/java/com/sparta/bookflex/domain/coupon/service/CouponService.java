@@ -1,10 +1,7 @@
 package com.sparta.bookflex.domain.coupon.service;
 
 import com.sparta.bookflex.common.exception.BusinessException;
-import com.sparta.bookflex.domain.coupon.dto.CouponRequestDto;
-import com.sparta.bookflex.domain.coupon.dto.CouponResponseDto;
-import com.sparta.bookflex.domain.coupon.dto.CouponUpdateRequestDto;
-import com.sparta.bookflex.domain.coupon.dto.UserCouponResponseDto;
+import com.sparta.bookflex.domain.coupon.dto.*;
 import com.sparta.bookflex.domain.coupon.entity.Coupon;
 import com.sparta.bookflex.domain.coupon.entity.UserCoupon;
 import com.sparta.bookflex.domain.coupon.enums.CouponStatus;
@@ -17,19 +14,19 @@ import com.sparta.bookflex.domain.user.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
+import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.sparta.bookflex.common.exception.ErrorCode.*;
 import static com.sparta.bookflex.domain.coupon.entity.Coupon.toCouponResponseDto;
@@ -48,10 +45,10 @@ public class CouponService {
     @Transactional
     public CouponResponseDto createCoupon(CouponRequestDto requestDto) {
         LocalDateTime now = LocalDateTime.now();
-        CouponStatus status = CouponStatus.NotAvailable;
+        CouponStatus status = CouponStatus.NOTAVAILABLE;
 
         if (now.isAfter(requestDto.getStartDate().atStartOfDay())) {
-            status = CouponStatus.Available;
+            status = CouponStatus.AVAILABLE;
         }
 
         Coupon coupon = Coupon.builder()
@@ -114,7 +111,7 @@ public class CouponService {
         Coupon coupon = findCouponById(couponId);
 
         // 쿠폰이 발급가능 상태인지
-        if (coupon.getCouponStatus() == CouponStatus.NotAvailable) {
+        if (coupon.getCouponStatus() == CouponStatus.NOTAVAILABLE) {
             throw new BusinessException(COUPON_CANNOT_BE_ISSUED);
         }
 
@@ -174,7 +171,7 @@ public class CouponService {
         Coupon coupon = findCouponById(couponId);
 
         // 쿠폰이 발급가능 상태인지
-        if (coupon.getCouponStatus() == CouponStatus.NotAvailable) {
+        if (coupon.getCouponStatus() == CouponStatus.NOTAVAILABLE) {
             throw new BusinessException(COUPON_CANNOT_BE_ISSUED);
         }
 
@@ -218,7 +215,7 @@ public class CouponService {
     public UserCouponResponseDto issueCoupon(long couponId, User user) {
         Coupon coupon = findCouponById(couponId);
 
-        if (coupon.getCouponStatus() == CouponStatus.NotAvailable) {
+        if (coupon.getCouponStatus() == CouponStatus.NOTAVAILABLE) {
             throw new BusinessException(COUPON_CANNOT_BE_ISSUED);
         }
 
@@ -305,5 +302,34 @@ public class CouponService {
         issuedCoupon.updateStatus();
     }
 
+    @Transactional
+    public List<CouponOrderResponseDto> getMyOrderCoupons(User user, Pageable pageable) {
 
+
+        Page<UserCoupon> userCouponPage = userCouponRepository.findAllByUserId(user.getId(), pageable);
+
+        Page<CouponOrderResponseDto> couponOrderResponseDtoPage = new PageImpl<>(
+                userCouponPage.getContent().stream()
+                        .filter(userCoupon -> !userCoupon.getIsUsed())
+                        .map(userCoupon -> {
+                            Coupon coupon = userCoupon.getCoupon();
+                            if (coupon == null) {
+                                throw new BusinessException(COUPON_NOT_FOUND);
+                            }
+                            return CouponOrderResponseDto.builder()
+                                    .couponName(coupon.getCouponName())
+                                    .userCouponId(userCoupon.getId())
+                                    .couponCode(userCoupon.getCouponCode())
+                                    .discountType(coupon.getDiscountType())
+                                    .minPrice(coupon.getMinPrice())
+                                    .discountPrice(coupon.getDiscountPrice())
+                                    .build();
+                        })
+                        .collect(Collectors.toList()),
+                userCouponPage.getPageable(),
+                userCouponPage.getTotalElements()
+        );
+
+        return couponOrderResponseDtoPage.getContent();
+    }
 }
