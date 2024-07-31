@@ -18,11 +18,11 @@ const AdminDashboard = () => {
                 <ul className={styles.navList}>
                     <li><Link to="/admin/register-book">상품 등록</Link></li>
                     <li><Link to="/admin/inquiry-booklist">상품 관리</Link></li>
-                    <li><Link to="/admin/coupons">매출 내역</Link></li>
+                    <li><Link to="/admin/coupons">쿠폰 관리</Link></li>
                     <li><Link to="/admin/sales">Sales Report</Link></li>
                     <li><Link to="/admin/payments">Payment Management</Link></li>
                     <li><Link to="/admin/shipping">Shipping Management</Link></li>
-                    <li><Link to="/admin/qna">Admin Q&A</Link></li>
+                    <li><Link to="/admin/qna">고객문의 관리</Link></li>
                     {/* 새로운 링크 추가 */}
                 </ul>
                 <button className={styles.logoutButton} onClick={handleLogout}>Logout</button>

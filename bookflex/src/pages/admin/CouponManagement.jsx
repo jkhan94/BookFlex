@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import axiosInstance from "../../api/axiosInstance";
 import styles from '../admin/couponmanagement.module.css'; // CSS 파일을 여기에 넣으세요
 
@@ -7,7 +7,8 @@ const PAGE_SIZE = 5;
 const CouponManagement = () => {
     const [coupons, setCoupons] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
+    const [totalPages, setTotalPages] = useState(1);
+    const [totalElements, setTotalElements] = useState(0);
     const [error, setError] = useState(null);
     const [showCreateForm, setShowCreateForm] = useState(false);
     const [newCoupon, setNewCoupon] = useState({
@@ -41,17 +42,18 @@ const CouponManagement = () => {
                     'Content-Type': 'application/json',
                 },
                 params: {
-                    page: currentPage,
+                    page: page, // 서버는 0 기반 페이지 인덱스를 사용합니다
                     size: PAGE_SIZE,
-                    sortBy: 'expirationDate',
+                    sortBy: 'createdAt',
                 }
             });
 
-            if (Array.isArray(response.data)) {
-                setCoupons(response.data);
-                setHasMore(response.data.length === PAGE_SIZE);
+            if (response.data.content) {
+                setCoupons(response.data.content);
+                setTotalPages(response.data.totalPages);
+                setTotalElements(response.data.totalElements);
             } else {
-                throw new Error('API response is not an array');
+                throw new Error('API response does not contain expected data');
             }
         } catch (error) {
             alert('쿠폰을 불러오는 중 오류가 발생했습니다: ' + error.message);
@@ -96,7 +98,7 @@ const CouponManagement = () => {
     };
 
     const handleNextPage = () => {
-        if (hasMore) {
+        if (currentPage < totalPages) {
             setCurrentPage(currentPage + 1);
         }
     };
@@ -108,7 +110,7 @@ const CouponManagement = () => {
             if (!isNaN(newCountNumber) && newCountNumber >= 0) {
                 try {
                     const token = localStorage.getItem('Authorization');
-                    await axiosInstance.put(`/coupons/${couponId}`, { totalCount: newCountNumber }, {
+                    await axiosInstance.put(`/coupons/${couponId}`, {totalCount: newCountNumber}, {
                         headers: {
                             Authorization: token,
                             'Content-Type': 'application/json',
@@ -170,7 +172,7 @@ const CouponManagement = () => {
     };
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         setNewCoupon((prevCoupon) => ({
             ...prevCoupon,
             [name]: value
@@ -216,7 +218,7 @@ const CouponManagement = () => {
                     <tr key={coupon.couponId}>
                         <td>{coupon.couponType}</td>
                         <td>{coupon.couponName}</td>
-                        <td>{coupon.validityDays === 0 ? "쿠폰 만료일까지" : coupon.validityDays}</td>
+                        <td>{coupon.validityDays === 0 ? "쿠폰 만료일까지" : "발급일로부터 " + coupon.validityDays + "일"}</td>
                         <td>{coupon.totalCount}</td>
                         <td>{coupon.discountType}</td>
                         <td>{coupon.minPrice}</td>
@@ -238,13 +240,13 @@ const CouponManagement = () => {
                             </div>
                         </td>
                     </tr>
-                    ))}
+                ))}
                 </tbody>
             </table>
             <div className={styles.pagination}>
                 <button onClick={handlePreviousPage} disabled={currentPage === 1}>이전</button>
-                <span>페이지 {currentPage}</span>
-                <button onClick={handleNextPage} disabled={!hasMore}>다음</button>
+                <span>페이지 {currentPage} / {totalPages}</span>
+                <button onClick={handleNextPage} disabled={currentPage === totalPages}>다음</button>
             </div>
 
             <div className={styles.createCouponContainer}>

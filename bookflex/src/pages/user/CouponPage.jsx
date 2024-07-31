@@ -1,19 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import axiosInstance from "../../api/axiosInstance";
 import styles from '../user/couponpage.module.css'; // CSS 모듈 임포트
-
-const PAGE_SIZE = 5;
 
 const CouponPage = () => {
     const [myCoupons, setMyCoupons] = useState([]);
     const [availableCoupons, setAvailableCoupons] = useState([]);
     const [error, setError] = useState(null);
-    const [currentPage, setCurrentPage] = useState(1);
+
+    const [currentPageMyCoupons, setCurrentPageMyCoupons] = useState(1); // My Coupons 페이지
+    const [currentPageAvailableCoupons, setCurrentPageAvailableCoupons] = useState(1); // Available Coupons 페이지
+
+    const [totalPagesMyCoupons, setTotalPagesMyCoupons] = useState(1);
+    const [totalPagesAvailableCoupons, setTotalPagesAvailableCoupons] = useState(1);
 
     useEffect(() => {
         fetchMyCoupons();
+    }, [currentPageMyCoupons]);
+
+    useEffect(() => {
         fetchAvailableCoupons();
-    }, [currentPage]);
+    }, [currentPageAvailableCoupons]);
 
     const fetchMyCoupons = async () => {
         try {
@@ -24,11 +30,12 @@ const CouponPage = () => {
                     'Content-Type': 'application/json',
                 },
                 params: {
-                    page: currentPage,
+                    page: currentPageMyCoupons, // My Coupons 페이지 번호 (1 기반)
                     sortBy: 'isUsed',
                 }
             });
-            setMyCoupons(response.data);
+            setMyCoupons(response.data.content);
+            setTotalPagesMyCoupons(response.data.totalPages);
         } catch (error) {
             setError('내 쿠폰을 불러오는 중 오류가 발생했습니다: ' + error.message);
         }
@@ -43,11 +50,12 @@ const CouponPage = () => {
                     'Content-Type': 'application/json',
                 },
                 params: {
-                    page: currentPage,
+                    page: currentPageAvailableCoupons, // Available Coupons 페이지 번호 (1 기반)
                     sortBy: 'createdAt',
                 }
             });
-            setAvailableCoupons(response.data);
+            setAvailableCoupons(response.data.content);
+            setTotalPagesAvailableCoupons(response.data.totalPages);
         } catch (error) {
             setError('사용 가능한 쿠폰을 불러오는 중 오류가 발생했습니다: ' + error.message);
         }
@@ -62,15 +70,37 @@ const CouponPage = () => {
                     'Content-Type': 'application/json',
                 }
             });
-            // 쿠폰 발급 성공 시, 발급된 쿠폰을 myCoupons 상태에 추가하고 availableCoupons에서 제거
-            setMyCoupons(prev => [...prev, response.data]);
-            setAvailableCoupons(prev => prev.filter(coupon => coupon.couponId !== couponId));
+            // 쿠폰 발급 성공 시, 쿠폰 목록을 새로고침
+            fetchMyCoupons();
+            fetchAvailableCoupons();
         } catch (error) {
             setError('쿠폰 발급 중 오류가 발생했습니다: ' + error.message);
         }
     };
 
-    const myCouponIds = new Set(myCoupons.map(coupon => coupon.coupon.couponId));
+    const handlePreviousPageMyCoupons = () => {
+        if (currentPageMyCoupons > 1) {
+            setCurrentPageMyCoupons(currentPageMyCoupons - 1);
+        }
+    };
+
+    const handleNextPageMyCoupons = () => {
+        if (currentPageMyCoupons < totalPagesMyCoupons) {
+            setCurrentPageMyCoupons(currentPageMyCoupons + 1);
+        }
+    };
+
+    const handlePreviousPageAvailableCoupons = () => {
+        if (currentPageAvailableCoupons > 1) {
+            setCurrentPageAvailableCoupons(currentPageAvailableCoupons - 1);
+        }
+    };
+
+    const handleNextPageAvailableCoupons = () => {
+        if (currentPageAvailableCoupons < totalPagesAvailableCoupons) {
+            setCurrentPageAvailableCoupons(currentPageAvailableCoupons + 1);
+        }
+    };
 
     return (
         <div>
@@ -119,6 +149,13 @@ const CouponPage = () => {
                 </tbody>
             </table>
 
+            <div className={styles.pagination}>
+                <button onClick={handlePreviousPageMyCoupons} disabled={currentPageMyCoupons === 1}>Previous</button>
+                <span>페이지 {currentPageMyCoupons} / {totalPagesMyCoupons}</span>
+                <button onClick={handleNextPageMyCoupons} disabled={currentPageMyCoupons >= totalPagesMyCoupons}>Next
+                </button>
+            </div>
+
             <h3>Available Coupons</h3>
             <table className={styles.table}>
                 <thead>
@@ -137,30 +174,38 @@ const CouponPage = () => {
                 </thead>
                 <tbody>
                 {availableCoupons.map(coupon => (
-                    !myCouponIds.has(coupon.couponId) && (
-                        <tr key={coupon.couponId}>
-                            <td className={styles.td}>{coupon.couponName}</td>
-                            <td className={styles.td}>{coupon.couponType}</td>
-                            <td className={styles.td}>{coupon.discountType}</td>
-                            <td className={styles.td}>{coupon.minPrice}</td>
-                            <td className={styles.td}>{coupon.discountPrice}</td>
-                            <td className={styles.td}>{coupon.eligibleGrade}</td>
-                            <td className={styles.td}>{coupon.couponStatus}</td>
-                            <td className={styles.td}>{coupon.startDate}</td>
-                            <td className={styles.td}>{coupon.expirationDate}</td>
-                            <td className={styles.td}>
-                                <button
-                                    className={styles.issueButton}
-                                    onClick={() => issueCoupon(coupon.couponId)}
-                                >
-                                    쿠폰 발급
-                                </button>
-                            </td>
-                        </tr>
-                    )
+                    <tr key={coupon.couponId}>
+                        <td className={styles.td}>{coupon.couponName}</td>
+                        <td className={styles.td}>{coupon.couponType}</td>
+                        <td className={styles.td}>{coupon.discountType}</td>
+                        <td className={styles.td}>{coupon.minPrice}</td>
+                        <td className={styles.td}>{coupon.discountPrice}</td>
+                        <td className={styles.td}>{coupon.eligibleGrade}</td>
+                        <td className={styles.td}>{coupon.couponStatus}</td>
+                        <td className={styles.td}>{coupon.startDate}</td>
+                        <td className={styles.td}>{coupon.expirationDate}</td>
+                        <td className={styles.td}>
+                            <button
+                                className={styles.issueButton}
+                                onClick={() => issueCoupon(coupon.couponId)}
+                            >
+                                쿠폰 발급
+                            </button>
+                        </td>
+                    </tr>
                 ))}
                 </tbody>
             </table>
+
+            <div className={styles.pagination}>
+                <button onClick={handlePreviousPageAvailableCoupons}
+                        disabled={currentPageAvailableCoupons === 1}>Previous
+                </button>
+                <span>페이지 {currentPageAvailableCoupons} / {totalPagesAvailableCoupons}</span>
+                <button onClick={handleNextPageAvailableCoupons}
+                        disabled={currentPageAvailableCoupons >= totalPagesAvailableCoupons}>Next
+                </button>
+            </div>
         </div>
     );
 };
