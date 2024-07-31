@@ -1,4 +1,4 @@
-package com.sparta.bookflex.domain.reveiw;
+package com.sparta.bookflex.domain.reveiw.dto;
 
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.reveiw.entity.Review;

@@ -1,9 +1,11 @@
-package com.sparta.bookflex.domain.reveiw;
+package com.sparta.bookflex.domain.reveiw.service;
 
 import com.sparta.bookflex.common.exception.BusinessException;
 import com.sparta.bookflex.common.exception.ErrorCode;
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.service.BookService;
+import com.sparta.bookflex.domain.reveiw.dto.ReviewRequestDto;
+import com.sparta.bookflex.domain.reveiw.dto.ReviewResponseDto;
 import com.sparta.bookflex.domain.reveiw.entity.Review;
 import com.sparta.bookflex.domain.reveiw.repository.ReviewRepository;
 import com.sparta.bookflex.domain.sale.entity.Sale;
@@ -12,6 +14,10 @@ import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.enums.RoleType;
 import com.sparta.bookflex.domain.user.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -100,5 +106,22 @@ public class ReviewService {
     public List<ReviewResponseDto> getAllReviews() {
 
         return reviewRepository.findAll().stream().map(Review::toResponseDto).toList();
+    }
+
+
+    public Page<ReviewResponseDto> getReviewByBookId(int page, int size, boolean isAsc, String sortBy, Long bookId) {
+
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        Sort sort = Sort.by(direction, sortBy);
+
+        Pageable pageble = PageRequest.of(page - 1, size, sort);
+
+        Page<Review> reviewList = reviewRepository.findByBookId(bookId, pageble);
+
+        return reviewList.map(Review::toResponseDto);
+
+//        Page<Review> reviewList = reviewRepository.findByBookId(bookId, pageble);
+
     }
 }
