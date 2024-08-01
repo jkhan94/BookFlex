@@ -7,6 +7,7 @@ import com.sparta.bookflex.domain.book.service.BookService;
 import com.sparta.bookflex.domain.reveiw.dto.ReviewRequestDto;
 import com.sparta.bookflex.domain.reveiw.dto.ReviewResponseDto;
 import com.sparta.bookflex.domain.reveiw.entity.Review;
+import com.sparta.bookflex.domain.reveiw.repository.ReviewCustomRepositoryImpl;
 import com.sparta.bookflex.domain.reveiw.repository.ReviewRepository;
 import com.sparta.bookflex.domain.sale.entity.Sale;
 import com.sparta.bookflex.domain.sale.repository.SaleRepository;
@@ -32,6 +33,7 @@ public class ReviewService {
     private final BookService bookService;
 //    private final SaleService saleService;
     private final SaleRepository saleRepository;
+    private final ReviewCustomRepositoryImpl reviewCustomRepositoryImpl;
 
     /*
     레포지토리 접근 부분 추후 수정 필요
@@ -117,11 +119,25 @@ public class ReviewService {
 
         Pageable pageble = PageRequest.of(page - 1, size, sort);
 
+//        Page<Review> reviewList = reviewCustomRepositoryImpl.findByBookId(bookName, bookId, pageble);
+
+//        return reviewList.map(Review::toResponseDto);
+
         Page<Review> reviewList = reviewRepository.findByBookId(bookId, pageble);
 
         return reviewList.map(Review::toResponseDto);
 
-//        Page<Review> reviewList = reviewRepository.findByBookId(bookId, pageble);
+    }
 
+    public Page<ReviewResponseDto> getAllReviews(int page, int size, boolean isAsc, String sortBy, String bookName) {
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        Sort sort = Sort.by(direction, sortBy);
+
+        Pageable pageble = PageRequest.of(page - 1, size, sort);
+
+        Page<Review> reviewList = reviewCustomRepositoryImpl.getReviewsByBookName(bookName, pageble);
+
+        return reviewList.map(Review::toResponseDto);
     }
 }

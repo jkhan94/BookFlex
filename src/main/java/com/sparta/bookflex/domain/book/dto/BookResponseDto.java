@@ -23,8 +23,8 @@ public class BookResponseDto {
     private String status;
     private String mainCategoryName;
     private String subCategoryName;
-
     private String photoImagePath;
+    private double avgStar;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
@@ -41,9 +41,10 @@ public class BookResponseDto {
                            String mainCategoryName,
                            String subCategoryName,
                            String photoImagePath,
+                           double avgStar,
                            LocalDateTime createdAt,
                            LocalDateTime modifiedAt
-                           ) {
+    ) {
 
         this.bookId = bookId;
         this.bookName = bookName;
@@ -56,6 +57,7 @@ public class BookResponseDto {
         this.mainCategoryName = mainCategoryName;
         this.subCategoryName = subCategoryName;
         this.photoImagePath = photoImagePath;
+        this.avgStar = avgStar;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
 

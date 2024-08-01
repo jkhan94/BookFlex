@@ -28,6 +28,13 @@ import './App.css';
 import SuccessPage from "./pages/payment/Success";
 import FailPage from "./pages/payment/Fail";
 import CheckoutPage from "./pages/payment/Checkout";
+import ReviewListPage from "./pages/admin/ReviewListPage";
+import RegisterReviewPage from "./pages/admin/RegisterReviewPage";
+import ReviewDetailPage from "./pages/admin/ReviewDetailPage";
+import SaleReportByBookNamePage from "./pages/admin/SaleReportByBookNamePage";
+import SaleReportByCategoryNamePage from "./pages/admin/SaleReportByCategoryNamePage";
+import MemberListPage from "./pages/admin/MemberListPage";
+
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -64,9 +71,6 @@ function App() {
                     />
                     <Route path="/login" element={<LoginPage onLogin={handleLogin}/>}/>
                     <Route path="/signup" element={<SignUpPage/>}/>
-                    <Route path="/success" element={<SuccessPage/>}/>
-                    <Route path="/fail" element={<FailPage/>}/>
-                    <Route path="/checkout" element={<CheckoutPage/>}/>
 
                     <Route path="/books/:bookId" element={<BookDetailPage/>}/>
 
@@ -90,6 +94,22 @@ function App() {
                         <Route path="payments" element={<PaymentManagement/>}/>
                         <Route path="shipping" element={<ShippingManagement/>}/>
                         <Route path="qna" element={<AdminQnAPage/>}/>
+                        <Route path="inquiry-book" element={<BookDetailPages/>}/>
+                        <Route path="register-book" element={<RegisterBookPage/>}/>
+                        <Route path="inquiry-booklist" element={<BookListPage/>}/>
+                        <Route path="modify-book-info" element={<BookUpdatePage/>}/>
+                        <Route path="books/:bookId" element={<BookDetailPages/>}/>
+                        <Route path="books/:productId/edit" element={<BookUpdatePage/>}/>
+                        <Route path="" element={<BookListPage/>}/>
+                        <Route path="register-book" element={<RegisterBookPage/>}/>
+                        <Route path="Review-List" element={<ReviewListPage/>}/>
+                        <Route path="register-review" element={<RegisterReviewPage/>}/>
+                        <Route path="inquiry-review" element={<ReviewDetailPage/>}/>
+                        <Route path="salereport-bybookname" element={<SaleReportByBookNamePage/>}/>
+                        <Route path="reviews/:reviewId" element={<ReviewDetailPage/>}/>
+                        <Route path="salereport-bycategory" element={<SaleReportByCategoryNamePage/>}/>
+                        <Route path="member-list" element={<MemberListPage/>}/>
+
                         {/* 추가적인 관리자 하위 라우트 설정 */}
                     </Route>
                 </Routes>

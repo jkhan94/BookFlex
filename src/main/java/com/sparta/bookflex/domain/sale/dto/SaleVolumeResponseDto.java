@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -13,12 +14,12 @@ import java.util.List;
 @NoArgsConstructor
 public class SaleVolumeResponseDto {
 
-    private List<SaleVolumeRowDto> SaleVolumeRowList;
+    private Page<SaleVolumeRowDto> SaleVolumeRowList;
 
     private TotalSaleVolumeDto inquiryTotalSaleVolume;
 
     @Builder
-    public SaleVolumeResponseDto(List<SaleVolumeRowDto> firstData, TotalSaleVolumeDto secondData) {
+    public SaleVolumeResponseDto(Page<SaleVolumeRowDto> firstData, TotalSaleVolumeDto secondData) {
         this.SaleVolumeRowList = firstData;
         this.inquiryTotalSaleVolume = secondData;
     }
