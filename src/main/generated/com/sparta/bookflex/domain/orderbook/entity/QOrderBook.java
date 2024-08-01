@@ -27,7 +27,9 @@ public class QOrderBook extends EntityPathBase<OrderBook> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
-    public final NumberPath<java.math.BigDecimal> discountPrice = createNumber("discountPrice", java.math.BigDecimal.class);
+    public final NumberPath<java.math.BigDecimal> discount = createNumber("discount", java.math.BigDecimal.class);
+
+    public final NumberPath<java.math.BigDecimal> discountTotal = createNumber("discountTotal", java.math.BigDecimal.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
@@ -45,6 +47,8 @@ public class QOrderBook extends EntityPathBase<OrderBook> {
     public final NumberPath<java.math.BigDecimal> total = createNumber("total", java.math.BigDecimal.class);
 
     public final com.sparta.bookflex.domain.user.entity.QUser user;
+
+    public final com.sparta.bookflex.domain.coupon.entity.QUserCoupon userCoupon;
 
     public QOrderBook(String variable) {
         this(OrderBook.class, forVariable(variable), INITS);
@@ -65,6 +69,7 @@ public class QOrderBook extends EntityPathBase<OrderBook> {
     public QOrderBook(Class<? extends OrderBook> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.user = inits.isInitialized("user") ? new com.sparta.bookflex.domain.user.entity.QUser(forProperty("user"), inits.get("user")) : null;
+        this.userCoupon = inits.isInitialized("userCoupon") ? new com.sparta.bookflex.domain.coupon.entity.QUserCoupon(forProperty("userCoupon"), inits.get("userCoupon")) : null;
     }
 
 }

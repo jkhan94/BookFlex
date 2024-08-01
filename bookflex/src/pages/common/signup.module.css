@@ -1,80 +1,86 @@
-/* src/pages/signup/signup.module.css */
-
+/* 컨테이너 스타일 */
 .container {
     display: flex;
     flex-direction: column;
-    align-items: center; /* 중앙 정렬 */
-    justify-content: center; /* 세로 중앙 정렬 */
-    height: 100vh; /* 화면 전체 높이 */
-    background-color: #f5f5dc; /* 기본 배경색: 베이지 */
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f5f5dc;
 }
 
+/* 폼 스타일 */
 .form {
     max-width: 500px;
-    width: 100%; /* 전체 너비 */
+    width: 100%;
     padding: 20px;
-    border: 1px solid #e0e0e0; /* 연회색 경계선 */
-    border-radius: 8px; /* 부드러운 모서리 */
-    background-color: #f9f9f9; /* 폼 배경색: 연회색 */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     position: relative;
 }
 
+/* 제목 스타일 */
 .title {
-    font-size: 24px; /* 제목 크기 조정 */
+    font-size: 24px;
     font-weight: bold;
-    color: #003f5c; /* 다크블루 텍스트 색상 */
-    margin-bottom: 20px; /* 제목과 폼 사이 여백 */
-    text-align: center; /* 제목 중앙 정렬 */
+    color: #003f5c;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
+/* 폼 그룹 스타일 */
 .formGroup {
-    margin-bottom: 20px; /* 각 그룹 사이에 여백 추가 */
+    margin-bottom: 20px;
 }
 
-label {
+/* 레이블 스타일 */
+.label {
     display: block;
-    margin-bottom: 4px; /* 레이블과 입력 필드 사이 여백 조정 */
+    margin-bottom: 4px;
     font-weight: bold;
-    color: #003f5c; /* 다크블루 텍스트 색상 */
+    color: #003f5c;
 }
 
-input, select {
+/* 입력 필드와 선택 박스 스타일 */
+.input, .select {
     width: 100%;
-    padding: 10px; /* 입력 필드의 패딩 조정 */
-    border: 1px solid #e0e0e0; /* 연회색 경계선 */
-    border-radius: 4px; /* 부드러운 모서리 */
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
     box-sizing: border-box;
-    font-size: 14px; /* 폰트 크기 조정 */
-    color: #003f5c; /* 다크블루 텍스트 색상 */
-    background-color: #ffffff; /* 입력 필드 배경색: 흰색 */
+    font-size: 14px;
+    color: #003f5c;
+    background-color: #ffffff;
 }
 
-input:focus, select:focus {
-    border-color: #003f5c; /* 다크블루 포커스 색상 */
+.input:focus, .select:focus {
+    border-color: #003f5c;
     outline: none;
-    box-shadow: 0 0 4px rgba(0, 63, 92, 0.2); /* 포커스 시 그림자 */
+    box-shadow: 0 0 4px rgba(0, 63, 92, 0.2);
 }
 
-button {
+/* 버튼 스타일 */
+.button {
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
-    background-color: #003f5c; /* 다크블루 버튼 배경색 */
+    background-color: #003f5c;
     color: white;
-    font-size: 14px; /* 버튼 텍스트 폰트 크기 조정 */
+    font-size: 14px;
     cursor: pointer;
-    font-weight: bold; /* 버튼 텍스트 굵게 */
-    transition: background-color 0.3s, transform 0.2s; /* 부드러운 전환 */
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
-button:hover {
-    background-color: #002a3a; /* 버튼 호버 시 더 어두운 다크블루 */
-    transform: translateY(-2px); /* 버튼을 약간 위로 이동 */
+.button:hover {
+    background-color: #002a3a;
+    transform: translateY(-2px);
 }
 
+/* 에러 메시지 스타일 */
 .error {
-    color: #e74c3c; /* 에러 메시지 색상 */
-    font-size: 12px; /* 에러 메시지 폰트 크기 조정 */
-    margin-top: 4px; /* 에러 메시지와 입력 필드 사이 여백 조정 */
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 4px;
 }
