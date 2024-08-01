@@ -31,6 +31,8 @@ public class QOrderItem extends EntityPathBase<OrderItem> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final BooleanPath isReviewed = createBoolean("isReviewed");
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 

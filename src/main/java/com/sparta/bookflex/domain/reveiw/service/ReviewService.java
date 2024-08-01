@@ -4,6 +4,8 @@ import com.sparta.bookflex.common.exception.BusinessException;
 import com.sparta.bookflex.common.exception.ErrorCode;
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.service.BookService;
+import com.sparta.bookflex.domain.orderbook.entity.OrderItem;
+import com.sparta.bookflex.domain.orderbook.repository.OrderItemRepository;
 import com.sparta.bookflex.domain.reveiw.dto.ReviewRequestDto;
 import com.sparta.bookflex.domain.reveiw.dto.ReviewResponseDto;
 import com.sparta.bookflex.domain.reveiw.entity.Review;
@@ -34,17 +36,19 @@ public class ReviewService {
 //    private final SaleService saleService;
     private final SaleRepository saleRepository;
     private final ReviewCustomRepositoryImpl reviewCustomRepositoryImpl;
+    private final OrderItemRepository orderItemRepository;
 
     /*
     레포지토리 접근 부분 추후 수정 필요
      */
     @Transactional
-    public ReviewResponseDto createReview(User user, Long saleId, ReviewRequestDto reviewRequestDto) {
+    public ReviewResponseDto createReview(User user, Long itemId, ReviewRequestDto reviewRequestDto) {
         User selectedUser = getUser(user.getUsername());
 //        Sale selectedSale = saleService.getSale(saleId);
-        Sale selectedSale = saleRepository.findById(saleId).orElseThrow(()->new IllegalArgumentException());
-        Book selectedBook = bookService.getBookByBookId(selectedSale.getBook().getId());
-
+        OrderItem selectedOrderItem = orderItemRepository.findById(itemId).orElseThrow(() -> new BusinessException(ErrorCode.ORDER_ITEM_NOT_FOUND));
+        Book selectedBook = bookService.getBookByBookId(selectedOrderItem.getBook().getId());
+        selectedOrderItem.updateIsReviewed(true);
+        orderItemRepository.save(selectedOrderItem);
         Review createdReview = reviewRequestDto.toEntity(selectedUser, selectedBook);
 
         createdReview = reviewRepository.save(createdReview);

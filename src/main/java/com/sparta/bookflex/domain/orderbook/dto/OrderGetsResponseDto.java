@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 public class OrderGetsResponseDto {
@@ -15,10 +16,12 @@ public class OrderGetsResponseDto {
     private int total;
     private LocalDateTime createdAt;
     private OrderState orderState;
+    private List<OrderItemResponseDto> orderItemList;
 //    private ShipmentEnum shipment;
 
     @Builder
-    public OrderGetsResponseDto(Long orderId, String orderNo, String orderName, LocalDateTime createdAt, OrderState orderState, ShipmentEnum shipment,int total) {
+    public OrderGetsResponseDto(Long orderId, String orderNo, String orderName, LocalDateTime createdAt, OrderState orderState, ShipmentEnum shipment,int total, List<OrderItemResponseDto> orderItemList) {
+        this.orderItemList = orderItemList;
         this.orderId = orderId;
         this.orderNo = orderNo;
         this.orderName = orderName;

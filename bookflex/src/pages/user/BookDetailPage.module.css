@@ -1,0 +1,76 @@
+/* BookDetailPage.module.css */
+.bookDetailPage {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+}
+
+.bookDetailPage h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.bookDetails {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.bookImage {
+    max-width: 200px;
+    height: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    background-color: #fff;
+}
+
+.bookInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.bookInfo h2 {
+    margin-bottom: 10px;
+}
+
+.bookInfo p {
+    margin: 5px 0;
+}
+
+.bookInfo strong {
+    font-weight: bold;
+}
+
+.quantityContainer {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+}
+
+.quantityInput {
+    width: 50px;
+    margin-left: 10px;
+    padding: 5px;
+}
+
+.addToCartButton {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    align-self: flex-start;
+}
+
+.addToCartButton:hover {
+    background-color: #0056b3;
+}

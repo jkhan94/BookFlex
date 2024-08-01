@@ -194,7 +194,7 @@ public class PaymentService {
     @Transactional
     public void processPayment(User user, SuccessPayReqDto successPayReqDto) throws MessagingException, UnsupportedEncodingException {
         OrderBook orderBook = orderBookService.getOrderByOrderNo(successPayReqDto.getOrderId());
-        orderBook.updateStatus(OrderState.ITEM_PREPARING);
+        orderBook.updateStatus(OrderState.SALE_COMPLETED);
         Payment payment = paymentRepository.findByOrderBook(orderBook);
         payment.updateStatus(PaymentStatus.PAY_COMPLETE);
         payment.updatePayToken(successPayReqDto.getPaymentKey());
