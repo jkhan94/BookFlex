@@ -69,7 +69,7 @@ public class CouponServiceTest {
                 .minPrice(BigDecimal.valueOf(50000))
                 .discountPrice(BigDecimal.valueOf(5000))
                 .eligibleGrade(UserGrade.NORMAL)
-                .couponStatus(CouponStatus.Available)
+                .couponStatus(CouponStatus.AVAILABLE)
                 .startDate(LocalDateTime.now())
                 .expirationDate(LocalDateTime.now().plusMonths(1))
                 .build();
