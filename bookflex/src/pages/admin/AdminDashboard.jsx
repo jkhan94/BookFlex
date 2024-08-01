@@ -17,11 +17,12 @@ const AdminDashboard = () => {
                 <h2 className={styles.sidebarTitle}>관리자 메뉴</h2>
                 <ul className={styles.navList}>
                     <li><Link to="/admin/inquiry-booklist">상품 관리</Link></li>
+                    <li><Link to="/admin/coupons">쿠폰 관리</Link></li>
                     <li><Link to="/admin/salereport-bybookname">매출 내역</Link></li>
                     <li><Link to="/admin/Review-List">리뷰 관리</Link></li>
                     <li><Link to="/admin/register-review">리뷰 등록(사용자 기능으로 옮겨야함)</Link></li>
                     <li><Link to="/admin/member-list">회원 관리</Link></li>
-                    <li><Link to="/admin/qna">Admin Q&A</Link></li>
+                    <li><Link to="/admin/qna">고객문의 관리</Link></li>
 
                     {/* 새로운 링크 추가 */}
                 </ul>

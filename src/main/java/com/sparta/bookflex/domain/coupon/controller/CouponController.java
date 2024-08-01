@@ -36,7 +36,6 @@ public class CouponController {
     private final AuthService authService;
 
     @PostMapping
-//    @Envelop("쿠폰을 생성했습니다.")
     public ResponseEntity<CouponResponseDto> createCoupon(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                           @RequestBody @Valid CouponRequestDto requestDto) {
         User user = authService.findByUserName(userDetails.getUser().getUsername());
@@ -54,23 +53,20 @@ public class CouponController {
     }
 
     @GetMapping("/admin")
-//    @Envelop("발급 가능한 모든 쿠폰을 조회했습니다.")
-    public ResponseEntity<List<CouponResponseDto>> getAllCoupons(@AuthenticationPrincipal UserDetailsImpl userDetails,
+    public ResponseEntity<Page<CouponResponseDto>> getAllCoupons(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                  @RequestParam(value = "page", defaultValue = "1") int page,
-                                                                 @RequestParam(value = "sortBy", defaultValue = "expirationDate") String sortBy) {
+                                                                 @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy) {
         User user = authService.findByUserName(userDetails.getUser().getUsername());
         if (user.getAuth() != RoleType.ADMIN) {
             throw new BusinessException(COUPON_VIEW_NOT_ALLOWED);
         }
 
-        List<CouponResponseDto> responseList = couponService.getAllCoupons(page - 1, sortBy);
+        Page<CouponResponseDto> responseList = couponService.getAllCoupons(page - 1, sortBy);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseList);
     }
 
-
     @PutMapping("/{couponId}")
-//    @Envelop("쿠폰 개수를 변경했습니다.")
     public ResponseEntity<CouponResponseDto> updateCouponCount(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                @RequestBody @Valid CouponUpdateRequestDto requestDto,
                                                                @PathVariable long couponId) {
@@ -84,9 +80,7 @@ public class CouponController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
-
     @DeleteMapping("/{couponId}")
-//    @Envelop("쿠폰을 삭제했습니다.")
     public ResponseEntity<?> deleteCoupon(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                           @PathVariable long couponId) {
         User user = authService.findByUserName(userDetails.getUser().getUsername());
@@ -100,7 +94,6 @@ public class CouponController {
     }
 
     @PostMapping("/issue/all/{couponId}")
-//    @Envelop("쿠폰이 일괄 발급되었습니다.")
     public ResponseEntity<?> issueCouponToAll(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                               @PathVariable long couponId) {
         User user = authService.findByUserName(userDetails.getUser().getUsername());
@@ -128,9 +121,7 @@ public class CouponController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
-
     @PostMapping("/issue/{couponId}")
-//    @Envelop("쿠폰이 발급되었습니다.")
     public ResponseEntity<UserCouponResponseDto> issueCoupon(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                              @PathVariable long couponId) {
         User user = authService.findByUserName(userDetails.getUser().getUsername());
@@ -144,8 +135,7 @@ public class CouponController {
     }
 
     @GetMapping
-//    @Envelop("발급받은 모든 쿠폰을 조회했습니다.")
-    public ResponseEntity<List<UserCouponResponseDto>> getMyCoupons(@AuthenticationPrincipal UserDetailsImpl userDetails,
+    public ResponseEntity<Page<UserCouponResponseDto>> getMyCoupons(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                     @RequestParam(value = "page", defaultValue = "1") int page,
                                                                     @RequestParam(value = "sortBy", defaultValue = "isUsed") String sortBy) {
         User user = authService.findByUserName(userDetails.getUser().getUsername());
@@ -153,14 +143,13 @@ public class CouponController {
             throw new BusinessException(COUPON_VIEW_NOT_ALLOWED);
         }
 
-        List<UserCouponResponseDto> responseList = couponService.getMyCoupons(user, page - 1, sortBy);
+        Page<UserCouponResponseDto> responseList = couponService.getMyCoupons(user, page - 1, sortBy);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseList);
     }
 
     @GetMapping("/availables")
-//    @Envelop("발급 가능한 모든 쿠폰을 조회했습니다.")
-    public ResponseEntity<List<CouponResponseDto>> getAvailableCoupons(@AuthenticationPrincipal UserDetailsImpl userDetails,
+    public ResponseEntity<Page<CouponResponseDto>> getAvailableCoupons(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                        @RequestParam(value = "page", defaultValue = "1") int page,
                                                                        @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy) {
         User user = authService.findByUserName(userDetails.getUser().getUsername());
@@ -168,13 +157,12 @@ public class CouponController {
             throw new BusinessException(COUPON_VIEW_NOT_ALLOWED);
         }
 
-        List<CouponResponseDto> responseList = couponService.getAvailableCoupons(user, page - 1, sortBy);
+        Page<CouponResponseDto> responsePage = couponService.getAvailableCoupons(user, page - 1, sortBy);
 
-        return ResponseEntity.status(HttpStatus.OK).body(responseList);
+        return ResponseEntity.status(HttpStatus.OK).body(responsePage);
     }
 
     @GetMapping("/use/{couponId}")
-//    @Envelop("사용할 쿠폰을 조회했습니다.")
     public ResponseEntity<UserCouponResponseDto> getSingleUserCoupon(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                      @PathVariable long couponId) {
         User user = authService.findByUserName(userDetails.getUser().getUsername());
@@ -188,7 +176,6 @@ public class CouponController {
     }
 
     @GetMapping("/types")
-//    @Envelop("쿠폰 종류를 조회했습니다.")
     public ResponseEntity<List<String>> getCouponType() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Arrays.stream(CouponType.values())
@@ -197,7 +184,6 @@ public class CouponController {
     }
 
     @GetMapping("/discounts")
-//    @Envelop("할인 유형을 조회했습니다.")
     public ResponseEntity<List<String>> getDiscountType() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Arrays.stream(DiscountType.values())
@@ -206,7 +192,6 @@ public class CouponController {
     }
 
     @GetMapping("/grades")
-//    @Envelop("사용자 등급을 조회했습니다.")
     public ResponseEntity<List<String>> getUserGrade() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Arrays.stream(UserGrade.values())
@@ -217,9 +202,9 @@ public class CouponController {
 
     @GetMapping("/order")
     public ResponseEntity<List<CouponOrderResponseDto>> getMyOrderCoupons(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam(value = "page", defaultValue = "1") int page,
-                                                                          @RequestParam (value = "page", defaultValue = "10") int PAGE_SIZE,@RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy ) {
+                                                                          @RequestParam(value = "page", defaultValue = "10") int PAGE_SIZE, @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy) {
         Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.by(Sort.Direction.ASC, sortBy));
-        return ResponseEntity.status(HttpStatus.OK).body(couponService.getMyOrderCoupons(userDetails.getUser(),pageable));
+        return ResponseEntity.status(HttpStatus.OK).body(couponService.getMyOrderCoupons(userDetails.getUser(), pageable));
     }
 
 
