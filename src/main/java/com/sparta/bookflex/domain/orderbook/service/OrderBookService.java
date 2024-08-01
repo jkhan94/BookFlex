@@ -103,7 +103,7 @@ public class OrderBookService {
             .total(total)
             .user(user)
             .build();
-        orderBook.updateSaleList(orderItemList);
+        orderBook.updateOrderItemList(orderItemList);
 
         for (OrderItem orderItem : orderItemList) {
             orderItem.updateOrderBook(orderBook);

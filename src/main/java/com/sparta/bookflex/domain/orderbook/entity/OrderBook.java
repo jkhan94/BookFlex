@@ -1,6 +1,7 @@
 package com.sparta.bookflex.domain.orderbook.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
+import com.sparta.bookflex.domain.coupon.entity.UserCoupon;
 import com.sparta.bookflex.domain.orderbook.dto.OrderShipResDto;
 import com.sparta.bookflex.domain.orderbook.emuns.OrderState;
 import com.sparta.bookflex.domain.sale.entity.Sale;
@@ -19,7 +20,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Table(name = "order_book")
 @NoArgsConstructor
 public class OrderBook extends Timestamped {
     @Id
@@ -28,14 +28,23 @@ public class OrderBook extends Timestamped {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status")
+    @Column(name="status")
     private OrderState status;
 
-    @Column(name = "total", precision = 10, scale = 2)
+    @Column(name = "total",precision = 10, scale = 2)
     private BigDecimal total;
 
     @Column(name = "order_no")
     private String orderNo;
+
+    @Column(name = "discount",precision = 10, scale = 2)
+    private BigDecimal discount;
+
+    @Column(name = "discount_total",precision = 10, scale = 2)
+    private BigDecimal discountTotal;
+
+    @Column(name = "is_coupon")
+    private boolean isCoupon;
 
     @Column(name = "discountPrice", precision = 10, scale = 2)
     private BigDecimal discountPrice;
@@ -44,11 +53,18 @@ public class OrderBook extends Timestamped {
     @JoinColumn(name = "user_id")
     User user;
 
+    @OneToOne
+    @JoinColumn(name = "userCoupon_id")
+    UserCoupon userCoupon;
+
     @OneToMany(mappedBy = "orderBook", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItemList;
 
     @OneToMany(mappedBy = "orderBook")
     private List<Sale> saleList;
+
+    @Transient
+    private final String PREFIX = "BookFlexA";
 
     @Column
     private String carrier;
@@ -57,21 +73,23 @@ public class OrderBook extends Timestamped {
     private String trackingNumber;
 
     @Builder
-    public OrderBook(OrderState status, BigDecimal total, User user, boolean isCoupon, BigDecimal discountPrice, String orderNo) {
+    public OrderBook(OrderState status, BigDecimal total, User user, BigDecimal discountPrice,String orderNo) {
         this.status = status;
         this.user = user;
-        this.discountPrice = discountPrice;
-        if(discountPrice !=null) {
-            this.total = total.subtract(discountPrice);}
+        this.discount = discountPrice != null ? discountPrice : BigDecimal.ZERO;
+        this.total = total ;
+        this.orderNo = orderNo;
+        this.discountTotal = total.subtract(discountPrice != null ? discountPrice : BigDecimal.ZERO);
+        this.isCoupon = false;
         this.carrier = "dev.track.dummy";
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now().minusDays(1);
         ZonedDateTime zonedDateTime = now.atZone(ZoneOffset.UTC);
         this.trackingNumber = zonedDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'09:00:00'Z'"));
     }
 
     public static OrderShipResDto toOrderShipRes(OrderBook orderBook) {
-        return new OrderShipResDto(orderBook.getOrderNo()
+        return new OrderShipResDto(orderBook.generateOrderNo()
             , orderBook.getUser().getUsername()
             , orderBook.getTrackingNumber()
             , orderBook.getCarrier());
@@ -84,18 +102,32 @@ public class OrderBook extends Timestamped {
 //        this.status = status;
 //        this.carrier = carrier;
 
-    public void updateSaleList(List<OrderItem> orderItemList) {
+    public void updateOrderItemList(List<OrderItem> orderItemList) {
         this.orderItemList = orderItemList;
+    }
+
+    public void updateSaleList(List<Sale> saleList) {
+        this.saleList = saleList;
     }
 
     public void updateStatus(OrderState status) {
         this.status = status;
     }
 
-    public String getOrderNo() {
-        if (id != null && id != 0L) {
-            orderNo = "ORD_" + id;
+    public void updateDiscount(BigDecimal discount) {
+        this.discount = discount;
+        this.discountTotal = this.total.subtract(discount);
+        this.isCoupon = true;
+    }
+
+    public String generateOrderNo() {
+        if (this.id != null) {
+            this.orderNo = String.format("%s-%d", PREFIX, this.id);
         }
         return orderNo;
+    }
+
+    public void updateUserCoupon(UserCoupon userCoupon) {
+        this.userCoupon = userCoupon;
     }
 }
