@@ -54,22 +54,19 @@ public class QnaService {
     }
 
     @Transactional(readOnly = true)
-    public List<QnaResponseDto> getUserQnas(User user, int page, String sortBy) {
+    public Page<QnaResponseDto> getUserQnas(User user, int page, String sortBy) {
         Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
 
-        Page<QnaResponseDto> qnaPage = qnaRepository.findAllByUserId(user.getId(), pageable).map(Qna::toQnaResponseDto);
-        return qnaPage.getContent();
+        return qnaRepository.findAllByUserId(user.getId(), pageable).map(Qna::toQnaResponseDto);
     }
 
     @Transactional(readOnly = true)
-    public List<QnaResponseDto> getAllQnas(int page, String sortBy) {
+    public Page<QnaResponseDto> getAllQnas(int page, String sortBy) {
         Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
 
-        Page<QnaResponseDto> qnaPage = qnaRepository.findAll(pageable).map(Qna::toQnaResponseDto);
-
-        return qnaPage.getContent();
+        return qnaRepository.findAll(pageable).map(Qna::toQnaResponseDto);
     }
 
     @Transactional

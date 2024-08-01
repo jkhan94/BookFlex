@@ -1,6 +1,5 @@
 package com.sparta.bookflex.domain.category.controller;
 
-import com.sparta.bookflex.common.aop.Envelop;
 import com.sparta.bookflex.domain.category.dto.CategoryAllResponseDto;
 import com.sparta.bookflex.domain.category.dto.CategoryNameResponseDto;
 import com.sparta.bookflex.domain.category.service.CategoryService;
@@ -21,8 +20,6 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-//    @Envelop("모든 카테고리 조회에 성공하였습니다.")
-
     public ResponseEntity<List<CategoryAllResponseDto>> getAllCategories() {
 
         List<CategoryAllResponseDto> responseList = categoryService.getAllCategories();
@@ -30,8 +27,6 @@ public class CategoryController {
     }
 
     @GetMapping("/main")
-//    @Envelop("메인 카테고리 조회에 성공하였습니다.")
-
     public ResponseEntity<List<CategoryNameResponseDto>> getAllMainCategories() {
 
         List<CategoryNameResponseDto> responseList = categoryService.getAllMainCategories();
@@ -39,7 +34,6 @@ public class CategoryController {
     }
 
     @GetMapping("/sub")
-
     public ResponseEntity<List<CategoryNameResponseDto>> getAllSubCategories(@RequestParam(value = "mainCategory", defaultValue = "카테고리") String mainCategory) {
 
         List<CategoryNameResponseDto> responseList = categoryService.getAllSubCategories(mainCategory);
