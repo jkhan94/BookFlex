@@ -3,6 +3,10 @@ package com.sparta.bookflex.domain.orderbook.controller;
 import com.sparta.bookflex.common.dto.CommonDto;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
 import com.sparta.bookflex.domain.orderbook.dto.*;
+import com.sparta.bookflex.domain.orderbook.dto.OrderBookTotalResDto;
+import com.sparta.bookflex.domain.orderbook.dto.OrderRequestDto;
+import com.sparta.bookflex.domain.orderbook.dto.OrderResponsDto;
+import com.sparta.bookflex.domain.orderbook.dto.OrderStatusRequestDto;
 import com.sparta.bookflex.domain.orderbook.service.OrderBookService;
 import jakarta.mail.MessagingException;
 import org.springframework.http.HttpStatus;
@@ -58,5 +62,14 @@ public class OrderBookController {
                 .status(HttpStatus.OK)
                 .body(responseDto);
     }
-    
+
+    @GetMapping()
+    public ResponseEntity<OrderBookTotalResDto> getAllOrder(@RequestParam("page") int page,
+                                                            @RequestParam("size") int size) {
+        OrderBookTotalResDto orderShipResDto = orderBookService.getAllOrder(page, size);
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(orderShipResDto);
+    }
 }
