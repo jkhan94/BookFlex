@@ -1,12 +1,15 @@
+// CategoryPage.jsx
 import React, { useState, useEffect } from 'react';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import axiosInstance from '../../api/axiosInstance';
-import { useParams } from 'react-router-dom';
 import './CategoryPage.css'; // 스타일을 위한 CSS 파일 임포트
 
 const CategoryPage = () => {
     const { categoryName } = useParams();
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchBooks = async () => {
@@ -42,7 +45,9 @@ const CategoryPage = () => {
                         <div key={book.bookId} className="book-card">
                             <img src={book.photoImagePath} alt={book.bookName} className="book-image" />
                             <div className="book-details">
-                                <h2 className="book-title">{book.bookName}</h2>
+                                <h2 className="book-title" >
+                                    <Link to={`/main/book-detail/${book.bookId}`}>{book.bookName}</Link>
+                                </h2>
                                 <p className="book-author">Author: {book.author}</p>
                                 <p className="book-price">Price: ${book.price.toFixed(2)}</p>
                             </div>

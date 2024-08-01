@@ -89,20 +89,23 @@ public class BasketService {
         }
 
         if(isBasketExistByBookIdAndUserId(book.getId(), selectedUser.getBasket().getId())) {
-            throw new BusinessException(ErrorCode.BASKET_ITEM_ALREADY_EXIST);
+            updateBasketById(book.getId(),basketCreateDto,selectedUser);
+            //throw new BusinessException(ErrorCode.BASKET_ITEM_ALREADY_EXIST);
         }
+        else {
 
-        Basket basket = getOrCreateBasket(selectedUser);
+            Basket basket = getOrCreateBasket(selectedUser);
 
-        BasketItem basketItem = BasketItem.builder()
+            BasketItem basketItem = BasketItem.builder()
                 .book(book)
                 .basket(basket)
                 .quantity(basketCreateDto.getQuantity())
                 .price(book.getPrice())
                 .build();
 
-        basket.addBasketItem(basketItem);
-        basketItemRepository.save(basketItem);
+            basket.addBasketItem(basketItem);
+            basketItemRepository.save(basketItem);
+        }
     }
 
 //    public BasketResDto getBasket(User user,Long bookId) {
@@ -186,4 +189,16 @@ public class BasketService {
         basketItemRepository.deleteById(basketItemId);
     }
 
+    @Transactional
+    public void updateBasketById(Long bookId, BasketCreateReqestDto basketCreateDto, User user) {
+
+        if(!isUserExist(user.getUsername())) {
+            throw new IllegalArgumentException("사용자가 존재하지 않습니다.");
+        }
+        BasketItem basketItem = basketItemRepository.findByBookId(bookId)
+            .orElseThrow(() -> new BusinessException(ErrorCode.BASKET_ITEM_NOT_FOUND));
+
+        basketItem.updateQuantity(basketCreateDto.getQuantity());
+        basketItemRepository.save(basketItem);
+    }
 }

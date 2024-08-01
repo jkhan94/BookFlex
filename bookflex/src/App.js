@@ -79,6 +79,7 @@ function App() {
                         <Route path="qna" element={<UserQnAPage/>}/>
                         {/* 추가적인 유저 하위 라우트 설정 */}
                         <Route path="profile-modify" element={<ProfileModifyPage/>}/>
+                        <Route path="book-detail/:bookId" element={<BookDetailPage/>}/>
                     </Route>
 
 
