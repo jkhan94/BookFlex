@@ -38,23 +38,17 @@ public class OrderItem extends Timestamped {
     @JoinColumn(name = "order_book_id")
     private OrderBook orderBook;
 
-    @ManyToOne
-    @JoinColumn(name = "shipment_id")
-    private Shipment shipment;
 
     @Builder
-    public OrderItem(int quantity, Book book,  OrderBook orderBook,BigDecimal price,Shipment shipment) {
+    public OrderItem(int quantity, Book book,  OrderBook orderBook,BigDecimal price) {
         this.quantity = quantity;
         this.book = book;
         this.price = price;
         this.total = BigDecimal.valueOf(quantity).multiply(price);
         this.orderBook = orderBook;
-        this.shipment = shipment;
     }
 
-    public void updateShipment(Shipment shipment) {
-        this.shipment = shipment;
-    }
+
 
     public void updateOrderBook(OrderBook orderBook) {
         this.orderBook = orderBook;

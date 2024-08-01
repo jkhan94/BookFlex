@@ -28,6 +28,8 @@ import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.service.AuthService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -234,6 +236,7 @@ public class OrderBookService {
 
     }
 
+
     @Transactional
     public OrderPaymentResponseDto createPayment(OrderPaymentRequestDto orderPaymentRequestDto, User user) {
         OrderBook orderBook = getOrderBook(orderPaymentRequestDto.getOrderId());
@@ -288,6 +291,8 @@ public class OrderBookService {
         paymentRepository.save(payment);
 
 
+
+
         String orderName = orderItemList.get(0)+" 외 "+(orderItemList.size()-1)+"개";
 
 
@@ -297,8 +302,24 @@ public class OrderBookService {
                 .orderName(orderName)
                 .customerEmail(user.getEmail())
                 .customerName(user.getName())
-                .customerMobilePhone(user.getPhoneNumber())
+                .customerMobilePhone(user.getPhoneNumber().replaceAll("-", ""))
                 .paymentAmount(total.intValue())
                 .build();
+    }
+
+    public OrderBook getOrderByOrderNo(String orderNo){
+        return orderBookRepository.findByOrderNo(orderNo);
+    }
+
+    public Page<OrderGetsResponseDto> getOrders(User user, Pageable pageable) {
+        Page<OrderBook> orderBookList = orderBookRepository.findByUser(user, pageable);
+        return orderBookList.map(orderBook -> OrderGetsResponseDto.builder()
+            .orderId(orderBook.getId())
+            .orderNo(orderBook.getOrderNo())
+            .total(orderBook.getDiscountTotal().intValue())
+            .orderState(orderBook.getStatus())
+            .createdAt(orderBook.getCreatedAt())
+            ///.shipment(orderBook.getShipment().getStatus())
+            .build());
     }
 }

@@ -11,25 +11,33 @@ const OrderPage = () => {
     const [selectedCoupon, setSelectedCoupon] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [discountedTotal, setDiscountedTotal] = useState(0);
 
     // 할인 금액 계산 함수
-    const calculateDiscountedTotal = () => {
-        if (!selectedCoupon || !order) return order.total;
+    const calculateDiscountedTotal = (orderTotal, coupon) => {
+        if (!coupon || !orderTotal) return orderTotal;
 
-        if (selectedCoupon.discountType === 'FIXED_AMOUNT') {
-            return Math.max(0, order.total - selectedCoupon.discountPrice);
-        } else if (selectedCoupon.discountType === 'PERCENTAGE') {
-            return Math.max(0, order.total - (order.total * (selectedCoupon.discountPrice / 100)));
+        let discountedTotal = orderTotal;
+
+        if (coupon.discountType === 'FIXED_AMOUNT') {
+            discountedTotal -= coupon.discountPrice;
+        } else if (coupon.discountType === 'PERCENTAGE') {
+            discountedTotal -= (orderTotal * (coupon.discountPrice / 100));
         }
-        return order.total;
+
+        return Math.max(0, discountedTotal);
     };
 
     // 쿠폰 선택 핸들러
     const handleCouponSelect = (coupon) => {
-        if (order && order.total >= coupon.minPrice) {
-            setSelectedCoupon(coupon);
-        } else {
+        if (selectedCoupon && selectedCoupon.userCouponId === coupon.userCouponId) {
+            // 이미 선택된 쿠폰 클릭 시 해제
             setSelectedCoupon(null);
+            setDiscountedTotal(order.total); // 초기화
+        } else if (order.total >= coupon.minPrice) {
+            // 최소 금액 조건을 만족하는 경우에만 쿠폰 선택
+            setSelectedCoupon(coupon);
+            setDiscountedTotal(calculateDiscountedTotal(order.total, coupon));
         }
     };
 
@@ -39,6 +47,7 @@ const OrderPage = () => {
             try {
                 const response = await axiosInstance.get(`/orders/${orderId}`);
                 setOrder(response.data);
+                setDiscountedTotal(response.data.total); // 초기화
             } catch (error) {
                 setError(`주문 정보를 가져오는 데 오류가 발생했습니다: ${error.response ? error.response.data : error.message}`);
                 console.error('Error fetching order:', error);
@@ -65,14 +74,18 @@ const OrderPage = () => {
         fetchCoupons();
     }, []);
 
-    // 결제 핸들러\]
+    // 선택된 쿠폰이나 주문이 변경될 때마다 할인된 총액을 다시 계산
+    useEffect(() => {
+        if (order) {
+            setDiscountedTotal(calculateDiscountedTotal(order.total, selectedCoupon));
+        }
+    }, [selectedCoupon, order]);
 
+    // 결제 핸들러
     const handlePayment = async () => {
         try {
             const response = await axiosInstance.post('/orders/payment', {
-                orderId: order.orderId
-
-                ,
+                orderId: order.orderId,
                 userCouponId: selectedCoupon ? selectedCoupon.userCouponId : null
             });
 
@@ -108,13 +121,17 @@ const OrderPage = () => {
                     <div>주문 항목이 없습니다.</div>
                 )}
                 <div className={styles.total}>총 금액: ₩{order.total?.toLocaleString() || '0'}</div>
-                <div className={styles.finalTotal}>할인된 금액: ₩{calculateDiscountedTotal().toLocaleString()}</div>
+                <div className={styles.finalTotal}>할인된 금액: ₩{discountedTotal.toLocaleString()}</div>
 
                 <h2>사용 가능한 쿠폰</h2>
                 {coupons.length > 0 ? (
                     <ul className={styles.couponList}>
                         {coupons.map(coupon => (
-                            <li key={coupon.userCouponId} className={styles.couponItem}>
+                            <li
+                                key={coupon.userCouponId}
+                                className={`${styles.couponItem} ${order.total < coupon.minPrice ? styles.couponDisabled : ''} ${selectedCoupon?.userCouponId === coupon.userCouponId ? styles.selectedCoupon : ''}`}
+                                onClick={() => handleCouponSelect(coupon)}
+                            >
                                 <input
                                     type="checkbox"
                                     id={`coupon-${coupon.userCouponId}`}
@@ -122,7 +139,7 @@ const OrderPage = () => {
                                     checked={selectedCoupon?.userCouponId === coupon.userCouponId}
                                     onChange={() => handleCouponSelect(coupon)}
                                 />
-                                <label htmlFor={`coupon-${coupon.userCouponId}`} className={`${order.total < coupon.minPrice ? styles.couponDisabled : ''}`}>
+                                <label htmlFor={`coupon-${coupon.userCouponId}`} className={`${order.total < coupon.minPrice ? styles.couponLabelDisabled : ''}`}>
                                     <div className={styles.couponName}>{coupon.couponName}</div>
                                     <div className={styles.couponDetails}>
                                         {coupon.discountType === 'FIXED_AMOUNT' ? (
