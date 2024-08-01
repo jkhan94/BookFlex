@@ -26,7 +26,7 @@ public class Review extends Timestamped {
     private String content;
 
     @Column(nullable = false)
-    private String star;
+    private int star;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -37,7 +37,7 @@ public class Review extends Timestamped {
     private Book book;
 
     @Builder
-    public Review(String title, String content, String star, User user, Book book) {
+    public Review(String title, String content, int star, User user, Book book) {
         this.title = title;
         this.content = content;
         this.star = star;
@@ -47,10 +47,12 @@ public class Review extends Timestamped {
 
     public ReviewResponseDto toResponseDto() {
         return ReviewResponseDto.builder()
+                .id(this.id)
                 .title(this.title)
                 .content(this.content)
                 .star(this.star)
                 .username(this.user.getUsername())
+                .nickname(this.user.getNickname())
                 .bookName(this.book.getBookName())
                 .createdAt(this.createdAt)
                 .modifiedAt(this.modifiedAt)

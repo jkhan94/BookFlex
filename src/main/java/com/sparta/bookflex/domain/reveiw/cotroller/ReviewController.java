@@ -45,7 +45,7 @@ public class ReviewController {
                                                                 @RequestParam(name = "size", required = false, defaultValue = "10") int size,
                                                                 @RequestParam(name = "direction", required = false, defaultValue = "true") boolean isAsc,
                                                                 @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
-                                                                @PathVariable(value = "bookId") Long bookId) {
+                                                                @PathVariable(value = "bookId", required = false) Long bookId) {
 
         Page<ReviewResponseDto> reviewResponseDto = reviewService.getReviewByBookId(page, size, isAsc, sortBy, bookId);
 
@@ -53,9 +53,13 @@ public class ReviewController {
     }
 
     @GetMapping("/reviews")
-    public CommonDto<List<ReviewResponseDto>> getAllReviews() {
+    public CommonDto<Page<ReviewResponseDto>> getAllReviews(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
+                                                            @RequestParam(name = "size", required = false, defaultValue = "10") int size,
+                                                            @RequestParam(name = "direction", required = false, defaultValue = "true") boolean isAsc,
+                                                            @RequestParam(name = "sortBy", required = false, defaultValue = "sortBy") String sortBy,
+                                                            @RequestParam(name = "bookName", required = false) String bookName) {
 
-        List<ReviewResponseDto> reviewResponseDto = reviewService.getAllReviews();
+        Page<ReviewResponseDto> reviewResponseDto = reviewService.getAllReviews(page, size, isAsc, sortBy, bookName);
 
         return new CommonDto<>(HttpStatus.CREATED.value(), "리뷰를 조회했습니다.", reviewResponseDto);
     }
@@ -81,7 +85,7 @@ public class ReviewController {
 
         String reviewTitle = reviewService.deleteReview(userDetails.getUser(), reviewId);
 
-        return new CommonDto<>(HttpStatus.OK.value(), "리뷰 등록에 성공하였습니다.", reviewTitle + " 리뷰를 삭제하였습니다.");
+        return new CommonDto<>(HttpStatus.OK.value(), "리뷰 삭제에 성공하였습니다.", reviewTitle + " 리뷰를 삭제하였습니다.");
     }
 
 }

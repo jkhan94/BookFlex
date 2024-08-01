@@ -121,8 +121,13 @@
 .title {
     display: flex;
     align-items: center;
-
 }
+
+.stars {
+    font-size: 24px;
+    color: #f1c40f;
+}
+
 /* 기타 스타일 유지 */
 
 
