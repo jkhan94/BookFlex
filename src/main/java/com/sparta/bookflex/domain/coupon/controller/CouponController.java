@@ -202,9 +202,9 @@ public class CouponController {
 
     @GetMapping("/order")
     public ResponseEntity<List<CouponOrderResponseDto>> getMyOrderCoupons(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam(value = "page", defaultValue = "1") int page,
-                                                                          @RequestParam (value = "page", defaultValue = "10") int PAGE_SIZE,@RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy ) {
+                                                                          @RequestParam(value = "page", defaultValue = "10") int PAGE_SIZE, @RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy) {
         Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.by(Sort.Direction.ASC, sortBy));
-        return ResponseEntity.status(HttpStatus.OK).body(couponService.getMyOrderCoupons(userDetails.getUser(),pageable));
+        return ResponseEntity.status(HttpStatus.OK).body(couponService.getMyOrderCoupons(userDetails.getUser(), pageable));
     }
 
 
