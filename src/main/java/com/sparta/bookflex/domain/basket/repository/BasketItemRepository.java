@@ -9,11 +9,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface BasketItemRepository extends JpaRepository<BasketItem, Long> {
-    boolean existsByBookIdAndBasketId(Long bookId, Long basketId);
-
-    Page<BasketItem> findAllByBasketUserId(long id, Pageable pageable);
 
     Page<BasketItem> findAllByBasketId(Long basketId, Pageable pageable);
+
+    boolean existsByIdAndBasketId(Long basketItemId, Long basketId);
 
     Optional<BasketItem> findByBookId(Long bookId);
 }

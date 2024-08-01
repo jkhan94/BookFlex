@@ -2,10 +2,7 @@ package com.sparta.bookflex.domain.coupon.controller;
 
 import com.sparta.bookflex.common.exception.BusinessException;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
-import com.sparta.bookflex.domain.coupon.dto.CouponRequestDto;
-import com.sparta.bookflex.domain.coupon.dto.CouponResponseDto;
-import com.sparta.bookflex.domain.coupon.dto.CouponUpdateRequestDto;
-import com.sparta.bookflex.domain.coupon.dto.UserCouponResponseDto;
+import com.sparta.bookflex.domain.coupon.dto.*;
 import com.sparta.bookflex.domain.coupon.enums.CouponType;
 import com.sparta.bookflex.domain.coupon.enums.DiscountType;
 import com.sparta.bookflex.domain.coupon.service.CouponService;
@@ -15,6 +12,10 @@ import com.sparta.bookflex.domain.user.enums.UserGrade;
 import com.sparta.bookflex.domain.user.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -212,4 +213,14 @@ public class CouponController {
                         .map(UserGrade::getUserGrade)
                         .collect(Collectors.toList()));
     }
+
+
+    @GetMapping("/order")
+    public ResponseEntity<List<CouponOrderResponseDto>> getMyOrderCoupons(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                          @RequestParam (value = "page", defaultValue = "10") int PAGE_SIZE,@RequestParam(value = "sortBy", defaultValue = "createdAt") String sortBy ) {
+        Pageable pageable = PageRequest.of(page - 1, PAGE_SIZE, Sort.by(Sort.Direction.ASC, sortBy));
+        return ResponseEntity.status(HttpStatus.OK).body(couponService.getMyOrderCoupons(userDetails.getUser(),pageable));
+    }
+
+
 }

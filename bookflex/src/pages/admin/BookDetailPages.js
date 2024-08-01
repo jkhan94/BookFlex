@@ -94,7 +94,7 @@ const BookDetailPage = () => {
                     </div>
                     <div>
                         <label>카테고리:</label>
-                        <span>{book.mainCategoryName} / {book.subCategoryName}</span>
+                        <span>{book.subCategoryName}</span>
                     </div>
                     <div>
                         <label>상품가격:</label>

@@ -19,6 +19,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 public class BasketService {
 
@@ -62,6 +64,7 @@ public class BasketService {
     private boolean isBasketExistByBookIdAndUserId(Long bookId, Long basketId) {
         return basketItemRepository.existsByBookIdAndBasketId(bookId, basketId);
     }
+
     private boolean isBasketExist(Long basketId, User user) {
         return basketRepository.existsByIdAndUser(basketId, user);
     }
@@ -131,10 +134,9 @@ public class BasketService {
 //    }
 
     @Transactional(readOnly=true)
-    public Page<BasketItemResponseDto> getBasketItems(User user, Pageable pageable, Long basketId) {
-        if(!isUserExist(user.getUsername())) {
-            throw new BusinessException(ErrorCode.USER_NOT_FOUND);
-        }
+    public Page<BasketItemResponseDto> getBasketItems(User user, Pageable pageable) {
+        User selectedUser = getUser(user.getUsername());
+        Long basketId = selectedUser.getBasket().getId();
 
         if (!isBasketExist(basketId, user)) {
             throw new BusinessException(ErrorCode.BASKET_NOT_FOUND);
@@ -182,12 +184,22 @@ public class BasketService {
         if(!isUserExist(user.getUsername())) {
             throw new BusinessException(ErrorCode.USER_NOT_FOUND);
         }
-        if(!isBasketExistByBookIdAndUserId(basketItemId, user.getId())) {
+        Optional<Basket> basket = basketRepository.findByUserId(user.getId());
+        if(basket.isEmpty()) {
+            throw new BusinessException(ErrorCode.BASKET_NOT_FOUND);
+        }
+
+        if(!isBasketItemExistByBasKetItemIdAndBasketId(basketItemId, basket.get().getId())) {
             throw new BusinessException(ErrorCode.BASKET_ITEM_NOT_FOUND);
         }
 
         basketItemRepository.deleteById(basketItemId);
     }
+
+    private boolean isBasketItemExistByBasKetItemIdAndBasketId(Long basketItemId, Long basketId) {
+        return basketItemRepository.existsByIdAndBasketId(basketItemId, basketId);
+    }
+
 
     @Transactional
     public void updateBasketById(Long bookId, BasketCreateReqestDto basketCreateDto, User user) {

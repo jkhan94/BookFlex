@@ -12,7 +12,7 @@ public class ReviewRequestDto {
 
     private String content;
 
-    private String star;
+    private int star;
 
     public Review toEntity(User user, Book book) {
         return Review.builder()

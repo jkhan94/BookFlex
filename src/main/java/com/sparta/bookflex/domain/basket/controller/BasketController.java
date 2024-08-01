@@ -36,21 +36,13 @@ public class BasketController {
 
     }
 
-//    @GetMapping("/{bookId}")
-//    public ResponseEntity<?> getBasket(
-//        @PathVariable Long bookId,
-//        @AuthenticationPrincipal UserDetailsImpl userDetails){
-//        BasketResDto basketResDto = basketService.getBasket(userDetails.getUser(),bookId);
-//        return ResponseEntity.status(HttpStatus.OK)
-//                .body(new CommonDto<>(HttpStatus.OK.value(), "장바구니를 조회했습니다.", basketResDto));
-//    }
 
-    @GetMapping("/{basketId}")
+    @GetMapping("")
     public ResponseEntity<?> getBasketItems(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @PathVariable Long basketId,
+
             @PageableDefault(size = 10)Pageable pageable){
-        Page<BasketItemResponseDto> basketResDto = basketService.getBasketItems(userDetails.getUser(), pageable, basketId);
+        Page<BasketItemResponseDto> basketResDto = basketService.getBasketItems(userDetails.getUser(), pageable);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonDto<>(HttpStatus.OK.value(), "장바구니를 조회했습니다.", basketResDto));
     }

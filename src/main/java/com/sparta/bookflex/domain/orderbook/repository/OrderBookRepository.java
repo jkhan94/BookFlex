@@ -10,6 +10,8 @@ import java.util.Optional;
 public interface OrderBookRepository extends JpaRepository<OrderBook, Long>, OrderBookQRepository {
     Optional<OrderBook> findByIdAndUser(Long orderId, User user);
 
+    OrderBook findByOrderNo(String orderNo);
+
     @Query("SELECT COUNT(o.id) FROM OrderBook o")
     Long findTotalCount();
 }

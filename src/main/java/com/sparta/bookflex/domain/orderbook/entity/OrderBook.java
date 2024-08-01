@@ -95,13 +95,6 @@ public class OrderBook extends Timestamped {
             , orderBook.getCarrier());
     }
 
-//        this.orderNumber = orderNumber;
-//        this.username = username;
-//        this.shipStartedAt = shipStartedAt;
-//        this.deliverStartedAt = deliverStartedAt;
-//        this.status = status;
-//        this.carrier = carrier;
-
     public void updateOrderItemList(List<OrderItem> orderItemList) {
         this.orderItemList = orderItemList;
     }

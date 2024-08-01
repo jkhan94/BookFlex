@@ -25,7 +25,7 @@ public class CouponQRepositoryImpl implements CouponQRepository {
     public Page<Coupon> findAvailableByUserGrade(User user, Pageable pageable) {
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(coupon.eligibleGrade.eq(user.getGrade()));
-        builder.and(coupon.couponStatus.eq(CouponStatus.Available));
+        builder.and(coupon.couponStatus.eq(CouponStatus.AVAILABLE));
         builder.and(coupon.totalCount.gt(0));
 
         List<Coupon> births = queryFactory.select(coupon)
@@ -84,7 +84,7 @@ public class CouponQRepositoryImpl implements CouponQRepository {
     public void updateIssuedCoupon() {
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         queryFactory.update(coupon)
-                .set(coupon.couponStatus, CouponStatus.Available)
+                .set(coupon.couponStatus, CouponStatus.AVAILABLE)
                 .where(coupon.startDate.before(now))
                 .execute();
     }

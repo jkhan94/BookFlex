@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 public class ProfileResDto {
 
+    private Long id;
     private String username;
     private String email;
     private String address;
