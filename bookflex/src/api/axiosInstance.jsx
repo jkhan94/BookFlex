@@ -10,7 +10,7 @@ const axiosInstance = axios.create({
 const refreshToken = async () => {
     try {
         const response = await axiosInstance.post('/auth/refresh', {});
-        const accessToken = response.data.accessToken;
+        const {accessToken} = response.data.data;
         localStorage.setItem('Authorization', accessToken);
         console.log("재발급성공");
         return accessToken;
@@ -26,16 +26,14 @@ axiosInstance.interceptors.request.use(
         if(config.url === 'auth/login') {
             return config;
         }
-        console.log("요청 가로채기");
         const access_token = localStorage.getItem('Authorization');
         const refresh_token = localStorage.getItem('refreshToken');
 
         if (config.url === '/auth/refresh') {
-            console.log("요청세팅이 되는건가요");
-            console.log(refresh_token);
+            console.log("리프레쉬 토큰 보내기");
             config.headers.setAuthorization(refresh_token);
         } else {
-            console.log("액세스 토큰 자동보내주기");
+            console.log("액세스 토큰 보내주기");
             config.headers.setAuthorization(access_token);
         }
         return config;
