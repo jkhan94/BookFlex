@@ -1,0 +1,66 @@
+.book-detail-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.book-detail {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.book-image img {
+    width: 300px; /* 이미지 너비를 설정 (필요에 따라 조정) */
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.book-info {
+    margin-left: 300px;
+    flex: 1;
+}
+
+.book-info div {
+    margin-bottom: 10px;
+}
+
+.book-info label {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.book-info span,
+.book-info p {
+    font-size: 16px;
+
+}
+
+.reviews-section {
+    margin-top: 40px;
+    width: 100%;
+    max-width: 800px;
+}
+
+.reviews-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.reviews-list li {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.pagination button {
+    margin: 0 10px;
+}

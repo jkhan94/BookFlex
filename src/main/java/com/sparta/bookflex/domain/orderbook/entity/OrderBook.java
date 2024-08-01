@@ -43,6 +43,9 @@ public class OrderBook extends Timestamped {
     @Column(name = "is_coupon")
     private boolean isCoupon;
 
+    @Column(name = "discountPrice", precision = 10, scale = 2)
+    private BigDecimal discountPrice;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
@@ -59,7 +62,6 @@ public class OrderBook extends Timestamped {
 
     @Transient
     private final String PREFIX = "BookFlexA";
-
 
 
     @Builder

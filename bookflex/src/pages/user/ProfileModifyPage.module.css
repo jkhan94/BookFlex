@@ -1,6 +1,24 @@
+.profileModifyPageContainer {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column; /* Ensure content is aligned vertically as well */
+}
 
+.profileModifyPageTitle {
+    color: #333;
+    text-align: center;
+    margin-bottom: 5rem; /* Add some margin to separate the title from the form */
+}
 
-.profile-container {
+.profileModifyPageForm {
+    display: flex;
+    flex-direction: column;
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -9,40 +27,38 @@
     max-width: 600px;
 }
 
+.profileModifyPageLabel {
+    margin-top: 1rem;
+    font-weight: bold;
+}
 
+.profileModifyPageInput {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
 
-.avatar-container {
-    text-align: center;
+.profileModifyPageButton {
+    margin-top: 1rem;
+    padding: 0.5rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.profileModifyPageButton:hover {
+    background-color: #45a049;
+}
+
+.profileModifyPageFormGroup {
     margin-bottom: 1rem;
 }
 
-.avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #4CAF50;
-}
-
-#avatarUpload {
-    display: none;
-}
-
-.avatar-upload-btn {
-    display: inline-block;
-    margin-top: 0.5rem;
-    padding: 0.5rem 1rem;
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.avatar-upload-btn:hover {
-    background-color: #e0e0e0;
-}
-
-.error {
+.profileModifyPageError {
     color: #e74c3c;
     font-size: 12px;
     margin-top: 4px;

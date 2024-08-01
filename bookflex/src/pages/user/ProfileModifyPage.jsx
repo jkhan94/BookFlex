@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './ProfileModifyPage.module.css'; // CSS 모듈 임포트
 import axiosInstance from "../../api/axiosInstance";
 
 const ProfileModifyPage = () => {
 
-    const [nickname, setNickname ] = useState('');
+    const [nickname, setNickname] = useState('');
     const [password, setPassword] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [address, setAddress] = useState('');
@@ -52,11 +52,11 @@ const ProfileModifyPage = () => {
     }
 
     return (
-        <div className={styles.container}>
-            <h1 className={styles.title}>Modify Your Profile</h1>
-            <form id="profile-form" onSubmit={handleSubmit} className={styles.form}>
-                <div className={styles.formGroup}>
-                    <label htmlFor="username">Nickname:</label>
+        <div className={styles.profileModifyPageContainer}>
+            <h1 className={styles.profileModifyPageTitle}>Modify Your Profile</h1>
+            <form id="profile-form" onSubmit={handleSubmit} className={styles.profileModifyPageForm}>
+                <div className={styles.profileModifyPageFormGroup}>
+                    <label htmlFor="username" className={styles.profileModifyPageLabel}>Nickname:</label>
                     <input
                         type="text"
                         id="username"
@@ -64,10 +64,11 @@ const ProfileModifyPage = () => {
                         value={nickname}
                         onChange={(e) => setNickname(e.target.value)}
                         required
+                        className={styles.profileModifyPageInput}
                     />
                 </div>
-                <div className={styles.formGroup}>
-                    <label htmlFor="password">Password:</label>
+                <div className={styles.profileModifyPageFormGroup}>
+                    <label htmlFor="password" className={styles.profileModifyPageLabel}>Password:</label>
                     <input
                         type="password"
                         id="password"
@@ -75,11 +76,12 @@ const ProfileModifyPage = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
+                        className={styles.profileModifyPageInput}
                     />
-                    {errors.password && <p className={styles.error}>{errors.password}</p>}
+                    {errors.password && <p className={styles.profileModifyPageError}>{errors.password}</p>}
                 </div>
-                <div className={styles.formGroup}>
-                    <label htmlFor="phoneNumber">Phone Number:</label>
+                <div className={styles.profileModifyPageFormGroup}>
+                    <label htmlFor="phoneNumber" className={styles.profileModifyPageLabel}>Phone Number:</label>
                     <input
                         type="tel"
                         id="phoneNumber"
@@ -87,11 +89,12 @@ const ProfileModifyPage = () => {
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
                         required
+                        className={styles.profileModifyPageInput}
                     />
-                    {errors.phoneNumber && <p className={styles.error}>{errors.phoneNumber}</p>}
+                    {errors.phoneNumber && <p className={styles.profileModifyPageError}>{errors.phoneNumber}</p>}
                 </div>
-                <div className={styles.formGroup}>
-                    <label htmlFor="address">Address:</label>
+                <div className={styles.profileModifyPageFormGroup}>
+                    <label htmlFor="address" className={styles.profileModifyPageLabel}>Address:</label>
                     <input
                         type="text"
                         id="address"
@@ -99,9 +102,10 @@ const ProfileModifyPage = () => {
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                         required
+                        className={styles.profileModifyPageInput}
                     />
                 </div>
-                <button type="submit" className={styles.button}>Save Changes</button>
+                <button type="submit" className={styles.profileModifyPageButton}>Save Changes</button>
             </form>
         </div>
     );

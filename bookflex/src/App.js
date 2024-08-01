@@ -23,6 +23,11 @@ import ProfileModifyPage from "./pages/user/ProfileModifyPage";
 import UserQnAPage from './pages/user/UserQnAPage'; // 유저 Q&A 페이지 임포트
 import AdminQnAPage from './pages/admin/AdminQnAPage'
 import BookDetailPage from './pages/user/BookDetailPage';
+import BookDetailPages from './pages/admin/BookDetailPages';
+import RegisterBookPage from "./pages/admin/RegisterBookPage";
+import BookListPage from "./pages/admin/BookListPage";
+import ModifyBookDetail from "./pages/admin/BookUpdatePage";
+import BookUpdatePage from "./pages/admin/BookUpdatePage";
 import CheckoutPage from "./pages/payment/Checkout";
 import FailPage from "./pages/payment/Fail";
 import SuccessPage from "./pages/payment/Success";
@@ -64,10 +69,6 @@ function App() {
                     />
                     <Route path="/login" element={<LoginPage onLogin={handleLogin}/>}/>
                     <Route path="/signup" element={<SignUpPage/>}/>
-                    <Route path="/checkout" element={<CheckoutPage/>}/>
-                    <Route path="/success" element={<SuccessPage/>}/>
-                    <Route path="/fail" element={<FailPage/>}/>
-
 
                     <Route path="/books/:bookId" element={<BookDetailPage/>}/>
 
@@ -83,14 +84,26 @@ function App() {
                         {/* 추가적인 유저 하위 라우트 설정 */}
                         <Route path="proZZfile-modify" element={<ProfileModifyPage/>}/>
                     </Route>
+
+
                     <Route path="/admin" element={<AdminDashboard/>}>
-                        <Route path="orders" element={<OrderManagement/>}/>
+                        <Route path="RegisterBook" element={<RegisterBookPage/>}/>
                         <Route path="products" element={<ProductManagement/>}/>
                         <Route path="coupons" element={<CouponManagement/>}/>
                         <Route path="sales" element={<SalesReport/>}/>
                         <Route path="payments" element={<PaymentManagement/>}/>
                         <Route path="shipping" element={<ShippingManagement/>}/>
                         <Route path="qna" element={<AdminQnAPage/>}/>
+                        <Route path="inquiry-book" element={<BookDetailPages/>}/>
+                        <Route path="register-book" element={<RegisterBookPage/>}/>
+                        <Route path="inquiry-booklist" element={<BookListPage/>}/>
+                        <Route path="modify-book-info" element={<BookUpdatePage/>}/>
+                        <Route path="/admin/books/:bookId" element={<BookDetailPages/>}/>
+                        <Route path="books/:productId/edit" element={<BookUpdatePage/>}/>
+                        <Route path="" element={<BookListPage/>}/>
+                        <Route path="register-book" element={<RegisterBookPage/>}/>
+                        <Route path="register-book" element={<RegisterBookPage/>}/>
+
                         {/* 추가적인 관리자 하위 라우트 설정 */}
                     </Route>
                 </Routes>
