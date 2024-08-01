@@ -32,6 +32,7 @@ import CheckoutPage from "./pages/payment/Checkout";
 import FailPage from "./pages/payment/Fail";
 import SuccessPage from "./pages/payment/Success";
 import axiosInstance from './api/axiosInstance';
+import CouponPage from "./pages/user/CouponPage";
 import ReviewListPage from "./pages/admin/ReviewListPage";
 import RegisterReviewPage from "./pages/admin/RegisterReviewPage";
 import ReviewDetailPage from "./pages/admin/ReviewDetailPage";
@@ -82,6 +83,7 @@ function App() {
                         <Route path="dashboard" element={<UserMainPage/>}/>
                         <Route path="cart" element={<CartPage/>}/>
                         <Route path="order/:orderId" element={<OrderPage/>}/>
+                        <Route path="coupon" element={<CouponPage/>}/>
                         <Route path="payment-history" element={<PaymentHistoryPage/>}/>
                         <Route path="category/:categoryName" element={<CategoryPage/>}/>
                         <Route path="wishlist" element={<WishlistPage/>}/>

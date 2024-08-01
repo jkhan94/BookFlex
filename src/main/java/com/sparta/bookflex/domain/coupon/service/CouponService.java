@@ -15,17 +15,14 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.domain.*;
-import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.sparta.bookflex.common.exception.ErrorCode.*;
@@ -45,7 +42,7 @@ public class CouponService {
     @Transactional
     public CouponResponseDto createCoupon(CouponRequestDto requestDto) {
         LocalDateTime now = LocalDateTime.now();
-        CouponStatus status = CouponStatus.NOTAVAILABLE;
+        CouponStatus status = CouponStatus.NOT_AVAILABLE;
 
         if (now.isAfter(requestDto.getStartDate().atStartOfDay())) {
             status = CouponStatus.AVAILABLE;
@@ -72,19 +69,18 @@ public class CouponService {
 
 
     @Transactional(readOnly = true)
-    public List<CouponResponseDto> getAllCoupons(int page, String sortBy) {
-        Sort sort = Sort.by(Sort.Direction.ASC, sortBy);
+    public Page<CouponResponseDto> getAllCoupons(int page, String sortBy) {
+        Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
 
-        Page<CouponResponseDto> couponPage = couponRepository.findAll(pageable).map(Coupon::toCouponResponseDto);
-        return couponPage.getContent();
+        return couponRepository.findAll(pageable).map(Coupon::toCouponResponseDto);
     }
 
 
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public CouponResponseDto updateCouponCount(long couponId,
                                                @RequestBody @Valid CouponUpdateRequestDto requestDto) {
-        Coupon coupon = findCouponById(couponId);
+        Coupon coupon = findCouponByIdWithPessimisticLock(couponId);
 
         coupon.updateCount(requestDto);
         couponRepository.save(coupon);
@@ -93,9 +89,9 @@ public class CouponService {
     }
 
 
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void deleteCoupon(long couponId) {
-        Coupon coupon = findCouponById(couponId);
+        Coupon coupon = findCouponByIdWithPessimisticLock(couponId);
 
         // 이미 발급된 쿠폰은 삭제 불가.
         List<UserCoupon> issuedCoupon = userCouponRepository.findByCouponId(couponId);
@@ -106,12 +102,12 @@ public class CouponService {
         couponRepository.delete(coupon);
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void issueCouponToAll(long couponId) {
-        Coupon coupon = findCouponById(couponId);
+        Coupon coupon = findCouponByIdWithPessimisticLock(couponId);
 
         // 쿠폰이 발급가능 상태인지
-        if (coupon.getCouponStatus() == CouponStatus.NOTAVAILABLE) {
+        if (coupon.getCouponStatus() == CouponStatus.NOT_AVAILABLE) {
             throw new BusinessException(COUPON_CANNOT_BE_ISSUED);
         }
 
@@ -141,37 +137,12 @@ public class CouponService {
         }
     }
 
-    private void saveCoupons(List<User> userList, Coupon coupon) {
-        LocalDateTime issuedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
-        LocalDateTime expirationDate;
-
-        for (User user : userList) {
-            UserCoupon issuedCoupon = userCouponRepository.findByUserAndCoupon(user, coupon);
-            if (issuedCoupon == null) {
-                String couponCode = RandomStringUtils.randomAlphanumeric(20);
-
-                coupon.decreaseTotalCount();
-
-                if (coupon.getValidityDays() == 0) {
-                    expirationDate = coupon.getExpirationDate();
-                } else {
-                    expirationDate = issuedAt.plusDays(coupon.getValidityDays());
-                }
-
-                UserCoupon userCoupon = toUserCouponEntity(couponCode, issuedAt, expirationDate, false, null, user, coupon);
-
-                couponRepository.save(coupon);
-                userCouponRepository.save(userCoupon);
-            }
-        }
-    }
-
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public UserCouponResponseDto issueCouponToUser(long couponId, long userId) {
-        Coupon coupon = findCouponById(couponId);
+        Coupon coupon = findCouponByIdWithPessimisticLock(couponId);
 
         // 쿠폰이 발급가능 상태인지
-        if (coupon.getCouponStatus() == CouponStatus.NOTAVAILABLE) {
+        if (coupon.getCouponStatus() == CouponStatus.NOT_AVAILABLE) {
             throw new BusinessException(COUPON_CANNOT_BE_ISSUED);
         }
 
@@ -211,11 +182,11 @@ public class CouponService {
         return toUserCouponResponseDto(userCoupon, toCouponResponseDto(coupon));
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public UserCouponResponseDto issueCoupon(long couponId, User user) {
-        Coupon coupon = findCouponById(couponId);
+        Coupon coupon = findCouponByIdWithPessimisticLock(couponId);
 
-        if (coupon.getCouponStatus() == CouponStatus.NOTAVAILABLE) {
+        if (coupon.getCouponStatus() == CouponStatus.NOT_AVAILABLE) {
             throw new BusinessException(COUPON_CANNOT_BE_ISSUED);
         }
 
@@ -252,28 +223,33 @@ public class CouponService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserCouponResponseDto> getMyCoupons(User user, int page, String sortBy) {
+    public Page<UserCouponResponseDto> getMyCoupons(User user, int page, String sortBy) {
         Sort sort = Sort.by(Sort.Direction.ASC, sortBy);
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
 
-        Page<UserCouponResponseDto> couponPage = userCouponRepository.findAllByUserId(user.getId(), pageable).map(
+        return userCouponRepository.findAllByUserId(user.getId(), pageable).map(
                 userCoupon -> toUserCouponResponseDto(userCoupon, toCouponResponseDto(userCoupon.getCoupon()))
         );
-        return couponPage.getContent();
     }
 
     @Transactional(readOnly = true)
-    public List<CouponResponseDto> getAvailableCoupons(User user, int page, String sortBy) {
-        Sort sort = Sort.by(Sort.Direction.ASC, sortBy);
+    public Page<CouponResponseDto> getAvailableCoupons(User user, int page, String sortBy) {
+        Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
 
-        Page<CouponResponseDto> couponPage = couponRepository.findAvailableByUserGrade(user, pageable).map(Coupon::toCouponResponseDto);
-        return couponPage.getContent();
+        List<Long> issuedCouponIds = userCouponRepository.findAllByUserId(user.getId())
+                .stream()
+                .map(uc -> uc.getCoupon().getId())
+                .toList();
+
+        return couponRepository.findAvailableByUserGrade(user, pageable, issuedCouponIds).map(Coupon::toCouponResponseDto);
     }
 
     @Transactional(readOnly = true)
     public UserCouponResponseDto getSingleUserCoupon(long couponId, User user) {
-        Coupon coupon = findCouponById(couponId);
+        Coupon coupon = couponRepository.findById(couponId).orElseThrow(
+                () -> new BusinessException(COUPON_NOT_FOUND)
+        );
 
         UserCoupon userCoupon = userCouponRepository.findByUserAndCoupon(user, coupon);
         if (userCoupon == null) {
@@ -287,19 +263,36 @@ public class CouponService {
         return toUserCouponResponseDto(userCoupon, toCouponResponseDto(userCoupon.getCoupon()));
     }
 
-    public Coupon findCouponById(long couponId) {
-        Coupon coupon = couponRepository.findById(couponId).orElseThrow(
+    public Coupon findCouponByIdWithPessimisticLock(long couponId) {
+        Coupon coupon = couponRepository.findByIdWithPessimisticLock(couponId).orElseThrow(
                 () -> new BusinessException(COUPON_NOT_FOUND)
         );
         return coupon;
     }
 
-    // 쿠폰 선택 후 결제 시 쿠폰 상태 변경하는 메소드
-    public void useCoupon(long couponId, User user) {
-        Coupon coupon = findCouponById(couponId);
+    private void saveCoupons(List<User> userList, Coupon coupon) {
+        LocalDateTime issuedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime expirationDate;
 
-        UserCoupon issuedCoupon = userCouponRepository.findByUserAndCoupon(user, coupon);
-        issuedCoupon.updateStatus();
+        for (User user : userList) {
+            UserCoupon issuedCoupon = userCouponRepository.findByUserAndCoupon(user, coupon);
+            if (issuedCoupon == null) {
+                String couponCode = RandomStringUtils.randomAlphanumeric(20);
+
+                coupon.decreaseTotalCount();
+
+                if (coupon.getValidityDays() == 0) {
+                    expirationDate = coupon.getExpirationDate();
+                } else {
+                    expirationDate = issuedAt.plusDays(coupon.getValidityDays());
+                }
+
+                UserCoupon userCoupon = toUserCouponEntity(couponCode, issuedAt, expirationDate, false, null, user, coupon);
+
+                couponRepository.save(coupon);
+                userCouponRepository.save(userCoupon);
+            }
+        }
     }
 
     @Transactional
