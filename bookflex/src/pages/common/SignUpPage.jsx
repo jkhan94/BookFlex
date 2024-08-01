@@ -13,6 +13,7 @@ const SignUpPage = () => {
     const [nickname, setNickname] = useState('');
     const [birthday, setBirthday] = useState('');
     const [authType, setAuthType] = useState('USER'); // Default to USER
+    const [adminToken, setAdminToken] = useState('');
 
     const [errors, setErrors] = useState({});
 
@@ -80,12 +81,18 @@ const SignUpPage = () => {
                 phoneNumber,
                 nickname,
                 birthday: formattedBirthday,
-                authType
+                authType,
+                ...(authType === 'ADMIN' && { adminToken }) // Include aminToken only if authType is ADMINd
             });
 
             // Sign-up 성공 후 로그인 페이지로 이동
             navigate('/login');
         } catch (error) {
+            if(error.response.data.message === '인가되지 않은 사용자입니다.' ) {
+                let newErrors = {};
+                newErrors.adminToken = '잘못된 admin 토큰입니다';
+                setErrors(newErrors);
+            }
             console.error('Sign up error:', error.response ? error.response.data : error.message);
             alert('회원가입에 실패하였습니다. 다시 시도해 주세요.');
         }
@@ -189,6 +196,19 @@ const SignUpPage = () => {
                         <option value="ADMIN">Admin</option>
                     </select>
                 </div>
+                {authType === 'ADMIN' && (
+                    <div className={styles.formGroup}>
+                        <label htmlFor="adminToken">Admin Token:</label>
+                        <input
+                            id="adminToken"
+                            type="text"
+                            value={adminToken}
+                            onChange={(e) => setAdminToken(e.target.value)}
+                            required={authType === 'ADMIN'}
+                        />
+                        {errors.adminToken && <p className={styles.error}>{errors.adminToken}</p>}
+                    </div>
+                )}
                 <button type="submit" className={styles.button}>Sign Up</button>
             </form>
         </div>
