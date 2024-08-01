@@ -5,12 +5,8 @@ import com.sparta.bookflex.common.exception.ErrorCode;
 import com.sparta.bookflex.common.utill.LoggingSingleton;
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.service.BookService;
-import com.sparta.bookflex.domain.coupon.entity.Coupon;
 import com.sparta.bookflex.domain.coupon.service.CouponService;
-import com.sparta.bookflex.domain.orderbook.dto.OrderItemResponseDto;
-import com.sparta.bookflex.domain.orderbook.dto.OrderRequestDto;
-import com.sparta.bookflex.domain.orderbook.dto.OrderResponsDto;
-import com.sparta.bookflex.domain.orderbook.dto.OrderStatusRequestDto;
+import com.sparta.bookflex.domain.orderbook.dto.*;
 import com.sparta.bookflex.domain.orderbook.emuns.OrderState;
 import com.sparta.bookflex.domain.orderbook.entity.OrderBook;
 import com.sparta.bookflex.domain.orderbook.entity.OrderItem;
@@ -25,6 +21,10 @@ import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.service.AuthService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -207,6 +207,16 @@ public class OrderBookService {
             .status(orderBook.getStatus().toString())
             .orderItemResponseDtoList(orderItemResponseDtoList)
             .build();
+    }
 
+    public OrderBookTotalResDto getAllOrder(int page, int size) {
+
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        Pageable pageable = PageRequest.of(page-1, size, sort);
+        Page<OrderShipResDto> pageResdto = orderBookRepository.findAllByPagable(pageable).map(
+            OrderBook::toOrderShipRes);
+        Long totalCount = orderBookRepository.findTotalCount();
+
+        return new OrderBookTotalResDto(totalCount, pageResdto);
     }
 }

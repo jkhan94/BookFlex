@@ -2,6 +2,7 @@ package com.sparta.bookflex.domain.shipment.service;
 
 import com.sparta.bookflex.domain.shipment.dto.ShipmentReqDto;
 import com.sparta.bookflex.domain.shipment.dto.ShipmentResDto;
+import com.sparta.bookflex.domain.shipment.enums.ShipmentEnum;
 import com.sparta.bookflex.domain.user.dto.shipmentJsonDto;
 import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
@@ -18,6 +19,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -27,21 +30,47 @@ public class ShipmentService {
     private static final Logger log = LoggerFactory.getLogger(ShipmentService.class);
     private final RestTemplate restTemplate;
 
-    public List<ShipmentResDto> getShipment(ShipmentReqDto reqDto) {
+    public ShipmentResDto getShipment(ShipmentReqDto reqDto) {
 
-        List<ShipmentResDto> shipmentResDtoList = new ArrayList<>();
         List<shipmentJsonDto> dtoList = shipmentCheck(reqDto.getTrackingNumber(), reqDto.getCarrier());
 
-        for (shipmentJsonDto item : dtoList) {
-            ShipmentResDto dto = new ShipmentResDto(item.getTime(), item.getName());
-            shipmentResDtoList.add(dto);
+        ShipmentResDto tempDto = getStatus(reqDto);
+
+        int listSize = dtoList.size();
+         LocalDateTime shippedAt = LocalDateTime.now();
+         LocalDateTime deliveredAt = LocalDateTime.now();
+        for (int i = 0; i < listSize; i++) {
+            if(i==0){
+                shippedAt = getTimeParse(dtoList.get(i).getTime());
+            }
+            else if(i == listSize-1) {
+                deliveredAt = getTimeParse(dtoList.get(i).getTime());
+            }
         }
 
-        return shipmentResDtoList;
+        ShipmentResDto dto = new ShipmentResDto(shippedAt, deliveredAt, tempDto.getStatus());
+
+//        for (shipmentJsonDto item : dtoList) {
+//            ShipmentResDto dto = new ShipmentResDto(item.getTime(), item.getName());
+//            shipmentResDtoList.add(dto);
+//        }
+
+        return dto;
+    }
+
+    public LocalDateTime getTimeParse(String time) {
+        String thisTime;
+        if(time.contains("+")){
+            thisTime = time.replace("T", " ").substring(0, time.indexOf("+"));
+        }
+        else {
+            thisTime = time.replace("T", " ").replace("Z","");
+        }
+        return LocalDateTime.parse(thisTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
     }
 
     public ShipmentResDto getStatus(ShipmentReqDto reqDto) {
-       return shipmentStatus(reqDto.getTrackingNumber(), reqDto.getCarrier());
+        return shipmentStatus(reqDto.getTrackingNumber(), reqDto.getCarrier());
     }
 
     public ShipmentResDto shipmentStatus(String trackingNumber, String carrier) {
