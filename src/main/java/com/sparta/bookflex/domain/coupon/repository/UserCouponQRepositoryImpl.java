@@ -39,6 +39,15 @@ public class UserCouponQRepositoryImpl implements UserCouponQRepository {
     }
 
     @Override
+    public List<UserCoupon> findAllByUserId(long userId) {
+        return queryFactory.select(userCoupon)
+                .from(userCoupon)
+                .join(coupon).on(coupon.id.eq(userCoupon.coupon.id))
+                .where(userCoupon.user.id.eq(userId))
+                .fetch();
+    }
+
+    @Override
     @Transactional
     public void deleteUserCoupon() {
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
