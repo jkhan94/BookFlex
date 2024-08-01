@@ -2,6 +2,7 @@ package com.sparta.bookflex.domain.orderbook.controller;
 
 import com.sparta.bookflex.common.dto.CommonDto;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
+import com.sparta.bookflex.domain.orderbook.dto.OrderBookTotalResDto;
 import com.sparta.bookflex.domain.orderbook.dto.OrderRequestDto;
 import com.sparta.bookflex.domain.orderbook.dto.OrderResponsDto;
 import com.sparta.bookflex.domain.orderbook.dto.OrderStatusRequestDto;
@@ -50,5 +51,14 @@ public class OrderBookController {
                 .status(HttpStatus.OK)
                 .body(new CommonDto<>(HttpStatus.OK.value(), "주문조회에 성공했습니다.", orderResponseDto));
     }
-    
+
+    @GetMapping()
+    public ResponseEntity<OrderBookTotalResDto> getAllOrder(@RequestParam("page") int page,
+                                                            @RequestParam("size") int size) {
+        OrderBookTotalResDto orderShipResDto = orderBookService.getAllOrder(page, size);
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(orderShipResDto);
+    }
 }
