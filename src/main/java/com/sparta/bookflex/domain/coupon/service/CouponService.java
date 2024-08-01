@@ -15,18 +15,14 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.domain.*;
-import org.springframework.data.util.Streamable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.sparta.bookflex.common.exception.ErrorCode.*;
@@ -46,7 +42,7 @@ public class CouponService {
     @Transactional
     public CouponResponseDto createCoupon(CouponRequestDto requestDto) {
         LocalDateTime now = LocalDateTime.now();
-        CouponStatus status = CouponStatus.NOTAVAILABLE;
+        CouponStatus status = CouponStatus.NOT_AVAILABLE;
 
         if (now.isAfter(requestDto.getStartDate().atStartOfDay())) {
             status = CouponStatus.AVAILABLE;
@@ -111,7 +107,7 @@ public class CouponService {
         Coupon coupon = findCouponByIdWithPessimisticLock(couponId);
 
         // 쿠폰이 발급가능 상태인지
-        if (coupon.getCouponStatus() == CouponStatus.NOTAVAILABLE) {
+        if (coupon.getCouponStatus() == CouponStatus.NOT_AVAILABLE) {
             throw new BusinessException(COUPON_CANNOT_BE_ISSUED);
         }
 
@@ -146,7 +142,7 @@ public class CouponService {
         Coupon coupon = findCouponByIdWithPessimisticLock(couponId);
 
         // 쿠폰이 발급가능 상태인지
-        if (coupon.getCouponStatus() == CouponStatus.NOTAVAILABLE) {
+        if (coupon.getCouponStatus() == CouponStatus.NOT_AVAILABLE) {
             throw new BusinessException(COUPON_CANNOT_BE_ISSUED);
         }
 
@@ -190,7 +186,7 @@ public class CouponService {
     public UserCouponResponseDto issueCoupon(long couponId, User user) {
         Coupon coupon = findCouponByIdWithPessimisticLock(couponId);
 
-        if (coupon.getCouponStatus() == CouponStatus.NOTAVAILABLE) {
+        if (coupon.getCouponStatus() == CouponStatus.NOT_AVAILABLE) {
             throw new BusinessException(COUPON_CANNOT_BE_ISSUED);
         }
 
