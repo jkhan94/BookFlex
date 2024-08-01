@@ -18,12 +18,12 @@ const ProfileModifyPage = () => {
         let newErrors = {};
 
         if (!/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{6,}$/.test(password)) {
-            newErrors.password = 'Password must be at least 6 characters long and include uppercase, lowercase, number, and special character.';
+            newErrors.password = '비밀번호는 최소 6글자 이상으로 영문 대소문자와 특수문자를 포함해야합니다';
             isValid = false;
         }
 
         if (!/^(01[016789])-?[0-9]{3,4}-?[0-9]{4}$/.test(phoneNumber)) {
-            newErrors.phoneNumber = 'Phone number must be in a valid format (e.g., 010-1234-5678).';
+            newErrors.phoneNumber = '번호 포맷에 맞춰서 작성해주세요 (e.g., 010-1234-5678).';
             isValid = false;
         }
 
@@ -40,7 +40,7 @@ const ProfileModifyPage = () => {
             .then(response => {
                 navigate('/main/profile');
             });
-        alert('Profile updated successfully!');
+        alert('프로필이 성공적으로 바뀌었습니다!');
     }
 
     const handleSubmit = (e) => {
@@ -105,7 +105,7 @@ const ProfileModifyPage = () => {
                         className={styles.profileModifyPageInput}
                     />
                 </div>
-                <button type="submit" className={styles.profileModifyPageButton}>Save Changes</button>
+                <button type="submit" className={styles.profileModifyPageButton}>프로필 수정완료</button>
             </form>
         </div>
     );

@@ -24,14 +24,20 @@ public class QOrderBook extends EntityPathBase<OrderBook> {
 
     public final com.sparta.bookflex.common.utill.QTimestamped _super = new com.sparta.bookflex.common.utill.QTimestamped(this);
 
+    public final StringPath carrier = createString("carrier");
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
     public final NumberPath<java.math.BigDecimal> discount = createNumber("discount", java.math.BigDecimal.class);
 
+    public final NumberPath<java.math.BigDecimal> discountPrice = createNumber("discountPrice", java.math.BigDecimal.class);
+
     public final NumberPath<java.math.BigDecimal> discountTotal = createNumber("discountTotal", java.math.BigDecimal.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final BooleanPath isCoupon = createBoolean("isCoupon");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
@@ -45,6 +51,8 @@ public class QOrderBook extends EntityPathBase<OrderBook> {
     public final EnumPath<com.sparta.bookflex.domain.orderbook.emuns.OrderState> status = createEnum("status", com.sparta.bookflex.domain.orderbook.emuns.OrderState.class);
 
     public final NumberPath<java.math.BigDecimal> total = createNumber("total", java.math.BigDecimal.class);
+
+    public final StringPath trackingNumber = createString("trackingNumber");
 
     public final com.sparta.bookflex.domain.user.entity.QUser user;
 

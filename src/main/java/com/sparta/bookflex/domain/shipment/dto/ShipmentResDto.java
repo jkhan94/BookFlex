@@ -12,7 +12,16 @@ import java.time.format.DateTimeFormatter;
 public class ShipmentResDto {
 
     private LocalDateTime shippedAt;
+    private LocalDateTime deliveredAt;
+    private String carrierName;
     private ShipmentEnum status;
+
+    public ShipmentResDto(LocalDateTime shipedAt, LocalDateTime deliverdAt, ShipmentEnum status) {
+        this.shippedAt = shipedAt;
+        this.deliveredAt = deliverdAt;
+        this.carrierName = "dev.track.dummy";
+        this.status = status;
+    }
 
     public ShipmentResDto(String time, String name) {
         String cleanedDateTimeString;

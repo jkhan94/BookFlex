@@ -21,6 +21,7 @@ const AdminDashboard = () => {
                     <li><Link to="/admin/salereport-bybookname">매출 내역</Link></li>
                     <li><Link to="/admin/Review-List">리뷰 관리</Link></li>
                     <li><Link to="/admin/register-review">리뷰 등록(사용자 기능으로 옮겨야함)</Link></li>
+                    <li><Link to="/admin/shipping">주문상품 배송 정보</Link></li>
                     <li><Link to="/admin/member-list">회원 관리</Link></li>
                     <li><Link to="/admin/qna">고객문의 관리</Link></li>
 
