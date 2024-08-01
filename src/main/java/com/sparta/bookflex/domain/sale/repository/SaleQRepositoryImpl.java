@@ -51,8 +51,8 @@ public class SaleQRepositoryImpl implements SaleQRepository {
     @Override
     public Page<Tuple> findSaleByBookName(String bookName, LocalDate startDate, LocalDate endDate, Pageable pageable) {
         List<Tuple> result = queryFactory
-                .select(book.bookName, book.subCategory, book.publisher, book.author, book.price, sale.quantity.sum(), book.price.multiply(sale.quantity.sum())).
-                from(sale)
+                .select(book.bookName, book.subCategory, book.publisher, book.author, book.price, sale.quantity.sum(), sale.total.sum())
+                .from(sale)
                 .join(book).on(sale.book.id.eq(book.id))
                 .where(eqBookName(bookName))
                 .where(sale.status.eq(OrderState.SALE_COMPLETED))

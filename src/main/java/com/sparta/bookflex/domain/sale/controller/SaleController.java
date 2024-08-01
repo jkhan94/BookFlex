@@ -82,10 +82,10 @@ public class SaleController {
 //                .body(new CommonDto<>(HttpStatus.OK.value(), "판매 상태가 변경되었습니다.", null));
 //    }
 
-    @GetMapping("/byBookMame")
+    @GetMapping("/bybookname")
     public ResponseEntity<CommonDto<SaleVolumeResponseDto>> getSaleVoulmesByBookName(@RequestParam(name = "page", defaultValue = "1") int page,
                                                                                      @RequestParam(name = "size", defaultValue = "5") int size,
-                                                                                     @RequestParam(name = "direction") boolean isAsc,
+                                                                                     @RequestParam(name = "direction", required = false, defaultValue = "true") boolean isAsc,
                                                                                      @RequestParam(name = "sortBy", required = false, defaultValue = "bookName") String sortBy,
                                                                                      @RequestParam(name = "bookName", required = false) String bookName,
                                                                                      @RequestParam(name = "startDate", required = false, defaultValue = "19000101") @DateTimeFormat(pattern = "yyyyMMdd") LocalDate startDate,
