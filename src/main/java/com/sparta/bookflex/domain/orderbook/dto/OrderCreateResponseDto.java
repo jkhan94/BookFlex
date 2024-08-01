@@ -7,9 +7,11 @@ import lombok.Getter;
 public class OrderCreateResponseDto {
 
     private Long orderId;
+    private String orderNo;
 
     @Builder
-    public OrderCreateResponseDto(Long orderId) {
+    public OrderCreateResponseDto(Long orderId, String orderNo) {
+        this.orderNo = orderNo;
         this.orderId = orderId;
     }
 }

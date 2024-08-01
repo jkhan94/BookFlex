@@ -2,10 +2,7 @@ package com.sparta.bookflex.domain.orderbook.controller;
 
 import com.sparta.bookflex.common.dto.CommonDto;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
-import com.sparta.bookflex.domain.orderbook.dto.OrderCreateResponseDto;
-import com.sparta.bookflex.domain.orderbook.dto.OrderRequestDto;
-import com.sparta.bookflex.domain.orderbook.dto.OrderResponsDto;
-import com.sparta.bookflex.domain.orderbook.dto.OrderStatusRequestDto;
+import com.sparta.bookflex.domain.orderbook.dto.*;
 import com.sparta.bookflex.domain.orderbook.service.OrderBookService;
 import jakarta.mail.MessagingException;
 import org.springframework.http.HttpStatus;
@@ -14,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/orders")
@@ -28,9 +26,7 @@ public class OrderBookController {
     @PostMapping("")
     public ResponseEntity<OrderCreateResponseDto> createOrder(@RequestBody OrderRequestDto orderRequestDto,
                                                               @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        OrderCreateResponseDto responseDto = OrderCreateResponseDto.builder()
-                .orderId(orderBookService.createOrder(orderRequestDto, userDetails.getUser()).getId())
-                .build();
+        OrderCreateResponseDto responseDto = orderBookService.createOrder(orderRequestDto, userDetails.getUser());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(responseDto);
@@ -52,6 +48,15 @@ public class OrderBookController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(orderResponseDto);
+    }
+
+    @PostMapping("/payment")
+    public ResponseEntity<?> updateUserCoupon(@RequestBody OrderPaymentRequestDto OrderPaymentRequestDto,
+                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        OrderPaymentResponseDto responseDto = orderBookService.createPayment(OrderPaymentRequestDto, userDetails.getUser());
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(responseDto);
     }
     
 }

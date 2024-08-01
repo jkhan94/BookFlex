@@ -1,6 +1,7 @@
 package com.sparta.bookflex.domain.orderbook.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
+import com.sparta.bookflex.domain.coupon.entity.UserCoupon;
 import com.sparta.bookflex.domain.orderbook.emuns.OrderState;
 import com.sparta.bookflex.domain.sale.entity.Sale;
 import com.sparta.bookflex.domain.user.entity.User;
@@ -46,12 +47,17 @@ public class OrderBook extends Timestamped {
     @JoinColumn(name = "user_id")
     User user;
 
+    @OneToOne
+    @JoinColumn(name = "userCoupon_id")
+    UserCoupon userCoupon;
+
     @OneToMany(mappedBy = "orderBook", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItemList;
 
     @OneToMany(mappedBy = "orderBook")
     private List<Sale> saleList;
 
+    @Transient
     private final String PREFIX = "BookFlexA";
 
 
@@ -67,8 +73,12 @@ public class OrderBook extends Timestamped {
         this.isCoupon = false;
     }
 
-    public void updateSaleList(List<OrderItem> orderItemList) {
+    public void updateOrderItemList(List<OrderItem> orderItemList) {
         this.orderItemList = orderItemList;
+    }
+
+    public void updateSaleList(List<Sale> saleList) {
+        this.saleList = saleList;
     }
 
     public void updateStatus(OrderState status) {
@@ -85,5 +95,9 @@ public class OrderBook extends Timestamped {
         if (this.id != null) {
             this.orderNo = String.format("%s-%d", PREFIX, this.id);
         }
+    }
+
+    public void updateUserCoupon(UserCoupon userCoupon) {
+        this.userCoupon = userCoupon;
     }
 }

@@ -23,7 +23,11 @@ import ProfileModifyPage from "./pages/user/ProfileModifyPage";
 import UserQnAPage from './pages/user/UserQnAPage'; // 유저 Q&A 페이지 임포트
 import AdminQnAPage from './pages/admin/AdminQnAPage'
 import BookDetailPage from './pages/user/BookDetailPage';
+import CheckoutPage from "./pages/payment/Checkout";
+import FailPage from "./pages/payment/Fail";
+import SuccessPage from "./pages/payment/Success";
 import axiosInstance from './api/axiosInstance';
+
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -60,6 +64,10 @@ function App() {
                     />
                     <Route path="/login" element={<LoginPage onLogin={handleLogin}/>}/>
                     <Route path="/signup" element={<SignUpPage/>}/>
+                    <Route path="/checkout" element={<CheckoutPage/>}/>
+                    <Route path="/success" element={<SuccessPage/>}/>
+                    <Route path="/fail" element={<FailPage/>}/>
+
 
                     <Route path="/books/:bookId" element={<BookDetailPage/>}/>
 

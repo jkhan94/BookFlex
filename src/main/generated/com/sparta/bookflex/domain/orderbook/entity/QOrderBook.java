@@ -42,8 +42,6 @@ public class QOrderBook extends EntityPathBase<OrderBook> {
 
     public final StringPath orderNo = createString("orderNo");
 
-    public final StringPath PREFIX = createString("PREFIX");
-
     public final ListPath<com.sparta.bookflex.domain.sale.entity.Sale, com.sparta.bookflex.domain.sale.entity.QSale> saleList = this.<com.sparta.bookflex.domain.sale.entity.Sale, com.sparta.bookflex.domain.sale.entity.QSale>createList("saleList", com.sparta.bookflex.domain.sale.entity.Sale.class, com.sparta.bookflex.domain.sale.entity.QSale.class, PathInits.DIRECT2);
 
     public final EnumPath<com.sparta.bookflex.domain.orderbook.emuns.OrderState> status = createEnum("status", com.sparta.bookflex.domain.orderbook.emuns.OrderState.class);
@@ -51,6 +49,8 @@ public class QOrderBook extends EntityPathBase<OrderBook> {
     public final NumberPath<java.math.BigDecimal> total = createNumber("total", java.math.BigDecimal.class);
 
     public final com.sparta.bookflex.domain.user.entity.QUser user;
+
+    public final com.sparta.bookflex.domain.coupon.entity.QUserCoupon userCoupon;
 
     public QOrderBook(String variable) {
         this(OrderBook.class, forVariable(variable), INITS);
@@ -71,6 +71,7 @@ public class QOrderBook extends EntityPathBase<OrderBook> {
     public QOrderBook(Class<? extends OrderBook> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.user = inits.isInitialized("user") ? new com.sparta.bookflex.domain.user.entity.QUser(forProperty("user"), inits.get("user")) : null;
+        this.userCoupon = inits.isInitialized("userCoupon") ? new com.sparta.bookflex.domain.coupon.entity.QUserCoupon(forProperty("userCoupon"), inits.get("userCoupon")) : null;
     }
 
 }

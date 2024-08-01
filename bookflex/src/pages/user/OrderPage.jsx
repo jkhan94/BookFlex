@@ -1,15 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import axiosInstance from '../../api/axiosInstance'; // axios 인스턴스 임포트
-import { useParams } from 'react-router-dom';
-import styles from './OrderPage.module.css'; // CSS 모듈 임포트
+import axiosInstance from '../../api/axiosInstance';
+import { useParams, useNavigate } from 'react-router-dom';
+import styles from './OrderPage.module.css';
 
 const OrderPage = () => {
-    const { orderId } = useParams(); // URL 파라미터에서 orderId 가져오기
+    const { orderId } = useParams();
+    const navigate = useNavigate();
     const [order, setOrder] = useState(null);
-    const [coupons, setCoupons] = useState([]); // 쿠폰 상태 추가
-    const [selectedCoupon, setSelectedCoupon] = useState(null); // 선택된 쿠폰 상태 추가
+    const [coupons, setCoupons] = useState([]);
+    const [selectedCoupon, setSelectedCoupon] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    // 할인 금액 계산 함수
+    const calculateDiscountedTotal = () => {
+        if (!selectedCoupon || !order) return order.total;
+
+        if (selectedCoupon.discountType === 'FIXED_AMOUNT') {
+            return Math.max(0, order.total - selectedCoupon.discountPrice);
+        } else if (selectedCoupon.discountType === 'PERCENTAGE') {
+            return Math.max(0, order.total - (order.total * (selectedCoupon.discountPrice / 100)));
+        }
+        return order.total;
+    };
+
+    // 쿠폰 선택 핸들러
+    const handleCouponSelect = (coupon) => {
+        if (order && order.total >= coupon.minPrice) {
+            setSelectedCoupon(coupon);
+        } else {
+            setSelectedCoupon(null);
+        }
+    };
 
     // 주문 정보 가져오기
     useEffect(() => {
@@ -18,10 +40,10 @@ const OrderPage = () => {
                 const response = await axiosInstance.get(`/orders/${orderId}`);
                 setOrder(response.data);
             } catch (error) {
-                setError('주문 정보를 가져오는 데 오류가 발생했습니다.');
+                setError(`주문 정보를 가져오는 데 오류가 발생했습니다: ${error.response ? error.response.data : error.message}`);
                 console.error('Error fetching order:', error);
             } finally {
-                setLoading(false); // 데이터 요청 완료 후 로딩 상태 업데이트
+                setLoading(false);
             }
         };
 
@@ -32,11 +54,10 @@ const OrderPage = () => {
     useEffect(() => {
         const fetchCoupons = async () => {
             try {
-                const response = await axiosInstance.get('/coupons/order'); // 쿠폰 API 호출 수정
-                console.log(response.data);
+                const response = await axiosInstance.get('/coupons/order');
                 setCoupons(response.data);
             } catch (error) {
-                setError('쿠폰 정보를 가져오는 데 오류가 발생했습니다.');
+                setError(`쿠폰 정보를 가져오는 데 오류가 발생했습니다: ${error.response ? error.response.data : error.message}`);
                 console.error('Error fetching coupons:', error);
             }
         };
@@ -44,25 +65,23 @@ const OrderPage = () => {
         fetchCoupons();
     }, []);
 
-    const handleCouponSelect = (coupon) => {
-        if (selectedCoupon === coupon) {
-            // 이미 선택된 쿠폰을 클릭하면 선택 해제
-            setSelectedCoupon(null);
-        } else if (order && order.total >= coupon.minPrice) {
-            // 조건에 맞는 쿠폰을 선택
-            setSelectedCoupon(coupon);
-        }
-    };
+    // 결제 핸들러\]
 
-    const calculateDiscountedTotal = () => {
-        if (!selectedCoupon || !order) return order.total;
+    const handlePayment = async () => {
+        try {
+            const response = await axiosInstance.post('/orders/payment', {
+                orderId: order.orderId
 
-        if (selectedCoupon.discountType === '일정 금액 할인') {
-            return Math.max(0, order.total - selectedCoupon.discountPrice);
-        } else if (selectedCoupon.discountType === '일정 비율 할인') {
-            return Math.max(0, order.total - (order.total * (selectedCoupon.discountPrice / 100)));
+                ,
+                userCouponId: selectedCoupon ? selectedCoupon.userCouponId : null
+            });
+
+            // 결제 정보와 함께 /checkout 페이지로 이동
+            navigate('/checkout', { state: response.data });
+        } catch (error) {
+            setError(`결제 처리 중 오류가 발생했습니다: ${error.response ? error.response.data : error.message}`);
+            console.error('Error processing payment:', error);
         }
-        return order.total;
     };
 
     if (loading) return <div>Loading...</div>;
@@ -100,13 +119,13 @@ const OrderPage = () => {
                                     type="checkbox"
                                     id={`coupon-${coupon.userCouponId}`}
                                     disabled={order.total < coupon.minPrice}
-                                    checked={selectedCoupon === coupon}
+                                    checked={selectedCoupon?.userCouponId === coupon.userCouponId}
                                     onChange={() => handleCouponSelect(coupon)}
                                 />
                                 <label htmlFor={`coupon-${coupon.userCouponId}`} className={`${order.total < coupon.minPrice ? styles.couponDisabled : ''}`}>
                                     <div className={styles.couponName}>{coupon.couponName}</div>
                                     <div className={styles.couponDetails}>
-                                        {coupon.discountType === '일정 금액 할인' ? (
+                                        {coupon.discountType === 'FIXED_AMOUNT' ? (
                                             <>₩{coupon.discountPrice?.toLocaleString() || '0'} 일정 금액 할인</>
                                         ) : (
                                             <>{coupon.discountPrice?.toFixed(2) || '0'}% 일정 비율 할인</>
@@ -121,7 +140,7 @@ const OrderPage = () => {
                     <div>사용 가능한 쿠폰이 없습니다.</div>
                 )}
 
-                <button className={styles.payBtn} onClick={() => alert('결제 완료')}>결제하기</button>
+                <button className={styles.payBtn} onClick={handlePayment}>결제하기</button>
             </div>
         </div>
     );

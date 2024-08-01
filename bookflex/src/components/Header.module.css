@@ -13,7 +13,7 @@
     align-items: center; /* 세로 정렬 */
 }
 
-nav {
+.nav {
     display: flex;
     flex: 1; /* 나머지 공간을 차지하도록 */
     justify-content: center; /* 수평 가운데 정렬 */

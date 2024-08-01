@@ -332,4 +332,10 @@ public class CouponService {
 
         return couponOrderResponseDtoPage.getContent();
     }
+
+    public UserCoupon findUserCouponById(long userCouponId) {
+        return userCouponRepository.findById(userCouponId).orElseThrow(
+                () -> new BusinessException(COUPON_NOT_FOUND)
+        );
+    }
 }
