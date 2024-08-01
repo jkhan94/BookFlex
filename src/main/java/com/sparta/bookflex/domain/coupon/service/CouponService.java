@@ -22,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -81,10 +82,10 @@ public class CouponService {
     }
 
 
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public CouponResponseDto updateCouponCount(long couponId,
                                                @RequestBody @Valid CouponUpdateRequestDto requestDto) {
-        Coupon coupon = findCouponById(couponId);
+        Coupon coupon = findCouponByIdWithPessimisticLock(couponId);
 
         coupon.updateCount(requestDto);
         couponRepository.save(coupon);
@@ -93,9 +94,9 @@ public class CouponService {
     }
 
 
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void deleteCoupon(long couponId) {
-        Coupon coupon = findCouponById(couponId);
+        Coupon coupon = findCouponByIdWithPessimisticLock(couponId);
 
         // 이미 발급된 쿠폰은 삭제 불가.
         List<UserCoupon> issuedCoupon = userCouponRepository.findByCouponId(couponId);
@@ -106,9 +107,9 @@ public class CouponService {
         couponRepository.delete(coupon);
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void issueCouponToAll(long couponId) {
-        Coupon coupon = findCouponById(couponId);
+        Coupon coupon = findCouponByIdWithPessimisticLock(couponId);
 
         // 쿠폰이 발급가능 상태인지
         if (coupon.getCouponStatus() == CouponStatus.NotAvailable) {
@@ -141,34 +142,9 @@ public class CouponService {
         }
     }
 
-    private void saveCoupons(List<User> userList, Coupon coupon) {
-        LocalDateTime issuedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
-        LocalDateTime expirationDate;
-
-        for (User user : userList) {
-            UserCoupon issuedCoupon = userCouponRepository.findByUserAndCoupon(user, coupon);
-            if (issuedCoupon == null) {
-                String couponCode = RandomStringUtils.randomAlphanumeric(20);
-
-                coupon.decreaseTotalCount();
-
-                if (coupon.getValidityDays() == 0) {
-                    expirationDate = coupon.getExpirationDate();
-                } else {
-                    expirationDate = issuedAt.plusDays(coupon.getValidityDays());
-                }
-
-                UserCoupon userCoupon = toUserCouponEntity(couponCode, issuedAt, expirationDate, false, null, user, coupon);
-
-                couponRepository.save(coupon);
-                userCouponRepository.save(userCoupon);
-            }
-        }
-    }
-
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public UserCouponResponseDto issueCouponToUser(long couponId, long userId) {
-        Coupon coupon = findCouponById(couponId);
+        Coupon coupon = findCouponByIdWithPessimisticLock(couponId);
 
         // 쿠폰이 발급가능 상태인지
         if (coupon.getCouponStatus() == CouponStatus.NotAvailable) {
@@ -211,9 +187,9 @@ public class CouponService {
         return toUserCouponResponseDto(userCoupon, toCouponResponseDto(coupon));
     }
 
-    @Transactional
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public UserCouponResponseDto issueCoupon(long couponId, User user) {
-        Coupon coupon = findCouponById(couponId);
+        Coupon coupon = findCouponByIdWithPessimisticLock(couponId);
 
         if (coupon.getCouponStatus() == CouponStatus.NotAvailable) {
             throw new BusinessException(COUPON_CANNOT_BE_ISSUED);
@@ -276,7 +252,9 @@ public class CouponService {
 
     @Transactional(readOnly = true)
     public UserCouponResponseDto getSingleUserCoupon(long couponId, User user) {
-        Coupon coupon = findCouponById(couponId);
+        Coupon coupon = couponRepository.findById(couponId).orElseThrow(
+                () -> new BusinessException(COUPON_NOT_FOUND)
+        );
 
         UserCoupon userCoupon = userCouponRepository.findByUserAndCoupon(user, coupon);
         if (userCoupon == null) {
@@ -290,19 +268,36 @@ public class CouponService {
         return toUserCouponResponseDto(userCoupon, toCouponResponseDto(userCoupon.getCoupon()));
     }
 
-    public Coupon findCouponById(long couponId) {
-        Coupon coupon = couponRepository.findById(couponId).orElseThrow(
+    public Coupon findCouponByIdWithPessimisticLock(long couponId) {
+        Coupon coupon = couponRepository.findByIdWithPessimisticLock(couponId).orElseThrow(
                 () -> new BusinessException(COUPON_NOT_FOUND)
         );
         return coupon;
     }
 
-    // 쿠폰 선택 후 결제 시 쿠폰 상태 변경하는 메소드
-    public void useCoupon(long couponId, User user) {
-        Coupon coupon = findCouponById(couponId);
+    private void saveCoupons(List<User> userList, Coupon coupon) {
+        LocalDateTime issuedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        LocalDateTime expirationDate;
 
-        UserCoupon issuedCoupon = userCouponRepository.findByUserAndCoupon(user, coupon);
-        issuedCoupon.updateStatus();
+        for (User user : userList) {
+            UserCoupon issuedCoupon = userCouponRepository.findByUserAndCoupon(user, coupon);
+            if (issuedCoupon == null) {
+                String couponCode = RandomStringUtils.randomAlphanumeric(20);
+
+                coupon.decreaseTotalCount();
+
+                if (coupon.getValidityDays() == 0) {
+                    expirationDate = coupon.getExpirationDate();
+                } else {
+                    expirationDate = issuedAt.plusDays(coupon.getValidityDays());
+                }
+
+                UserCoupon userCoupon = toUserCouponEntity(couponCode, issuedAt, expirationDate, false, null, user, coupon);
+
+                couponRepository.save(coupon);
+                userCouponRepository.save(userCoupon);
+            }
+        }
     }
 
 
