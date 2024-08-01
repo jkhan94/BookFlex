@@ -1,0 +1,106 @@
+/* ReviewDetailPage.css */
+.review-detail-container {
+    width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Nanum Gothic', sans-serif;
+    color: #333;
+}
+
+.review-detail {
+    margin-top: 20px;
+}
+
+.review-title {
+    font-size: 30px;
+    font-weight: bold;
+    color: #3498db;
+    margin-bottom: 50px;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.book-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 50px;
+}
+
+.stars {
+    font-size: 24px;
+    color: #f1c40f;
+}
+
+h3 {
+    font-size: 20px;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.review-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #7f8c8d;
+}
+
+.review-footer span {
+    font-size: 14px;
+}
+
+.review-footer .delete-button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.review-footer .delete-button:hover {
+    background-color: #c0392b;
+}
+
+.review-detail-container h1 {
+    text-align: center;
+    color: #3498db;
+    margin-bottom: 20px;
+}
+
+.review-content {
+    margin-top: 50px;
+}
+
+.review-writer {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 50px;
+}
+
+.delete-button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background-color: #c0392b;
+}

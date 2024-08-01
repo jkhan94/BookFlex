@@ -29,6 +29,12 @@ import BookListPage from "./pages/admin/BookListPage";
 import ModifyBookDetail from "./pages/admin/BookUpdatePage";
 import BookUpdatePage from "./pages/admin/BookUpdatePage";
 import axiosInstance from './api/axiosInstance';
+import ReviewListPage from "./pages/admin/ReviewListPage";
+import RegisterReviewPage from "./pages/admin/RegisterReviewPage";
+import ReviewDetailPage from "./pages/admin/ReviewDetailPage";
+import SaleReportByBookNamePage from "./pages/admin/SaleReportByBookNamePage";
+import SaleReportByCategoryNamePage from "./pages/admin/SaleReportByCategoryNamePage";
+import MemberListPage from "./pages/admin/MemberListPage";
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -94,11 +100,17 @@ function App() {
                         <Route path="register-book" element={<RegisterBookPage/>}/>
                         <Route path="inquiry-booklist" element={<BookListPage/>}/>
                         <Route path="modify-book-info" element={<BookUpdatePage/>}/>
-                        <Route path="/admin/books/:bookId" element={<BookDetailPages/>}/>
+                        <Route path="books/:bookId" element={<BookDetailPages/>}/>
                         <Route path="books/:productId/edit" element={<BookUpdatePage/>}/>
                         <Route path="" element={<BookListPage/>}/>
                         <Route path="register-book" element={<RegisterBookPage/>}/>
-                        <Route path="register-book" element={<RegisterBookPage/>}/>
+                        <Route path="Review-List" element={<ReviewListPage/>}/>
+                        <Route path="register-review" element={<RegisterReviewPage/>}/>
+                        <Route path="inquiry-review" element={<ReviewDetailPage/>}/>
+                        <Route path="salereport-bybookname" element={<SaleReportByBookNamePage/>}/>
+                        <Route path="reviews/:reviewId" element={<ReviewDetailPage/>}/>
+                        <Route path="salereport-bycategory" element={<SaleReportByCategoryNamePage/>}/>
+                        <Route path="member-list" element={<MemberListPage/>}/>
 
                         {/* 추가적인 관리자 하위 라우트 설정 */}
                     </Route>

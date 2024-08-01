@@ -3,6 +3,9 @@ import {useNavigate} from 'react-router-dom';
 import axiosInstance from "../../api/axiosInstance";
 import './BookList.css'; // 필요한 CSS 파일을 가져옵니다.
 
+
+
+
 const BookList = () => {
     const [books, setBooks] = useState([]);
     const [page, setPage] = useState(1);
@@ -94,6 +97,10 @@ const BookList = () => {
         setStatus(value);
     };
 
+    function renderStars(rating) {
+        return '★'.repeat(rating) + '☆'.repeat(5 - rating);
+    }
+
     return (
         <div className="book-list-container">
             <h1 className="title">상품 목록</h1> {/* 타이틀 추가 */}
@@ -155,6 +162,7 @@ const BookList = () => {
                     <th>재고 수량</th>
                     <th>등록 일자</th>
                     <th>상태</th>
+                    <th>평점</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -175,8 +183,10 @@ const BookList = () => {
                         <td>{book.subCategoryName}</td>
                         <td>{book.price.toLocaleString()}</td>
                         <td>{book.stock}</td>
-                        <td>{book.createdAt}</td>
+                        <td>{new Date(book.createdAt).toLocaleString()}</td>
                         <td>{book.status}</td>
+                        <td className="stars">{renderStars(parseInt(book.avgStar, 10))}</td>
+
                     </tr>
                 ))}
                 </tbody>

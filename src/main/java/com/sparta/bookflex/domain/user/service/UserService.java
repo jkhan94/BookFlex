@@ -8,7 +8,12 @@ import com.sparta.bookflex.domain.user.dto.ProfileResDto;
 import com.sparta.bookflex.domain.user.dto.StateReqDto;
 import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.repository.UserRepository;
+import com.sparta.bookflex.domain.user.repository.UserRepositoryQueryImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +24,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserRepositoryQueryImpl userRepositoryQueryImpl;
 
     public ProfileResDto getProfile(User user) {
 
@@ -62,5 +68,17 @@ public class UserService {
         User curUser = userRepository.findById(userId).orElseThrow(() ->
             new BusinessException(ErrorCode.USER_NOT_FOUND));
         return curUser;
+    }
+
+    public Page<ProfileResDto> getUsers(int page, int size, boolean isAsc, String sortBy, String username) {
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        Sort sort = Sort.by(direction, sortBy);
+
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+
+        Page<User> userList = userRepositoryQueryImpl.getUsers(username, pageable);
+
+        return userList.map(User::of);
     }
 }
