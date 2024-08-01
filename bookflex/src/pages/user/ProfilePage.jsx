@@ -48,7 +48,7 @@ const ProfilePage = () => {
             <p className={styles.info}>Here you can manage your profile settings.</p>
             <div className={styles.profile}>
                 <div className={styles.field}>
-                    <label className={styles.label}>Username:</label>
+                    <label className={styles.label}>유저ID:</label>
                     <span className={styles.value}>{username}</span>
                 </div>
                 <div className={styles.field}>
@@ -56,27 +56,27 @@ const ProfilePage = () => {
                     <span className={styles.value}>{email}</span>
                 </div>
                 <div className={styles.field}>
-                    <label className={styles.label}>Address:</label>
+                    <label className={styles.label}>주소:</label>
                     <span className={styles.value}>{address}</span>
                 </div>
                 <div className={styles.field}>
-                    <label className={styles.label}>Phone Number:</label>
+                    <label className={styles.label}>전화번호:</label>
                     <span className={styles.value}>{phoneNumber}</span>
                 </div>
                 <div className={styles.field}>
-                    <label className={styles.label}>Nickname:</label>
+                    <label className={styles.label}>닉네임:</label>
                     <span className={styles.value}>{nickname}</span>
                 </div>
                 <div className={styles.field}>
-                    <label className={styles.label}>Grade:</label>
+                    <label className={styles.label}>등급:</label>
                     <span className={styles.value}>{grade}</span>
                 </div>
                 <div className={styles.field}>
-                    <label className={styles.label}>Birthday:</label>
+                    <label className={styles.label}>생일:</label>
                     <span className={styles.value}>{birthday}</span>
                 </div>
                 <div className={styles.field}>
-                    <label className={styles.label}>Created At:</label>
+                    <label className={styles.label}>가입일:</label>
                     <span className={styles.value}>{createdAt}</span>
                 </div>
             </div>

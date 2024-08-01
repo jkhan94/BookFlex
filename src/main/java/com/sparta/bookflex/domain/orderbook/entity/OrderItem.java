@@ -3,6 +3,7 @@ package com.sparta.bookflex.domain.orderbook.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.book.entity.Book;
+import com.sparta.bookflex.domain.orderbook.dto.OrderItemResponseDto;
 import com.sparta.bookflex.domain.shipment.entity.Shipment;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -38,6 +39,9 @@ public class OrderItem extends Timestamped {
     @JoinColumn(name = "order_book_id")
     private OrderBook orderBook;
 
+    @Column(name = "is_reviewed")
+    private boolean isReviewed;
+
 
     @Builder
     public OrderItem(int quantity, Book book,  OrderBook orderBook,BigDecimal price) {
@@ -46,12 +50,16 @@ public class OrderItem extends Timestamped {
         this.price = price;
         this.total = BigDecimal.valueOf(quantity).multiply(price);
         this.orderBook = orderBook;
+        this.isReviewed = false;
     }
-
 
 
     public void updateOrderBook(OrderBook orderBook) {
         this.orderBook = orderBook;
+    }
+
+    public void updateIsReviewed(boolean isReviewed) {
+        this.isReviewed = isReviewed;
     }
 
 }

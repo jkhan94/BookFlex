@@ -9,12 +9,7 @@ import com.sparta.bookflex.domain.shipment.service.ShipmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,12 +18,11 @@ public class ShipmentController {
 
     private final ShipmentService shipmentService;
 
-    @Envelop("배송정보 조회")
-    @GetMapping()
-    public ResponseEntity<List<ShipmentResDto>> getShipment(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody ShipmentReqDto reqDto){
+    @PostMapping()
+    public ResponseEntity<ShipmentResDto> getShipment(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody ShipmentReqDto reqDto){
 
-        List<ShipmentResDto> shipmentResDtoList = shipmentService.getShipment(reqDto);
-        return ResponseEntity.ok().body(shipmentResDtoList);
+        ShipmentResDto shipmentResDto = shipmentService.getShipment(reqDto);
+        return ResponseEntity.ok().body(shipmentResDto);
     }
 
     @Envelop("배송상태 조회")

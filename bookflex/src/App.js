@@ -6,7 +6,6 @@ import UserMainPage from './pages/user/UserMainPage';
 import CategoryPage from './pages/user/CategoryPage';
 import CartPage from './pages/user/CartPage';
 import OrderPage from './pages/user/OrderPage';
-import PaymentHistoryPage from './pages/user/PaymentHistoryPage';
 import WishlistPage from './pages/user/WishlistPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import OrderManagement from './pages/admin/OrderManagement';
@@ -39,6 +38,8 @@ import ReviewDetailPage from "./pages/admin/ReviewDetailPage";
 import SaleReportByBookNamePage from "./pages/admin/SaleReportByBookNamePage";
 import SaleReportByCategoryNamePage from "./pages/admin/SaleReportByCategoryNamePage";
 import MemberListPage from "./pages/admin/MemberListPage";
+import OrdersComponent from "./pages/user/OrdersComponent";
+
 
 
 function App() {
@@ -69,7 +70,7 @@ function App() {
                     <Route
                         path="/"
                         element={isLoggedIn ? (
-                            userRole === 'admin' ? <Navigate to="/admin"/> : <Navigate to="/main"/>
+                            userRole === 'admin' ? <Navigate to="/admin"/> : <Navigate to="/main/dashboard"/>
                         ) : (
                             <LoginPage onLogin={handleLogin}/>
                         )}
@@ -86,13 +87,18 @@ function App() {
                         <Route path="cart" element={<CartPage/>}/>
                         <Route path="order/:orderId" element={<OrderPage/>}/>
                         <Route path="coupon" element={<CouponPage/>}/>
-                        <Route path="payment-history" element={<PaymentHistoryPage/>}/>
+                        <Route path="register-review" element={<RegisterReviewPage/>}/>
+
                         <Route path="category/:categoryName" element={<CategoryPage/>}/>
                         <Route path="wishlist" element={<WishlistPage/>}/>
                         <Route path="profile" element={<ProfilePage/>}/>
                         <Route path="qna" element={<UserQnAPage/>}/>
                         {/* 추가적인 유저 하위 라우트 설정 */}
                         <Route path="proZZfile-modify" element={<ProfileModifyPage/>}/>
+                        <Route path="profile-modify" element={<ProfileModifyPage/>}/>
+                        <Route path="book-detail/:bookId" element={<BookDetailPage/>}/>
+
+                        <Route path="orders" element={<OrdersComponent/>}/>
                     </Route>
 
 
@@ -113,7 +119,7 @@ function App() {
                         <Route path="" element={<BookListPage/>}/>
                         <Route path="register-book" element={<RegisterBookPage/>}/>
                         <Route path="Review-List" element={<ReviewListPage/>}/>
-                        <Route path="register-review" element={<RegisterReviewPage/>}/>
+
                         <Route path="inquiry-review" element={<ReviewDetailPage/>}/>
                         <Route path="salereport-bybookname" element={<SaleReportByBookNamePage/>}/>
                         <Route path="reviews/:reviewId" element={<ReviewDetailPage/>}/>
