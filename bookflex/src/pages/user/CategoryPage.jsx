@@ -1,17 +1,13 @@
-// CategoryPage.jsx
-import React, {useState, useEffect} from 'react';
-import {Link, useParams, useNavigate} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../api/axiosInstance';
-import {useParams} from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import styles from './CategoryPage.module.css'; // CSS 모듈 사용
 
 const CategoryPage = () => {
-    const {categoryName} = useParams();
+    const { categoryName } = useParams();
     const [books, setBooks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null); // 에러 상태 추가
-
-    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchBooks = async () => {
@@ -57,10 +53,11 @@ const CategoryPage = () => {
                 <div className={styles.bookCards}>
                     {books.map(book => (
                         <div key={book.bookId} className={styles.bookCard}>
-                            <img src={book.photoImagePath} alt={book.bookName} className={styles.bookImage}/>
+                            <img src={book.photoImagePath} alt={book.bookName} className={styles.bookImage} />
                             <div className={styles.bookDetails}>
-                                <h2 className={styles.CategoryBookTitle}>{book.bookName}</h2>
-                                <Link to={`/main/book-detail/${book.bookId}`}>{book.bookName}</Link>
+                                <Link to={`/books/${book.bookId}`} className={styles.bookLink}>
+                                    <h2 className={styles.CategoryBookTitle}>{book.bookName}</h2>
+                                </Link>
                                 <p className={styles.bookAuthor}>Author: {book.author}</p>
                                 <p className={styles.bookPrice}>Price: ${book.price.toFixed(2)}</p>
                             </div>

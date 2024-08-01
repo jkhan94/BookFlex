@@ -28,7 +28,7 @@ const BookDetailPage = () => {
                 bookId,
                 quantity
             });
-            console.log("장바구니 담기성공");
+            alert("장바구니에 상품을 성공적으로 담았습니다")
             navigator('/main');
         }catch (error) {
             console.log("장바구니 담기 실패");
