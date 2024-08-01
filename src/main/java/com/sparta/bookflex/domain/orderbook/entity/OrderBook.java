@@ -35,7 +35,6 @@ public class OrderBook extends Timestamped {
     @Column(name = "order_no")
     private String orderNo;
 
-
     @Column(name = "discount",precision = 10, scale = 2)
     private BigDecimal discount;
 

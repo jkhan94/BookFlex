@@ -19,9 +19,9 @@ const OrderPage = () => {
 
         let discountedTotal = orderTotal;
 
-        if (coupon.discountType === 'FIXED_AMOUNT') {
+        if (coupon.discountType === '일정 금액 할인') {
             discountedTotal -= coupon.discountPrice;
-        } else if (coupon.discountType === 'PERCENTAGE') {
+        } else if (coupon.discountType === '일정 비율 할인') {
             discountedTotal -= (orderTotal * (coupon.discountPrice / 100));
         }
 
@@ -142,7 +142,7 @@ const OrderPage = () => {
                                 <label htmlFor={`coupon-${coupon.userCouponId}`} className={`${order.total < coupon.minPrice ? styles.couponLabelDisabled : ''}`}>
                                     <div className={styles.couponName}>{coupon.couponName}</div>
                                     <div className={styles.couponDetails}>
-                                        {coupon.discountType === 'FIXED_AMOUNT' ? (
+                                        {coupon.discountType === '일정 금액 할인' ? (
                                             <>₩{coupon.discountPrice?.toLocaleString() || '0'} 일정 금액 할인</>
                                         ) : (
                                             <>{coupon.discountPrice?.toFixed(2) || '0'}% 일정 비율 할인</>
