@@ -6,8 +6,8 @@ import lombok.Getter;
 
 @Getter
 public enum CouponStatus {
-    NOTAVAILABLE(CouponStatusCode.NotAvailable),
-    AVAILABLE(CouponStatusCode.Available);
+    NOT_AVAILABLE(CouponStatusCode.NOT_AVAILABLE_CODE),
+    AVAILABLE(CouponStatusCode.AVAILABLE_CODE);
 
     private final String status;
 
@@ -31,7 +31,7 @@ public enum CouponStatus {
     }
 
     private static class CouponStatusCode {
-        public static final String NotAvailable = "발급불가";
-        public static final String Available = "발급가능";
+        public static final String NOT_AVAILABLE_CODE = "발급불가";
+        public static final String AVAILABLE_CODE = "발급가능";
     }
 }

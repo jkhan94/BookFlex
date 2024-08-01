@@ -1,0 +1,85 @@
+/* couponmanagement.module.css */
+
+.container {
+    padding: 20px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.table th, .table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+.table th {
+    background-color: #f4f4f4;
+}
+
+.btnAction {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.btnAction:hover {
+    background-color: #0056b3;
+}
+
+.pagination {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.createCouponContainer {
+    margin-top: 20px;
+}
+
+.createForm {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.createFormContent {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.formGroup {
+    flex: 1;
+    min-width: 200px;
+}
+
+.formGroup label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.formGroup input, .formGroup select {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.createForm button {
+    margin-top: 10px;
+}
+
+.buttonContainer {
+    display: flex;
+    flex-direction: column; /* 버튼을 세로로 배치 */
+}
+
+.buttonContainer button {
+    margin-bottom: 8px; /* 버튼 사이의 간격 */
+}
