@@ -6,8 +6,8 @@ import lombok.Getter;
 
 @Getter
 public enum CouponStatus {
-    NotAvailable(CouponStatusCode.NotAvailable),
-    Available(CouponStatusCode.Available);
+    NOTAVAILABLE(CouponStatusCode.NotAvailable),
+    AVAILABLE(CouponStatusCode.Available);
 
     private final String status;
 

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axiosInstance from "../api/axiosInstance";
-import './Header.css';
+import styles from './Header.module.css'; // CSS 모듈 import
 
 const Header = () => {
     const [categories, setCategories] = useState([]);
     const [showCategories, setShowCategories] = useState(false);
     const [showSubCategories, setShowSubCategories] = useState({});
-    const [selectedCategory, setSelectedCategory] = useState(null); //
+    const [selectedCategory, setSelectedCategory] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -16,7 +16,6 @@ const Header = () => {
                 const response = await axiosInstance.get('/categories');
                 if (response.data && Array.isArray(response.data)) {
                     setCategories(response.data);
-                    //console.log('Categories fetched:', response.data.data);
                 } else {
                     console.error('Invalid response structure:', response);
                 }
@@ -53,31 +52,35 @@ const Header = () => {
     };
 
     return (
-        <header className="header">
-            <nav>
-                <ul className="navList">
+        <header className={styles.header}>
+            <nav className={styles.nav}>
+                <ul className={styles.navList}>
                     <li><Link to="/main/dashboard">Main</Link></li>
-                    <li className="categoryItem" onMouseEnter={toggleCategories} onMouseLeave={toggleCategories}>
+                    <li
+                        className={styles.categoryItem}
+                        onMouseEnter={toggleCategories}
+                        onMouseLeave={toggleCategories}
+                    >
                         Categories
                         {showCategories && (
-                            <ul className="dropdown">
+                            <ul className={styles.dropdown}>
                                 {categories.length > 0 ? (
                                     categories.map((category) => (
                                         <li
                                             key={category.mainCategoryName}
-                                            className="dropdownItem"
+                                            className={styles.dropdownItem}
                                             onMouseEnter={() => toggleSubCategories(category.mainCategoryName)}
                                             onMouseLeave={() => toggleSubCategories(category.mainCategoryName)}
                                         >
                                             {category.mainCategoryName}
                                             {showSubCategories[category.mainCategoryName] && (
-                                                <ul className="subDropdown">
+                                                <ul className={styles.subDropdown}>
                                                     {category.subCategoryNames.map((subCategory) => {
                                                         // URL 인코딩 처리
                                                         const encodedSubCategory = encodeURIComponent(subCategory.toUpperCase());
 
                                                         return (
-                                                            <li key={encodedSubCategory} className="dropdownItem">
+                                                            <li key={encodedSubCategory} className={styles.dropdownItem}>
                                                                 <Link to={`/main/category/${encodedSubCategory}`}>
                                                                     {subCategory}
                                                                 </Link>
@@ -85,12 +88,11 @@ const Header = () => {
                                                         );
                                                     })}
                                                 </ul>
-
                                             )}
                                         </li>
                                     ))
                                 ) : (
-                                    <li className="dropdownItem">No categories available</li>
+                                    <li className={styles.dropdownItem}>No categories available</li>
                                 )}
                             </ul>
                         )}
@@ -103,7 +105,7 @@ const Header = () => {
                     <li><Link to="/main/profile">Profile</Link></li>
                     <li><Link to="/main/qna">User Q&A</Link></li>
                     <li>
-                        <button className="logoutButton" onClick={handleLogout}>Logout</button>
+                        <button className={styles.logoutButton} onClick={handleLogout}>Logout</button>
                     </li>
                 </ul>
             </nav>
