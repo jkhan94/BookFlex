@@ -137,8 +137,7 @@ public class SaleService {
 
         Pageable pageable = PageRequest.of(page - 1, size, sort);
 
-        List<SaleVolumeRowDto> saleVolumeRowDtos = saleQRepositoryImpl.findSaleByBookName(bookName, startDate, endDate, pageable)
-                .stream()
+        Page<SaleVolumeRowDto> saleVolumeRowDtos = saleQRepositoryImpl.findSaleByBookName(bookName, startDate, endDate, pageable)
                 .map(tuple -> SaleVolumeRowDto
                         .builder()
                         .bookName(tuple.get(0, String.class))
@@ -148,7 +147,7 @@ public class SaleService {
                         .price(tuple.get(4, BigDecimal.class).setScale(0, RoundingMode.FLOOR))
                         .quantity(tuple.get(5, Integer.class))
                         .totalPrice(tuple.get(6, BigDecimal.class).setScale(0, RoundingMode.FLOOR))
-                        .build()).toList();
+                        .build());
 
 
         TotalSaleVolumeDto totalSaleVolume = TotalSaleVolumeDto.builder()
@@ -168,14 +167,15 @@ public class SaleService {
 
         Pageable pageable = PageRequest.of(page - 1, size, sort);
 
-        List<SaleVolumeRowDto> saleVolumeRowDtos = saleQRepositoryImpl.findSaleByCategory(categoryName, startDate, endDate, pageable)
-                .stream()
+        Page<SaleVolumeRowDto> saleVolumeRowDtos = saleQRepositoryImpl.findSaleByCategory(categoryName, startDate, endDate, pageable)
                 .map(tuple -> SaleVolumeRowDto
                         .builder()
                         .categoryName(tuple.get(0, Category.class))
                         .quantity(tuple.get(1, Integer.class))
                         .totalPrice(tuple.get(2, BigDecimal.class).setScale(0, RoundingMode.FLOOR))
-                        .build()).toList();
+                        .build());
+
+
 
         TotalSaleVolumeDto totalSaleVolume = TotalSaleVolumeDto.builder()
                 .totalSaleVolume(saleVolumeRowDtos.stream()

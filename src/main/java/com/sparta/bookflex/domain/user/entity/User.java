@@ -118,15 +118,16 @@ public class User extends Timestamped {
 
     public static ProfileResDto of(User user) {
         return ProfileResDto.builder()
-            .username(user.getUsername())
-            .email(user.getEmail())
-            .address(user.getAddress())
-            .phoneNumber(user.getPhoneNumber())
-            .nickname(user.getNickname())
-            .grade(user.getGrade())
-            .birthday(user.birthDay)
-            .createdAt(user.getCreatedAt())
-            .build();
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .address(user.getAddress())
+                .phoneNumber(user.getPhoneNumber())
+                .nickname(user.getNickname())
+                .grade(user.getGrade())
+                .birthday(user.birthDay)
+                .createdAt(user.getCreatedAt())
+                .build();
     }
 
     public void updateRefreshToken(String refreshToken) {

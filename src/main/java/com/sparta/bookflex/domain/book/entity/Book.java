@@ -118,6 +118,7 @@ public class Book extends Timestamped {
                 .mainCategoryName(this.mainCategory.getCategoryName())
                 .subCategoryName(this.subCategory.getCategoryName())
                 .photoImagePath(photoImageUrl)
+                .avgStar(Math.round(this.reviewList.stream().mapToInt(Review::getStar).average().orElse(0)))
                 .createdAt(this.createdAt)
                 .modifiedAt(this.modifiedAt)
                 .build();

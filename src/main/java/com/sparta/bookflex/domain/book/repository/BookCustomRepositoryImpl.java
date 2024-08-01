@@ -26,11 +26,11 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<Book> findBooks(String BookName, BookStatus bookStatus, Pageable pageable) {
+    public Page<Book> findBooks(String bookName, BookStatus bookStatus, Pageable pageable) {
         List<Book> result = queryFactory.select(book)
                 .from(book)
                 .where(eqStatus(bookStatus))
-                .where(eqBookName(BookName))
+                .where(eqBookName(bookName))
                 .orderBy(bookSort(pageable))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

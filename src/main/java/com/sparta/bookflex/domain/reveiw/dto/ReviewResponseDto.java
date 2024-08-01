@@ -10,13 +10,17 @@ import java.time.LocalDateTime;
 @Getter
 public class ReviewResponseDto {
 
+    private Long id;
+
     private String title;
 
     private String content;
 
-    private String star;
+    private int star;
 
     private String username;
+
+    private String nickname;
 
     private String bookName;
 
@@ -25,19 +29,23 @@ public class ReviewResponseDto {
     private LocalDateTime modifiedAt;
 
     @Builder
-    public ReviewResponseDto(String title,
+    public ReviewResponseDto(Long id,
+                             String title,
                              String content,
-                             String star,
+                             int star,
                              String username,
+                             String nickname,
                              String bookName,
                              LocalDateTime createdAt,
                              LocalDateTime modifiedAt) {
 
+        this.id = id;
         this.title = title;
         this.content = content;
         this.star = star;
-        this.username=username;
-        this.bookName=bookName;
+        this.username = username;
+        this.nickname = nickname;
+        this.bookName = bookName;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
 
