@@ -37,6 +37,9 @@ public class Sale extends Timestamped {
     @Column(name = "price", nullable = false)
     private BigDecimal price;
 
+    @Column(name = "discount", nullable = false)
+    private BigDecimal discount;
+
     @Column(name = "total", nullable = false)
     private BigDecimal total;
 
@@ -55,13 +58,14 @@ public class Sale extends Timestamped {
 
 
     @Builder
-    public Sale(OrderState status, int quantity, Book book, User user,BigDecimal price,BigDecimal total,OrderBook orderBook) {
+    public Sale(OrderState status, int quantity, Book book, User user,BigDecimal price,BigDecimal total,OrderBook orderBook,BigDecimal discount) {
         this.status = status;
+        this.discount = discount == null ? BigDecimal.ZERO : discount;
         this.quantity = quantity;
         this.book = book;
         this.user = user;
         this.price = price;
-        this.total = total;
+        this.total = total.subtract(discount != null?discount:BigDecimal.ZERO);
         this.orderBook = orderBook;
     }
 
@@ -77,6 +81,11 @@ public class Sale extends Timestamped {
 
     public void updateStatus(OrderState status) {
         this.status = status;
+    }
+
+    public void updateDiscount(BigDecimal discount) {
+        this.discount = discount;
+        this.total = this.total.subtract(discount);
     }
 }
 

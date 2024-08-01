@@ -4,16 +4,16 @@
     padding: 20px;
 }
 
-.sidebar nav ul {
+.navList {
     list-style-type: none;
     padding: 0;
 }
 
-.sidebar nav ul li {
+.navItem {
     margin-bottom: 10px;
 }
 
-.sidebar nav ul li a {
+.navLink {
     color: #333;
     text-decoration: none;
 }
