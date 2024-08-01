@@ -49,7 +49,7 @@ public class PaymentService {
     @Value("${payment.toss.fail_url}")
     private String failUrl;
 
-    private final String PREFIX = "BookFlexAB-";
+
 
     @Autowired
     public PaymentService(AuthService authService, PaymentRepository paymentRepository,
@@ -63,126 +63,126 @@ public class PaymentService {
         this.objectMapper = objectMapper1;
     }
 
-    @Transactional
-    public String createPayment(TossPaymentRequestDto requestDto, User user) {
-        try {
-            URL url = null;
-            URLConnection connection = null;
-            StringBuilder responseBody = new StringBuilder();
+//    @Transactional
+//    public String createPayment(TossPaymentRequestDto requestDto, User user) {
+//        try {
+//            URL url = null;
+//            URLConnection connection = null;
+//            StringBuilder responseBody = new StringBuilder();
+//
+//            try {
+//                url = new URL(TossPaymentConfig.PAYMENT_URL);
+//                connection = url.openConnection();
+//                connection.addRequestProperty("Content-Type", "application/json");
+//                connection.setDoOutput(true);
+//                connection.setDoInput(true);
+//
+//                final var jsonBody = getJsonObject(requestDto);
+//
+//                BufferedOutputStream bos = new BufferedOutputStream(connection.getOutputStream());
+//                bos.write(jsonBody.toJSONString().getBytes(StandardCharsets.UTF_8));
+//                bos.flush();
+//                bos.close();
+//
+//                BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
+//                String line = null;
+//                while ((line = br.readLine()) != null) {
+//                    responseBody.append(line);
+//                }
+//                br.close();
+//            } catch (Exception e) {
+//                throw new BusinessException(ErrorCode.FAIL_REQUEST_TOSS);
+//            }
+//
+//            String jsonResponse = responseBody.toString();
+//            String payToken =  getPayToken(jsonResponse);
+//            String checkoutPage = getCheckoutPage(jsonResponse);
+//
+//
+//            OrderBook orderBook = orderBookService.getOrderBook(requestDto.getOrderId());
+//            Payment payment = Payment.builder()
+//                    .total(requestDto.getAmount())
+//                    .user(user)
+//                    .payType(PayType.TOSS)
+//                    .payToken(payToken)
+//                    .status(PaymentStatus.PAY_STANDBY)
+//                    .orderBook(orderBook)
+//                    .build();
+//
+//            paymentRepository.save(payment);
+//            return checkoutPage;
+//        }catch (Exception e) {
+//            System.out.println(e.getMessage());
+//            throw new BusinessException(ErrorCode.PAYMENT_CREATION_FAILED);
+//        }
+//    }
+//
+//    private JSONObject getJsonObject(TossPaymentRequestDto requestDto) {
+//        JSONObject jsonBody = new JSONObject();
+//        jsonBody.put("orderNo", requestDto.getOrderNo());
+//        jsonBody.put("amount", requestDto.getAmount());
+//        jsonBody.put("amountTaxFree", requestDto.getAmountTaxFree());
+//        jsonBody.put("productDesc", requestDto.getProductDesc());
+//        jsonBody.put("apiKey",tossSecretKey);
+//        jsonBody.put("autoExecute", true);
+//        jsonBody.put("resultCallback", successUrl);
+//        jsonBody.put("retUrl", successUrl);
+//        jsonBody.put("retCancelUrl", failUrl);
+//        return jsonBody;
+//    }
 
-            try {
-                url = new URL(TossPaymentConfig.PAYMENT_URL);
-                connection = url.openConnection();
-                connection.addRequestProperty("Content-Type", "application/json");
-                connection.setDoOutput(true);
-                connection.setDoInput(true);
-
-                final var jsonBody = getJsonObject(requestDto);
-
-                BufferedOutputStream bos = new BufferedOutputStream(connection.getOutputStream());
-                bos.write(jsonBody.toJSONString().getBytes(StandardCharsets.UTF_8));
-                bos.flush();
-                bos.close();
-
-                BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8));
-                String line = null;
-                while ((line = br.readLine()) != null) {
-                    responseBody.append(line);
-                }
-                br.close();
-            } catch (Exception e) {
-                throw new BusinessException(ErrorCode.FAIL_REQUEST_TOSS);
-            }
-
-            String jsonResponse = responseBody.toString();
-            String payToken =  getPayToken(jsonResponse);
-            String checkoutPage = getCheckoutPage(jsonResponse);
-
-
-            OrderBook orderBook = orderBookService.getOrderBook(requestDto.getOrderId());
-            Payment payment = Payment.builder()
-                    .total(requestDto.getAmount())
-                    .user(user)
-                    .payType(PayType.TOSS)
-                    .payToken(payToken)
-                    .status(PaymentStatus.PAY_STANDBY)
-                    .orderBook(orderBook)
-                    .build();
-
-            paymentRepository.save(payment);
-            return checkoutPage;
-        }catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw new BusinessException(ErrorCode.PAYMENT_CREATION_FAILED);
-        }
-    }
-
-    private JSONObject getJsonObject(TossPaymentRequestDto requestDto) {
-        JSONObject jsonBody = new JSONObject();
-        jsonBody.put("orderNo", PREFIX+requestDto.getOrderId());
-        jsonBody.put("amount", requestDto.getAmount());
-        jsonBody.put("amountTaxFree", requestDto.getAmountTaxFree());
-        jsonBody.put("productDesc", requestDto.getProductDesc());
-        jsonBody.put("apiKey",tossSecretKey);
-        jsonBody.put("autoExecute", true);
-        jsonBody.put("resultCallback", requestDto.getResultCallback());
-        jsonBody.put("retUrl", successUrl);
-        jsonBody.put("retCancelUrl", failUrl);
-        return jsonBody;
-    }
-
-    public TossPaymentStatusDto checkPaymentStatus(String paymentKey) {
-        try {
-            String url = TossPaymentConfig.PAYMENT_URL + paymentKey;  // 실제 결제 상태 조회 엔드포인트
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("Authorization", "Bearer " + tossSecretKey);
-
-            HttpEntity<String> requestEntity = new HttpEntity<>(headers);
-            ResponseEntity<TossPaymentStatusDto> response = restTemplate.exchange(
-                    url,
-                    HttpMethod.GET,
-                    requestEntity,
-                    TossPaymentStatusDto.class
-            );
-
-            if (response.getStatusCode() == HttpStatus.OK) {
-                return response.getBody();
-            } else {
-                throw new RuntimeException("Failed to check payment status: " + response.getStatusCode());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Exception occurred while checking payment status", e);
-        }
-    }
-
-    public static String getCheckoutPage(String jsonString) {
-        String key = "\"checkoutPage\":\"";
-        int startIndex = jsonString.indexOf(key);
-
-        if (startIndex != -1) {
-            startIndex += key.length();
-            int endIndex = jsonString.indexOf("\"", startIndex);
-            if (endIndex != -1) {
-                return jsonString.substring(startIndex, endIndex);
-            }
-        }
-        return null;
-    }
-
-    public static String getPayToken(String jsonString) {
-        String key = "\"payToken\":\"";
-        int startIndex = jsonString.indexOf(key);
-
-        if (startIndex != -1) {
-            startIndex += key.length();
-            int endIndex = jsonString.indexOf("\"", startIndex);
-            if (endIndex != -1) {
-                return jsonString.substring(startIndex, endIndex);
-            }
-        }
-        return null;
-    }
+//    public TossPaymentStatusDto checkPaymentStatus(String paymentKey) {
+//        try {
+//            String url = TossPaymentConfig.PAYMENT_URL + paymentKey;  // 실제 결제 상태 조회 엔드포인트
+//            HttpHeaders headers = new HttpHeaders();
+//            headers.set("Authorization", "Bearer " + tossSecretKey);
+//
+//            HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+//            ResponseEntity<TossPaymentStatusDto> response = restTemplate.exchange(
+//                    url,
+//                    HttpMethod.GET,
+//                    requestEntity,
+//                    TossPaymentStatusDto.class
+//            );
+//
+//            if (response.getStatusCode() == HttpStatus.OK) {
+//                return response.getBody();
+//            } else {
+//                throw new RuntimeException("Failed to check payment status: " + response.getStatusCode());
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new RuntimeException("Exception occurred while checking payment status", e);
+//        }
+//    }
+//
+//    public static String getCheckoutPage(String jsonString) {
+//        String key = "\"checkoutPage\":\"";
+//        int startIndex = jsonString.indexOf(key);
+//
+//        if (startIndex != -1) {
+//            startIndex += key.length();
+//            int endIndex = jsonString.indexOf("\"", startIndex);
+//            if (endIndex != -1) {
+//                return jsonString.substring(startIndex, endIndex);
+//            }
+//        }
+//        return null;
+//    }
+//
+//    public static String getPayToken(String jsonString) {
+//        String key = "\"payToken\":\"";
+//        int startIndex = jsonString.indexOf(key);
+//
+//        if (startIndex != -1) {
+//            startIndex += key.length();
+//            int endIndex = jsonString.indexOf("\"", startIndex);
+//            if (endIndex != -1) {
+//                return jsonString.substring(startIndex, endIndex);
+//            }
+//        }
+//        return null;
+//    }
 
 
     @Transactional

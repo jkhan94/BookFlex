@@ -1,0 +1,84 @@
+.container {
+    /* 기존 스타일 */
+}
+
+.orderContainer {
+    /* 기존 스타일 */
+}
+
+.orderItem {
+    /* 기존 스타일 */
+}
+
+.itemImage {
+    /* 기존 스타일 */
+}
+
+.itemDetails {
+    /* 기존 스타일 */
+}
+
+.itemName {
+    /* 기존 스타일 */
+}
+
+.itemPrice {
+    /* 기존 스타일 */
+}
+
+.total {
+    /* 기존 스타일 */
+}
+
+.finalTotal {
+    /* 기존 스타일 */
+}
+
+.couponList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.couponItem {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    transition: transform 0.3s, background-color 0.3s;
+}
+
+.couponItem:hover {
+    transform: translateY(-5px);
+}
+
+.couponDisabled {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+}
+
+.couponName {
+    font-weight: bold;
+}
+
+.couponDetails {
+    margin-top: 5px;
+}
+
+.couponMinPrice {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.couponValidity {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.8em;
+    color: #888;
+}
+
+.payBtn {
+    /* 기존 스타일 */
+}

@@ -25,11 +25,11 @@ public class PaymentController {
         this.paymentService = paymentService;
     }
 
-    @PostMapping("/toss")
-    public ResponseEntity<CommonDto<String>> requestPayment(@RequestBody TossPaymentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        String checkedUrl =  paymentService.createPayment(requestDto, userDetails.getUser());
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CommonDto<>(HttpStatus.CREATED.value(), "주문이 완료되었습니다.", checkedUrl));
-    }
+//    @PostMapping("/toss")
+//    public ResponseEntity<CommonDto<String>> requestPayment(@RequestBody TossPaymentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        String checkedUrl =  paymentService.createPayment(requestDto, userDetails.getUser());
+//        return ResponseEntity.status(HttpStatus.CREATED).body(new CommonDto<>(HttpStatus.CREATED.value(), "주문이 완료되었습니다.", checkedUrl));
+//    }
 
     @PostMapping("/success")
     public ResponseEntity<CommonDto<Void>> handlePaymentSuccess(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody TossResultRequestDto resultRequestDto) throws MessagingException, UnsupportedEncodingException {

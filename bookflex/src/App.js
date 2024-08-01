@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 import Header from './components/Header'; // 경로 확인
 import Sidebar from './components/Sidebar'; // 경로 확인
@@ -28,7 +28,11 @@ import RegisterBookPage from "./pages/admin/RegisterBookPage";
 import BookListPage from "./pages/admin/BookListPage";
 import ModifyBookDetail from "./pages/admin/BookUpdatePage";
 import BookUpdatePage from "./pages/admin/BookUpdatePage";
+import CheckoutPage from "./pages/payment/Checkout";
+import FailPage from "./pages/payment/Fail";
+import SuccessPage from "./pages/payment/Success";
 import axiosInstance from './api/axiosInstance';
+
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -71,14 +75,14 @@ function App() {
                     <Route path="/main" element={<UserLayout/>}>
                         <Route path="dashboard" element={<UserMainPage/>}/>
                         <Route path="cart" element={<CartPage/>}/>
-                        <Route path="order" element={<OrderPage/>}/>
+                        <Route path="order/:orderId" element={<OrderPage/>}/>
                         <Route path="payment-history" element={<PaymentHistoryPage/>}/>
                         <Route path="category/:categoryName" element={<CategoryPage/>}/>
                         <Route path="wishlist" element={<WishlistPage/>}/>
                         <Route path="profile" element={<ProfilePage/>}/>
                         <Route path="qna" element={<UserQnAPage/>}/>
                         {/* 추가적인 유저 하위 라우트 설정 */}
-                        <Route path="profile-modify" element={<ProfileModifyPage/>}/>
+                        <Route path="proZZfile-modify" element={<ProfileModifyPage/>}/>
                     </Route>
 
 

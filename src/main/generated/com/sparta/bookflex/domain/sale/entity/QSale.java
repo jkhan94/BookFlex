@@ -29,6 +29,8 @@ public class QSale extends EntityPathBase<Sale> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
+    public final NumberPath<java.math.BigDecimal> discount = createNumber("discount", java.math.BigDecimal.class);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     //inherited
