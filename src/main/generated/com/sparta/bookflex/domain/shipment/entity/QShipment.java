@@ -38,7 +38,7 @@ public class QShipment extends EntityPathBase<Shipment> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 
-    public final ListPath<com.sparta.bookflex.domain.orderbook.entity.OrderItem, com.sparta.bookflex.domain.orderbook.entity.QOrderItem> orderItemList = this.<com.sparta.bookflex.domain.orderbook.entity.OrderItem, com.sparta.bookflex.domain.orderbook.entity.QOrderItem>createList("orderItemList", com.sparta.bookflex.domain.orderbook.entity.OrderItem.class, com.sparta.bookflex.domain.orderbook.entity.QOrderItem.class, PathInits.DIRECT2);
+    public final com.sparta.bookflex.domain.orderbook.entity.QOrderBook orderBook;
 
     public final DateTimePath<java.time.LocalDateTime> shippedAt = createDateTime("shippedAt", java.time.LocalDateTime.class);
 
@@ -66,6 +66,7 @@ public class QShipment extends EntityPathBase<Shipment> {
 
     public QShipment(Class<? extends Shipment> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.orderBook = inits.isInitialized("orderBook") ? new com.sparta.bookflex.domain.orderbook.entity.QOrderBook(forProperty("orderBook"), inits.get("orderBook")) : null;
         this.user = inits.isInitialized("user") ? new com.sparta.bookflex.domain.user.entity.QUser(forProperty("user"), inits.get("user")) : null;
     }
 

@@ -98,10 +98,9 @@ const Header = () => {
                         )}
                     </li>
                     <li><Link to="/main/cart">Cart</Link></li>
-                    <li><Link to="/main/order">Order</Link></li>
+                    <li><Link to="/main/orders">Order</Link></li>
                     <li><Link to="/main/coupon">Coupon</Link></li>
-                    <li><Link to="/main/payment-history">Payment History</Link></li>
-                    <li><Link to="/main/wishlist">Wishlist</Link></li>
+                    {/*<li><Link to="/main/wishlist">Wishlist</Link></li>*/}
                     <li><Link to="/main/profile">Profile</Link></li>
                     <li><Link to="/main/qna">User Q&A</Link></li>
                     <li>

@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.bookflex.common.config.TossPaymentConfig;
 import com.sparta.bookflex.common.exception.BusinessException;
 import com.sparta.bookflex.common.exception.ErrorCode;
+import com.sparta.bookflex.common.utill.Timestamped;
+import com.sparta.bookflex.domain.coupon.service.CouponService;
 import com.sparta.bookflex.domain.orderbook.dto.OrderStatusRequestDto;
 import com.sparta.bookflex.domain.orderbook.emuns.OrderState;
 import com.sparta.bookflex.domain.orderbook.entity.OrderBook;
@@ -14,6 +16,7 @@ import com.sparta.bookflex.domain.payment.entity.Payment;
 import com.sparta.bookflex.domain.payment.enums.PayType;
 import com.sparta.bookflex.domain.payment.enums.PaymentStatus;
 import com.sparta.bookflex.domain.payment.repository.PaymentRepository;
+import com.sparta.bookflex.domain.sale.entity.Sale;
 import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.service.AuthService;
 import jakarta.mail.MessagingException;
@@ -32,6 +35,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @Service
 public class PaymentService {
@@ -42,6 +46,7 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final OrderBookService orderBookService;
     private final ObjectMapper objectMapper;
+    private final CouponService couponService;
 
     @Value("${payment.toss.success_url}")
     private String successUrl;
@@ -55,12 +60,13 @@ public class PaymentService {
     public PaymentService(AuthService authService, PaymentRepository paymentRepository,
                           OrderBookService orderBookService,
                           RestTemplate restTemplate, ObjectMapper objectMapper,
-                          ObjectMapper objectMapper1) {
+                             CouponService couponService) {
         this.restTemplate = restTemplate;
         this.authService = authService;
         this.paymentRepository = paymentRepository;
         this.orderBookService = orderBookService;
-        this.objectMapper = objectMapper1;
+        this.objectMapper = objectMapper;
+        this.couponService = couponService;
     }
 
 //    @Transactional
@@ -186,16 +192,40 @@ public class PaymentService {
 
 
     @Transactional
-    public void processPayment(User user, TossResultRequestDto tossResultRequestDto) throws MessagingException, UnsupportedEncodingException {
-        Payment payment = paymentRepository.findByPayToken(tossResultRequestDto.getPayToken());
+    public void processPayment(User user, SuccessPayReqDto successPayReqDto) throws MessagingException, UnsupportedEncodingException {
+        OrderBook orderBook = orderBookService.getOrderByOrderNo(successPayReqDto.getOrderId());
+        orderBook.updateStatus(OrderState.SALE_COMPLETED);
+        Payment payment = paymentRepository.findByOrderBook(orderBook);
         payment.updateStatus(PaymentStatus.PAY_COMPLETE);
+        payment.updatePayToken(successPayReqDto.getPaymentKey());
         payment.updateIsSuccessYN(true);
         paymentRepository.save(payment);
-        OrderStatusRequestDto statusUpdate = OrderStatusRequestDto.builder()
-                        .status(OrderState.SALE_COMPLETED)
-                        .build();
-        orderBookService.updateOrderStatus(payment.getOrderBook().getId(), user, statusUpdate);
 
-        //쿠폰 사용 체크 필요
+        if(orderBook.isCoupon()){
+            orderBook.getUserCoupon().updateStatus();
+        }
+
+        List<Sale> saleList = orderBook.getSaleList();
+        for(Sale sale : saleList){
+            sale.updateStatus(OrderState.SALE_COMPLETED);
+        }
+
+        //emailService.sendEmail(EmailMessage.builder()
+        //        .to(user.getEmail())
+        //        .subject("[bookFlex] 배송현황안내")
+        //        .message("배송 현황을 아래와 같이 안내드립니다.").build(),
+        //        orderBook);
+
+
+
+    }
+
+    public void processFailPayment(Timestamped user, FailPayReqDto failPayReqDto) {
+        OrderBook orderBook = orderBookService.getOrderByOrderNo(failPayReqDto.getOrderId());
+        Payment payment = paymentRepository.findByOrderBook(orderBook);
+        payment.updateStatus(PaymentStatus.PAY_CANCEL);
+        payment.updateIsSuccessYN(false);
+        paymentRepository.save(payment);
+        orderBook.updateStatus(OrderState.ORDER_CANCELLED);
     }
 }

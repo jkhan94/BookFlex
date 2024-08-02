@@ -95,8 +95,8 @@ public enum ErrorCode {
     COUPON_ALREADY_ISSUED(HttpStatus.CONFLICT,"이미 발급받은 쿠폰입니다."),
     COUPON_NOT_ISSUED(HttpStatus.NOT_FOUND, "발급되지 않은 쿠폰입니다."),
     COUPON_ALREADY_USED(HttpStatus.BAD_REQUEST,"이미 사용된 쿠폰입니다."),
-    COUPON_CANNOT_BE_ISSUED_TO_ALL(HttpStatus.BAD_REQUEST,"쿠폰 수량이 부족합니다.")
-    ;
+    COUPON_CANNOT_BE_ISSUED_TO_ALL(HttpStatus.BAD_REQUEST,"쿠폰 수량이 부족합니다."),
+    ORDER_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND,"주문에 책을 찾을 수 없습니다."),;
 
     private final HttpStatus status;
     private final String message;

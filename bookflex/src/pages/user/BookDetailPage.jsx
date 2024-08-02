@@ -1,14 +1,13 @@
-// BookDetailPage.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axiosInstance from '../../api/axiosInstance'; // API 호출을 위한 인스턴스
-import styles from './BookDetailPage.module.css'; // 스타일을 위한 CSS 모듈 임포트
+import styles from './BookDetailPage.module.css'; // CSS 모듈 임포트
 
 const BookDetailPage = () => {
     const { bookId } = useParams(); // URL에서 책 ID 가져오기
     const [book, setBook] = useState(null);
-    const [quantity, setQuantity] = useState(1);
-    const navigator = useNavigate();
+    const [quantity, setQuantity] = useState(1); // 수량 상태 추가
+    const navigate = useNavigate(); // 페이지 이동을 위한 useNavigate 훅
 
     useEffect(() => {
         const fetchBookDetails = async () => {
@@ -19,19 +18,22 @@ const BookDetailPage = () => {
                 console.error("Error fetching book details", error);
             }
         };
+
         fetchBookDetails();
     }, [bookId]);
 
     const handleAddToCart = async () => {
         try {
-            const response = await axiosInstance.post('/baskets', {
+            await axiosInstance.post('/baskets', {
                 bookId,
                 quantity
             });
-            alert("장바구니에 상품을 성공적으로 담았습니다")
-            navigator('/main');
-        }catch (error) {
-            console.log("장바구니 담기 실패");
+            const shouldNavigate = window.confirm("장바구니로 이동하시겠습니까?");
+            if (shouldNavigate) {
+                navigate('/main/cart'); // 장바구니 페이지로 이동
+            }// 페이지 이동
+        } catch (error) {
+            console.log("장바구니 담기 실패", error);
         }
     };
 
