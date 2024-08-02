@@ -171,7 +171,7 @@ const UserQnaPage = () => {
                 <tr>
                     <th>문의 유형</th>
                     <th>문의 내용</th>
-                    <th>생성일</th>
+                    <th>문의 접수일</th>
                     <th>답변</th>
                     <th>삭제</th>
                     {/* 삭제 열 추가 */}
