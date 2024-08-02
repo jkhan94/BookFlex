@@ -112,19 +112,16 @@ const CouponPage = () => {
                 <thead>
                 <tr>
                     <th className={styles.th}>쿠폰 코드</th>
-                    <th className={styles.th}>발급일</th>
-                    <th className={styles.th}>만료일</th>
+                    <th className={styles.th}>쿠폰 발급일</th>
+                    <th className={styles.th}>사용 만료일</th>
                     <th className={styles.th}>사용 여부</th>
-                    <th className={styles.th}>사용일</th>
+                    <th className={styles.th}>쿠폰 사용일</th>
                     <th className={styles.th}>쿠폰 이름</th>
                     <th className={styles.th}>쿠폰 유형</th>
                     <th className={styles.th}>할인 타입</th>
                     <th className={styles.th}>최소 가격</th>
                     <th className={styles.th}>할인 가격</th>
                     <th className={styles.th}>적용 등급</th>
-                    <th className={styles.th}>상태</th>
-                    <th className={styles.th}>발급 시작일</th>
-                    <th className={styles.th}>발급 만료일</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -141,9 +138,6 @@ const CouponPage = () => {
                         <td className={styles.td}>{coupon.coupon ? coupon.coupon.minPrice : '-'}</td>
                         <td className={styles.td}>{coupon.coupon ? coupon.coupon.discountPrice : '-'}</td>
                         <td className={styles.td}>{coupon.coupon ? coupon.coupon.eligibleGrade : '-'}</td>
-                        <td className={styles.td}>{coupon.coupon ? coupon.coupon.couponStatus : '-'}</td>
-                        <td className={styles.td}>{coupon.coupon ? coupon.coupon.startDate : '-'}</td>
-                        <td className={styles.td}>{coupon.coupon ? coupon.coupon.expirationDate : '-'}</td>
                     </tr>
                 ))}
                 </tbody>
