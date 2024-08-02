@@ -16,9 +16,10 @@ public class OrderItemResponseDto {
     private BigDecimal total;;
     private String photoImagePath;
     private LocalDateTime createdAt;
+    private boolean isReviewed;
 
     @Builder
-    public OrderItemResponseDto(Long orderItemId, String bookName, BigDecimal price, int quantity,  LocalDateTime createdAt, BigDecimal total,String photoImagePath) {
+    public OrderItemResponseDto(Long orderItemId, String bookName, BigDecimal price, int quantity,  LocalDateTime createdAt, BigDecimal total,String photoImagePath,boolean isReviewed) {
         this.orderItemId = orderItemId;
         this.bookName = bookName;
         this.price = price;
@@ -26,6 +27,7 @@ public class OrderItemResponseDto {
         this.createdAt = createdAt;
         this.total = total;
         this.photoImagePath = photoImagePath;
+        this.isReviewed = isReviewed;
     }
 
 

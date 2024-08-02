@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './MemberListPage.css';
+import styles from './MemberListPage.module.css'; // CSS 모듈 임포트
 
 function MemberListPage() {
     const [members, setMembers] = useState([]);
@@ -46,9 +46,9 @@ function MemberListPage() {
     };
 
     return (
-        <div className="container">
+        <div className={styles.container}>
             <h1>회원 목록 조회</h1>
-            <div className="search-bar">
+            <div className={styles.searchBar}>
                 <input
                     type="text"
                     id="searchInput"
@@ -57,7 +57,7 @@ function MemberListPage() {
                     onChange={handleSearch}
                 />
                 {searchTerm && (
-                    <button id="clearSearch" className="clear-button" onClick={handleClearSearch}>&times;</button>
+                    <button className={styles.clearButton} onClick={handleClearSearch}>&times;</button>
                 )}
                 <button onClick={() => fetchMembers(currentPage, searchTerm)}>검색</button>
             </div>
@@ -85,7 +85,7 @@ function MemberListPage() {
                 ))}
                 </tbody>
             </table>
-            <div className="pagination">
+            <div className={styles.pagination}>
                 <button
                     onClick={() => handlePageChange(-1)}
                     disabled={currentPage === 1}

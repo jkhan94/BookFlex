@@ -1,52 +1,58 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import axiosInstance from '../../api/axiosInstance';
+import { useLocation } from 'react-router-dom';
 
 export function SuccessPage() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
+    const location = useLocation();
 
     useEffect(() => {
-        // 쿼리 파라미터 값이 결제 요청할 때 보낸 데이터와 동일한지 반드시 확인하세요.
-        // 클라이언트에서 결제 금액을 조작하는 행위를 방지할 수 있습니다.
-        const requestData = {
-            orderId: searchParams.get("orderId"),
-            amount: searchParams.get("amount"),
-            paymentKey: searchParams.get("paymentKey"),
-        };
+        // 쿼리 파라미터로부터 필요한 데이터 추출
+        const queryParams = new URLSearchParams(location.search);
+        const orderId = queryParams.get("orderId");
+        const amount = parseInt(queryParams.get("amount"), 10);
+        const paymentKey = queryParams.get("paymentKey");
 
-        async function confirm() {
-            const response = await fetch("/confirm", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(requestData),
-            });
+        // 서버에 결제 성공 데이터 전송
+        async function confirmPayment() {
+            try {
+                const response = await axiosInstance.post("/payments/success", {
+                    orderId,
+                    amount,
+                    paymentKey
+                }, {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+                console.log(response);
 
-            const json = await response.json();
-
-            if (!response.ok) {
-                // 결제 실패 비즈니스 로직을 구현하세요.
-                navigate(`/fail?message=${json.message}&code=${json.code}`);
-                return;
+                // 서버 응답 처리
+                if (response.status === 200) {
+                    // 성공 시 주문 내역 페이지로 리다이렉트
+                    navigate(`/main/orders`);
+                } else {
+                    const { message, statusCode } = response.data;
+                    navigate(`/fail?message=${message}&code=${statusCode}`);
+                }
+            } catch (error) {
+                console.error('Error processing payment: ', error);
+                navigate(`/fail?message=Error processing payment&code=500`);
             }
-
-            // 결제 성공 비즈니스 로직을 구현하세요.
         }
-        confirm();
-    }, []);
+
+        confirmPayment();
+    }, [navigate, searchParams]);
 
     return (
         <div className="result wrapper">
             <div className="box_section">
-                <h2>
-                    결제 성공
-                </h2>
+                <h2>결제 성공</h2>
                 <p>{`주문번호: ${searchParams.get("orderId")}`}</p>
-                <p>{`결제 금액: ${Number(
-                    searchParams.get("amount")
-                ).toLocaleString()}원`}</p>
-                <p>{`paymentKey: ${searchParams.get("paymentKey")}`}</p>
+                <p>{`결제 금액: ${Number(searchParams.get("amount")).toLocaleString()}원`}</p>
+                <p>{`Payment Key: ${searchParams.get("paymentKey")}`}</p>
             </div>
         </div>
     );

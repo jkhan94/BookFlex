@@ -12,4 +12,7 @@ public interface PaymentRepository extends JpaRepository<Payment,Long> {
 
 
     Payment findByPayToken(String payToken);
+
+
+    Payment findByOrderBook(OrderBook orderBook);
 }

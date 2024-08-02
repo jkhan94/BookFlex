@@ -2,6 +2,7 @@ package com.sparta.bookflex.domain.shipment.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.orderbook.emuns.OrderState;
+import com.sparta.bookflex.domain.orderbook.entity.OrderBook;
 import com.sparta.bookflex.domain.orderbook.entity.OrderItem;
 import com.sparta.bookflex.domain.shipment.enums.ShipmentEnum;
 import com.sparta.bookflex.domain.user.entity.User;
@@ -41,21 +42,21 @@ public class Shipment extends Timestamped {
     @Column(name = "address", nullable = false)
     private String address;
 
-    @OneToMany(mappedBy = "shipment")
-    private List<OrderItem> orderItemList;
+    @OneToOne(mappedBy = "shipment")
+    private OrderBook orderBook;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
 
     @Builder
-    public Shipment(String trackingNumber, String carrier, ShipmentEnum status, LocalDateTime shippedAt, LocalDateTime deliveredAt, List<OrderItem> orderItemList,User user,String address) {
+    public Shipment(String trackingNumber, String carrier, ShipmentEnum status, LocalDateTime shippedAt, LocalDateTime deliveredAt, OrderBook orderBook,User user,String address) {
         this.trackingNumber = trackingNumber;
         this.carrier = carrier;
         this.status = status;
         this.shippedAt = shippedAt;
         this.deliveredAt = deliveredAt;
-        this.orderItemList = orderItemList;
+        this.orderBook = orderBook;
         this.user = user;
         this.address = address;
     }

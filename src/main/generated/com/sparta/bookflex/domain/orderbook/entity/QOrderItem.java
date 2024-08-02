@@ -31,6 +31,8 @@ public class QOrderItem extends EntityPathBase<OrderItem> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final BooleanPath isReviewed = createBoolean("isReviewed");
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifiedAt = _super.modifiedAt;
 
@@ -39,8 +41,6 @@ public class QOrderItem extends EntityPathBase<OrderItem> {
     public final NumberPath<java.math.BigDecimal> price = createNumber("price", java.math.BigDecimal.class);
 
     public final NumberPath<Integer> quantity = createNumber("quantity", Integer.class);
-
-    public final com.sparta.bookflex.domain.shipment.entity.QShipment shipment;
 
     public final NumberPath<java.math.BigDecimal> total = createNumber("total", java.math.BigDecimal.class);
 
@@ -64,7 +64,6 @@ public class QOrderItem extends EntityPathBase<OrderItem> {
         super(type, metadata, inits);
         this.book = inits.isInitialized("book") ? new com.sparta.bookflex.domain.book.entity.QBook(forProperty("book"), inits.get("book")) : null;
         this.orderBook = inits.isInitialized("orderBook") ? new QOrderBook(forProperty("orderBook"), inits.get("orderBook")) : null;
-        this.shipment = inits.isInitialized("shipment") ? new com.sparta.bookflex.domain.shipment.entity.QShipment(forProperty("shipment"), inits.get("shipment")) : null;
     }
 
 }

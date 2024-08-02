@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { useLocation,useNavigate } from 'react-router-dom';
 import axiosInstance from "../../api/axiosInstance"; // axios를 사용하여 HTTP 요청을 보냅니다.
+
 
 function RegisterReviewPage() {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [star, setStar] = useState('');
 
+    const location = useLocation();
+    const navigate = useNavigate();
+    const queryParams = new URLSearchParams(location.search);
+    const orderId = queryParams.get('orderId');
+    const itemId = queryParams.get('itemId');
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -22,13 +28,15 @@ function RegisterReviewPage() {
         };
 
         // API 요청 보내기
-        axiosInstance.post('/sale/1/reviews', reviewData) // 여기에 실제 saleId를 전달해야 합니다.
+        axiosInstance.post(`/sale/${itemId}/reviews`, reviewData) // 여기에 실제 saleId를 전달해야 합니다.
             .then(response => {
                 alert('리뷰가 성공적으로 등록되었습니다!');
                 setTitle('');
                 setContent('');
                 setStar('');
+                navigate('/main/dashboard')
             })
+            
             .catch(error => {
                 console.error('리뷰 등록에 실패했습니다!', error);
             });
