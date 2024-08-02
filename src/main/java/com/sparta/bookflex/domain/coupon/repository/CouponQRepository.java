@@ -10,7 +10,7 @@ import java.util.List;
 public interface CouponQRepository {
     Page<Coupon> findAvailableByUserGrade(User user, Pageable pageable, List<Long> issuedCouponIds);
 
-    void deleteExpiredCoupon();
+    void updateIssueExpiredCoupon();
 
     void updateIssuedCoupon();
 
