@@ -32,7 +32,7 @@ export function SuccessPage() {
                 // 서버 응답 처리
                 if (response.status === 200) {
                     // 성공 시 주문 내역 페이지로 리다이렉트
-                    navigate(`/main/orders"`);
+                    navigate(`/main/orders`);
                 } else {
                     const { message, statusCode } = response.data;
                     navigate(`/fail?message=${message}&code=${statusCode}`);
