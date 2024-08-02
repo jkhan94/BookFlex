@@ -202,14 +202,14 @@ const CouponManagement = () => {
                 <tr>
                     <th>쿠폰유형</th>
                     <th>쿠폰이름</th>
-                    <th>유효기간</th>
+                    <th>쿠폰 유효기간</th>
                     <th>총수량</th>
                     <th>할인유형</th>
                     <th>최소주문금액</th>
                     <th>할인금액</th>
                     <th>사용가능등급</th>
-                    <th>시작일</th>
-                    <th>만료일</th>
+                    <th>쿠폰 발급 시작일</th>
+                    <th>쿠폰 발급 만료일</th>
                     <th>작업</th>
                 </tr>
                 </thead>
@@ -218,7 +218,7 @@ const CouponManagement = () => {
                     <tr key={coupon.couponId}>
                         <td>{coupon.couponType}</td>
                         <td>{coupon.couponName}</td>
-                        <td>{coupon.validityDays === 0 ? "쿠폰 만료일까지" : "발급일로부터 " + coupon.validityDays + "일"}</td>
+                        <td>{coupon.validityDays === 0 ? "쿠폰 만료일까지" : "발급 가능 기간 내에 발급일로부터 " + coupon.validityDays + "일"}</td>
                         <td>{coupon.totalCount}</td>
                         <td>{coupon.discountType}</td>
                         <td>{coupon.minPrice}</td>
