@@ -13,6 +13,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Table(uniqueConstraints = {@UniqueConstraint(name = "UniqueCouponAndUser", columnNames = {"user_id", "coupon_id"})})
 @Entity
@@ -81,6 +82,11 @@ public class UserCoupon extends Timestamped {
                 .user(user)
                 .coupon(coupon)
                 .build();
+    }
+
+    public void updateStatus() {
+        this.isUsed = true;
+        this.usedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
     }
 
 }

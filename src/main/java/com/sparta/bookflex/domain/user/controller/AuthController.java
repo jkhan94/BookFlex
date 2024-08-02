@@ -78,7 +78,6 @@ public class AuthController {
     {
         String accessToken = authService.refreshToken(userDetails.getUser(), request.getHeader(JwtConfig.AUTHORIZATION_HEADER));
         RefreshResDto resDto = new RefreshResDto(accessToken);
-        response.setHeader(JwtConfig.ACCESS_TOKEN_HEADER, accessToken);
 
         return ResponseEntity.ok().body(resDto);
     }

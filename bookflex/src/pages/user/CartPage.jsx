@@ -88,7 +88,7 @@ const CartPage = () => {
     return (
         <div className={styles.cartPage}>
             <div className={styles.cartCard}>
-                <h1 className={styles.title}>나의 예쁜 장바구니</h1>
+                <h1 className={styles.title}>장바구니</h1>
                 <div className={styles.cartItems}>
                     {cartItems.length === 0 ? (
                         <p>No items in the cart.</p>

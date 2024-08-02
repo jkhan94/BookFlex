@@ -3,8 +3,14 @@ package com.sparta.bookflex.domain.orderbook.controller;
 import com.sparta.bookflex.common.dto.CommonDto;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
 import com.sparta.bookflex.domain.orderbook.dto.*;
+import com.sparta.bookflex.domain.orderbook.dto.OrderBookTotalResDto;
+import com.sparta.bookflex.domain.orderbook.dto.OrderRequestDto;
+import com.sparta.bookflex.domain.orderbook.dto.OrderResponsDto;
+import com.sparta.bookflex.domain.orderbook.dto.OrderStatusRequestDto;
 import com.sparta.bookflex.domain.orderbook.service.OrderBookService;
 import jakarta.mail.MessagingException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -58,5 +64,15 @@ public class OrderBookController {
                 .status(HttpStatus.OK)
                 .body(responseDto);
     }
-    
+
+
+    @GetMapping("")
+    public ResponseEntity<Page<OrderGetsResponseDto>> getOrders(@AuthenticationPrincipal UserDetailsImpl userDetails, Pageable pageable) {
+        Page<OrderGetsResponseDto> orderGetsResponseDtos = orderBookService.getOrders(userDetails.getUser(), pageable);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(orderGetsResponseDtos);
+    }
+
+
 }

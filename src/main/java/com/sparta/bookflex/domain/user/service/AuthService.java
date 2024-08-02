@@ -16,6 +16,7 @@ import com.sparta.bookflex.domain.user.enums.UserGrade;
 import com.sparta.bookflex.domain.user.enums.UserState;
 import com.sparta.bookflex.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -35,6 +36,8 @@ public class AuthService {
     private final JwtProvider jwtProvider;
     private final AuthenticationManager authenticationManager;
     private final SystemLogRepository systemLogRepository;
+    @Value("${ADMIN_TOKEN}")
+    String adminToken;
 
     @Transactional
     public void signUp(SignUpReqDto signupReqDto) {
@@ -43,6 +46,12 @@ public class AuthService {
         if (userRepository.findByUserName(username).isPresent()) {
             throw new BusinessException(ErrorCode.EXIST_USER);
         }
+
+//        if(signupReqDto.getAuthType().equals(RoleType.ADMIN)){
+//            if(signupReqDto.getAdminToken() == null || !signupReqDto.getAdminToken().equals(adminToken)){
+//                throw new BusinessException(ErrorCode.USER_NOT_AUTHORIZED);
+//            }
+//        }
 
         User user = User.builder()
             .username(signupReqDto.getUsername())
