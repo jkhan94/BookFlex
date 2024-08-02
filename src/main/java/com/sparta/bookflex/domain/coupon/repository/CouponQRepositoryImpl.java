@@ -76,9 +76,10 @@ public class CouponQRepositoryImpl implements CouponQRepository {
 
     @Override
     @Transactional
-    public void deleteExpiredCoupon() {
+    public void updateIssueExpiredCoupon() {
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
-        queryFactory.delete(coupon)
+        queryFactory.update(coupon)
+                .set(coupon.couponStatus, CouponStatus.NOT_AVAILABLE)
                 .where(coupon.expirationDate.before(now)
                         .and(coupon.couponType.notIn(CouponType.BIRTHDAY, CouponType.GRADE)))
                 .execute();

@@ -17,8 +17,8 @@ public class CouponScheduleService {
     private final UserCouponRepository userCouponRepository;
     private final CouponService couponService;
 
-    public void deleteExpiredCoupon() {
-        couponRepository.deleteExpiredCoupon();
+    public void updateIssueExpiredCoupon() {
+        couponRepository.updateIssueExpiredCoupon();
     }
 
     public void updateIssuedCoupon() {
@@ -43,4 +43,7 @@ public class CouponScheduleService {
         }
     }
 
+    public void deleteUseExpiredCoupon() {
+        userCouponRepository.deleteUserCoupon();
+    }
 }

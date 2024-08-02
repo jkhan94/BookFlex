@@ -13,9 +13,15 @@ public class CouponScheduler {
     private final CouponScheduleService couponScheduleService;
 
     @Scheduled(cron = "0 0 0 * * *") //  매일 오전 12시
-    public void deleteExpiredCoupon() throws InterruptedException {
-        log.info("만료된 쿠폰 삭제");
-        couponScheduleService.deleteExpiredCoupon();
+    public void updateIssueExpiredCoupon() throws InterruptedException {
+        log.info("발급 만료된 쿠폰을 발급불가 상태로 변경");
+        couponScheduleService.updateIssueExpiredCoupon();
+    }
+
+    @Scheduled(cron = "0 0 0  * * *") //  매일 오전 12시
+    public void deleteUseExpiredCoupon() throws InterruptedException {
+        log.info("사용 불가한 쿠폰 삭제");
+        couponScheduleService.deleteUseExpiredCoupon();
     }
 
     @Scheduled(cron = "0 0 0 * * *") // 매일 오전 12시
