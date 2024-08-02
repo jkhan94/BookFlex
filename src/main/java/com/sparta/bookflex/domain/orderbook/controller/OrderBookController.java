@@ -9,6 +9,8 @@ import com.sparta.bookflex.domain.orderbook.dto.OrderResponsDto;
 import com.sparta.bookflex.domain.orderbook.dto.OrderStatusRequestDto;
 import com.sparta.bookflex.domain.orderbook.service.OrderBookService;
 import jakarta.mail.MessagingException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -63,13 +65,14 @@ public class OrderBookController {
                 .body(responseDto);
     }
 
-    @GetMapping()
-    public ResponseEntity<OrderBookTotalResDto> getAllOrder(@RequestParam("page") int page,
-                                                            @RequestParam("size") int size) {
-        OrderBookTotalResDto orderShipResDto = orderBookService.getAllOrder(page, size);
 
+    @GetMapping("")
+    public ResponseEntity<Page<OrderGetsResponseDto>> getOrders(@AuthenticationPrincipal UserDetailsImpl userDetails, Pageable pageable) {
+        Page<OrderGetsResponseDto> orderGetsResponseDtos = orderBookService.getOrders(userDetails.getUser(), pageable);
         return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(orderShipResDto);
+                .status(HttpStatus.OK)
+                .body(orderGetsResponseDtos);
     }
+
+
 }

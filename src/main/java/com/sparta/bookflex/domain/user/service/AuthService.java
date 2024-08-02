@@ -47,11 +47,11 @@ public class AuthService {
             throw new BusinessException(ErrorCode.EXIST_USER);
         }
 
-        if(signupReqDto.getAuthType().equals(RoleType.ADMIN)){
-            if(signupReqDto.getAdminToken() == null || !signupReqDto.getAdminToken().equals(adminToken)){
-                throw new BusinessException(ErrorCode.USER_NOT_AUTHORIZED);
-            }
-        }
+//        if(signupReqDto.getAuthType().equals(RoleType.ADMIN)){
+//            if(signupReqDto.getAdminToken() == null || !signupReqDto.getAdminToken().equals(adminToken)){
+//                throw new BusinessException(ErrorCode.USER_NOT_AUTHORIZED);
+//            }
+//        }
 
         User user = User.builder()
             .username(signupReqDto.getUsername())

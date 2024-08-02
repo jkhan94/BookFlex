@@ -20,14 +20,14 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    @PostMapping("/sale/{saleId}/reviews")
+    @PostMapping("/sale/{itemId}/reviews")
     public CommonDto<ReviewResponseDto> createReview(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
-            @PathVariable(value = "saleId") Long saleId,
+            @PathVariable(value = "itemId") Long itemId,
             @RequestBody ReviewRequestDto reviewRequestDto
     ) {
 
-        ReviewResponseDto reviewResponseDto = reviewService.createReview(userDetails.getUser(), saleId, reviewRequestDto);
+        ReviewResponseDto reviewResponseDto = reviewService.createReview(userDetails.getUser(), itemId, reviewRequestDto);
 
         return new CommonDto<>(HttpStatus.CREATED.value(), "리뷰 등록에 성공하였습니다.", reviewResponseDto);
     }

@@ -39,6 +39,7 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderBookService {
@@ -201,19 +202,8 @@ public class OrderBookService {
         OrderBook orderBook = orderBookRepository.findByIdAndUser(orderId, user)
             .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
 
-        List<OrderItemResponseDto> orderItemResponseDtoList = new ArrayList<>();
-        for (OrderItem orderItem : orderBook.getOrderItemList()) {
-            OrderItemResponseDto orderItemResponseDto = OrderItemResponseDto.builder()
-                .orderItemId(orderItem.getId())
-                .price(orderItem.getPrice())
-                .total(orderItem.getPrice())
-                .createdAt(orderItem.getCreatedAt())
-                .bookName(orderItem.getBook().getBookName())
-                .quantity(orderItem.getQuantity())
-                .build();
+        List<OrderItemResponseDto> orderItemResponseDtoList = convertOrderItemsToDtoList(orderBook);
 
-            orderItemResponseDtoList.add(orderItemResponseDto);
-        }
 
         return OrderResponsDto.builder()
             .orderId(orderBook.getId())
@@ -302,7 +292,7 @@ public class OrderBookService {
         paymentRepository.save(payment);
 
 
-        String orderName = orderItemList.get(0)+" 외 "+(orderItemList.size()-1)+"개";
+        String orderName = orderItemList.get(0).getBook().getBookName()+" 외 "+(orderItemList.size()-1)+"개";
 
 
         return OrderPaymentResponseDto.builder()
@@ -311,8 +301,48 @@ public class OrderBookService {
                 .orderName(orderName)
                 .customerEmail(user.getEmail())
                 .customerName(user.getName())
-                .customerMobilePhone(user.getPhoneNumber())
+                .customerMobilePhone(user.getPhoneNumber().replaceAll("-", ""))
                 .paymentAmount(total.intValue())
+                .build();
+    }
+
+    public OrderBook getOrderByOrderNo(String orderNo){
+        return orderBookRepository.findByOrderNo(orderNo);
+    }
+
+    @Transactional
+    public Page<OrderGetsResponseDto> getOrders(User user, Pageable pageable) {
+        Page<OrderBook> orderBookList = orderBookRepository.findByUser(user, pageable);
+        return orderBookList.map(orderBook -> OrderGetsResponseDto.builder()
+            .orderId(orderBook.getId())
+            .orderNo(orderBook.getOrderNo())
+            .orderName(orderBook.getOrderItemList().get(0).getBook().getBookName()+" 외 "+(orderBook.getOrderItemList().size()-1)+"개")
+            .total(orderBook.getDiscountTotal().intValue())
+            .orderState(orderBook.getStatus())
+            .createdAt(orderBook.getCreatedAt())
+            .orderItemList(convertOrderItemsToDtoList(orderBook))
+            .build());
+    }
+
+    public List<OrderItemResponseDto> convertOrderItemsToDtoList(OrderBook orderBook) {
+        return orderBook.getOrderItemList().stream()
+                .map(this::convertToDto) // convertToDto 메서드 사용
+                .collect(Collectors.toList());
+    }
+    public OrderItemResponseDto convertToDto(OrderItem orderItem) {
+        Book book = orderItem.getBook();
+        String bookName = book != null ? book.getBookName() : "";
+        String photoImagePath = photoImageService.getPhotoImageUrl(book.getPhotoImage().getFilePath());
+
+        return OrderItemResponseDto.builder()
+                .orderItemId(orderItem.getId())
+                .bookName(bookName)
+                .price(orderItem.getPrice())
+                .quantity(orderItem.getQuantity())
+                .total(orderItem.getTotal())
+                .createdAt(orderItem.getCreatedAt())
+                .photoImagePath(photoImagePath)
+                .isReviewed(orderItem.isReviewed())
                 .build();
     }
 }
