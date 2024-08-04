@@ -14,10 +14,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v2
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
@@ -25,15 +25,21 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Docker images
+      - name: Build and push Backend Docker image
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: ./docker-compose.yml
+          file: ./Dockerfile
           push: true
-          tags: |
-            ${{ secrets.DOCKER_USERNAME }}/bookflex-backend:latest
-            ${{ secrets.DOCKER_USERNAME }}/bookflex-frontend:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/bookflex-backend:latest
+
+      - name: Build and push Frontend Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./frontend
+          file: ./bookflex/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/bookflex-frontend:latest
 
       - name: Deploy to Server
         uses: appleboy/ssh-action@v0.1.4
@@ -44,4 +50,5 @@ jobs:
           script: |
             docker pull ${{ secrets.DOCKER_USERNAME }}/bookflex-backend:latest
             docker pull ${{ secrets.DOCKER_USERNAME }}/bookflex-frontend:latest
-            docker-compose -f /path/to/docker-compose.yml up -d
+            cd /path/to/your/docker-compose-directory
+            docker-compose up -d
