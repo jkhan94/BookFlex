@@ -4,6 +4,7 @@ FROM openjdk:17-jdk-slim
 # 2. 작업 디렉토리 설정
 WORKDIR /app
 
+
 # 3. JAR 파일을 컨테이너에 복사
 COPY build/libs/BookFlex-0.0.1-SNAPSHOT.jar /app/BookFlex.jar
 
