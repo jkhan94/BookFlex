@@ -1,15 +1,17 @@
-# 1. OpenJDK 17을 기반으로 이미지를 생성
-FROM openjdk:17-jdk-slim
+# Use an official Java runtime as a parent image
+FROM openjdk:17-jdk
 
-# 2. 작업 디렉토리 설정
+# Set the working directory in the container
 WORKDIR /app
 
+# Copy the application JAR file into the container
+COPY build/libs/BookFlex-0.0.1-SNAPSHOT.jar /app/
 
-# 3. JAR 파일을 컨테이너에 복사
-COPY build/libs/BookFlex-0.0.1-SNAPSHOT.jar /app/BookFlex.jar
+# Verify the file was copied
+RUN ls -l /app/
 
-# 4. 애플리케이션 실행
-ENTRYPOINT ["java", "-jar", "/app/BookFlex.jar"]
-
-# 5. 애플리케이션이 사용하는 포트 노출
+# Expose port 8080
 EXPOSE 8080
+
+# Define the command to run the application
+CMD ["java", "-jar", "BookFlex-0.0.1-SNAPSHOT.jar"]
