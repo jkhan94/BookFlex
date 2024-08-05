@@ -54,8 +54,8 @@ jobs:
           port: 22
           script: |
             # Pull the latest Docker images
-            docker pull your-username/bookflex-backend:latest
-            docker pull your-username/bookflex-frontend:latest
+            docker pull dockerdavilju/bookflex-backend:latest
+            docker pull dockerdavilju/bookflex-frontend:latest
 
             # Stop and remove existing containers
             docker stop bookflex-backend || true
@@ -67,9 +67,10 @@ jobs:
             docker run -d --name bookflex-backend \
               -e AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }} \
               -e AWS_BUCKET_URL=${{ secrets.AWS_BUCKET_URL }} \
+              -e AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }} \
               -p 8080:8080 \
-              your-username/bookflex-backend:latest
+              dockerdavilju/bookflex-backend:latest
 
             docker run -d --name bookflex-frontend \
               -p 80:3000 \
-              your-username/bookflex-frontend:latest
+              dockerdavilju/bookflex-frontend:latest
