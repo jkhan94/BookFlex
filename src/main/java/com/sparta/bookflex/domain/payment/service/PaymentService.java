@@ -17,9 +17,11 @@ import com.sparta.bookflex.domain.payment.enums.PayType;
 import com.sparta.bookflex.domain.payment.enums.PaymentStatus;
 import com.sparta.bookflex.domain.payment.repository.PaymentRepository;
 import com.sparta.bookflex.domain.sale.entity.Sale;
+import com.sparta.bookflex.domain.sale.repository.SaleRepository;
 import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.service.AuthService;
 import jakarta.mail.MessagingException;
+import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,6 +40,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PaymentService {
 
     private String tossSecretKey="sk_test_w5lNQylNqa5lNQe013Nq";
@@ -47,6 +50,7 @@ public class PaymentService {
     private final OrderBookService orderBookService;
     private final ObjectMapper objectMapper;
     private final CouponService couponService;
+    private final SaleRepository saleRepository;
 
     @Value("${payment.toss.success_url}")
     private String successUrl;
@@ -56,18 +60,7 @@ public class PaymentService {
 
 
 
-    @Autowired
-    public PaymentService(AuthService authService, PaymentRepository paymentRepository,
-                          OrderBookService orderBookService,
-                          RestTemplate restTemplate, ObjectMapper objectMapper,
-                             CouponService couponService) {
-        this.restTemplate = restTemplate;
-        this.authService = authService;
-        this.paymentRepository = paymentRepository;
-        this.orderBookService = orderBookService;
-        this.objectMapper = objectMapper;
-        this.couponService = couponService;
-    }
+
 
 //    @Transactional
 //    public String createPayment(TossPaymentRequestDto requestDto, User user) {
@@ -208,6 +201,7 @@ public class PaymentService {
         List<Sale> saleList = orderBook.getSaleList();
         for(Sale sale : saleList){
             sale.updateStatus(OrderState.SALE_COMPLETED);
+            saleRepository.save(sale);
         }
 
         //emailService.sendEmail(EmailMessage.builder()

@@ -1,6 +1,8 @@
 version: '3.8'
+
 services:
   backend:
+    container_name: bookflex-backend
     build:
       context: .
       dockerfile: Dockerfile
@@ -10,8 +12,8 @@ services:
       - .env
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/bookflex
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=example
+      - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
 
       # JPA Settings
       - SPRING_JPA_SHOW_SQL=false
@@ -35,27 +37,34 @@ services:
       - CLOUD_AWS_CREDENTIALS_ACCESS_KEY=${AWS_ACCESS_KEY}
       - CLOUD_AWS_CREDENTIALS_SECRET_KEY=${AWS_SECRET_KEY}
       - CLOUD_AWS_S3_BUCKET_NAME=${AWS_BUCKET_NAME}
-      - CLOUD_AWS_REGION_STATIC=ap-northeast-2
+      - CLOUD_AWS_REGION_STATIC=ap-southeast-2
       - UPLOAD_PATH=${AWS_BUCKET_URL}
     depends_on:
       - db
+    restart: unless-stopped
 
   db:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: bookflex
+    container_name: bookflex-db
+    image: mysql:8.0.28
+    platform: linux/x86_64
+    restart: always
     ports:
-      - "3306:3306"
+      - "13306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: example  # 루트 비밀번호 설정
+      MYSQL_DATABASE: bookflex
+      TZ: Asia/Seoul
     volumes:
       - db-data:/var/lib/mysql
 
   frontend:
+    container_name: bookflex-frontend
     build:
       context: ./bookflex
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    restart: unless-stopped
 
 volumes:
   db-data:

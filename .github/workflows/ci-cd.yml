@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # GitHub Actions의 가상 환경
 
     steps:
       - name: Checkout code
@@ -36,7 +36,7 @@ jobs:
       - name: Build and push Frontend Docker image
         uses: docker/build-push-action@v3
         with:
-          context: .
+          context: ./bookflex
           file: ./bookflex/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/bookflex-frontend:latest
@@ -51,4 +51,5 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/bookflex-backend:latest
             docker pull ${{ secrets.DOCKER_USERNAME }}/bookflex-frontend:latest
             cd /path/to/your/docker-compose-directory
+            docker-compose down
             docker-compose up -d
