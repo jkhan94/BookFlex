@@ -1,5 +1,6 @@
 package com.sparta.bookflex.domain.user.repository;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.bookflex.domain.user.entity.QUser;
@@ -13,6 +14,7 @@ import org.thymeleaf.util.StringUtils;
 import java.util.List;
 import java.util.Optional;
 
+import static com.sparta.bookflex.domain.sale.entity.QSale.sale;
 import static com.sparta.bookflex.domain.user.entity.QUser.user;
 
 @RequiredArgsConstructor
@@ -30,11 +32,13 @@ public class UserRepositoryQueryImpl implements UserRepositoryQuery {
                 .fetchOne());
     }
 
-    public Page<User> getUsers(String username, Pageable pageable) {
-        List<User> result = jpaQueryFactory.select(user)
+    public Page<Tuple> getUsers(String username, Pageable pageable) {
+        List<Tuple> result = jpaQueryFactory.select(user.id, user.createdAt, user.username, user.name, user.grade, sale.total.sum() )
                 .from(user)
+                .join(sale).on(user.id.eq(sale.user.id))
                 .where(eqUsername(username))
                 .orderBy(user.id.asc())
+                .groupBy(user.id)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();

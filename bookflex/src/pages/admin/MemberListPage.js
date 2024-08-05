@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import './MemberListPage.css';
+import axiosInstance from "../../api/axiosInstance";
 
 function MemberListPage() {
     const [members, setMembers] = useState([]);
@@ -13,7 +14,7 @@ function MemberListPage() {
     }, [currentPage, searchTerm]);
 
     const fetchMembers = (page = 1, username = '') => {
-        axios.get('/users/all', {
+        axiosInstance.get('/users/all', {
             params: {
                 page: page,
                 size: 10,
@@ -66,9 +67,9 @@ function MemberListPage() {
                 <tr>
                     <th>회원번호</th>
                     <th>회원ID</th>
+                    <th>이름</th>
                     <th>가입일</th>
                     <th>구매금액</th>
-                    <th>배송액</th>
                     <th>회원등급</th>
                 </tr>
                 </thead>
@@ -76,10 +77,10 @@ function MemberListPage() {
                 {members.map(member => (
                     <tr key={member.id}>
                         <td>{member.id}</td>
-                        <td>{member.userId}</td>
-                        <td>{new Date(member.joinDate).toLocaleDateString('ko-KR')}</td>
-                        <td>{member.purchaseAmount.toLocaleString()}원</td>
-                        <td>{member.shippingAmount.toLocaleString()}원</td>
+                        <td>{member.username}</td>
+                        <td>{member.name}</td>
+                        <td>{new Date(member.createdAt).toLocaleDateString('ko-KR')}</td>
+                        <td>{member.purchaseTotal}원</td>
                         <td>{member.grade}</td>
                     </tr>
                 ))}
