@@ -52,10 +52,24 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          debug: true
           script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/bookflex-backend:latest
-            docker pull ${{ secrets.DOCKER_USERNAME }}/bookflex-frontend:latest
-            cd /path/to/your/docker-compose-directory
-            docker-compose down
-            docker-compose up -d
+            # Pull the latest Docker images
+            docker pull your-username/bookflex-backend:latest
+            docker pull your-username/bookflex-frontend:latest
+
+            # Stop and remove existing containers
+            docker stop bookflex-backend || true
+            docker rm bookflex-backend || true
+            docker stop bookflex-frontend || true
+            docker rm bookflex-frontend || true
+
+            # Run new containers with environment variables
+            docker run -d --name bookflex-backend \
+              -e AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }} \
+              -e AWS_BUCKET_URL=${{ secrets.AWS_BUCKET_URL }} \
+              -p 8080:8080 \
+              your-username/bookflex-backend:latest
+
+            docker run -d --name bookflex-frontend \
+              -p 80:3000 \
+              your-username/bookflex-frontend:latest
