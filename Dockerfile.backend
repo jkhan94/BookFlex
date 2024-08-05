@@ -12,7 +12,7 @@ ARG AWS_ACCESS_KEY
 # Set environment variables
 ENV AWS_SECRET_KEY=${AWS_SECRET_KEY}
 ENV AWS_BUCKET_URL=${AWS_BUCKET_URL}
-ENV ARG AWS_ACCESS_KEY=${ARG AWS_ACCESS_KEY}
+ENV AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
 
 # Copy the application JAR file into the container
 COPY build/libs/BookFlex-0.0.1-SNAPSHOT.jar /app/
