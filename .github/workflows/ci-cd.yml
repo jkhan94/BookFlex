@@ -51,6 +51,8 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          debug: true
           script: |
             docker pull ${{ secrets.DOCKER_USERNAME }}/bookflex-backend:latest
             docker pull ${{ secrets.DOCKER_USERNAME }}/bookflex-frontend:latest
