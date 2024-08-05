@@ -32,6 +32,10 @@ jobs:
           file: ./Dockerfile.backend
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/bookflex-backend:latest
+          build-args: |
+            AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }}
+            AWS_BUCKET_URL=${{ secrets.AWS_BUCKET_URL }}
+            AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }}
 
       - name: Build and push Frontend Docker image
         uses: docker/build-push-action@v3
