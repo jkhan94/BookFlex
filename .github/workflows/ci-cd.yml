@@ -29,15 +29,15 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: ./Dockerfile
+          file: ./Dockerfile.backend
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/bookflex-backend:latest
 
       - name: Build and push Frontend Docker image
         uses: docker/build-push-action@v3
         with:
-          context: .
-          file: ./bookflex/Dockerfile
+          context: ./bookflex
+          file: ./Dockerfile.frontend
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/bookflex-frontend:latest
 

@@ -5,7 +5,7 @@ services:
     container_name: bookflex-backend
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.backend
     ports:
       - "8080:8080"
     env_file:
@@ -14,31 +14,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/bookflex
       - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
       - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
-
-      # JPA Settings
-      - SPRING_JPA_SHOW_SQL=false
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - SPRING_JPA_DATABASE_PLATFORM=org.hibernate.dialect.MySQLDialect
-      - SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL=false
-      - SPRING_JPA_PROPERTIES_HIBERNATE_USE_SQL_COMMENTS=true
-      - SPRING_JPA_OPEN_IN_VIEW=false
-
-      # JWT Settings
-      - JWT_SECRET_KEY=7JWI64WV7ZWY7IS47JqU6rmA6r6466+47J6F64uI64uk7K2I6r647K2I6r647K2I6r647K2I6r64
-      - JWT_ACCESS_TIME=1800000
-      - JWT_REFRESH_TIME=1209600000
-
-      # Admin Token
-      - ADMIN_TOKEN=AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC
-
-      # AWS S3 Settings
-      - SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE=8MB
-      - SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE=128MB
-      - CLOUD_AWS_CREDENTIALS_ACCESS_KEY=${AWS_ACCESS_KEY}
-      - CLOUD_AWS_CREDENTIALS_SECRET_KEY=${AWS_SECRET_KEY}
-      - CLOUD_AWS_S3_BUCKET_NAME=${AWS_BUCKET_NAME}
-      - CLOUD_AWS_REGION_STATIC=ap-southeast-2
-      - UPLOAD_PATH=${AWS_BUCKET_URL}
+      # ... (other environment variables)
     depends_on:
       - db
     restart: unless-stopped
@@ -51,7 +27,7 @@ services:
     ports:
       - "13306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: example  # 루트 비밀번호 설정
+      MYSQL_ROOT_PASSWORD: example
       MYSQL_DATABASE: bookflex
       TZ: Asia/Seoul
     volumes:
@@ -61,7 +37,7 @@ services:
     container_name: bookflex-frontend
     build:
       context: ./bookflex
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.frontend
     ports:
       - "3000:3000"
     restart: unless-stopped
