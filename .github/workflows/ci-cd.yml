@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # GitHub Actions의 가상 환경
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -54,8 +54,8 @@ jobs:
           port: 22
           script: |
             # Pull the latest Docker images
-            docker pull dockerdavilju/bookflex-backend:latest
-            docker pull dockerdavilju/bookflex-frontend:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/bookflex-backend:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/bookflex-frontend:latest
 
             # Stop and remove existing containers
             docker stop bookflex-backend || true
@@ -69,8 +69,8 @@ jobs:
               -e AWS_BUCKET_URL=${{ secrets.AWS_BUCKET_URL }} \
               -e AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }} \
               -p 8080:8080 \
-              dockerdavilju/bookflex-backend:latest
+              ${{ secrets.DOCKER_USERNAME }}/bookflex-backend:latest
 
             docker run -d --name bookflex-frontend \
               -p 80:3000 \
-              dockerdavilju/bookflex-frontend:latest
+              ${{ secrets.DOCKER_USERNAME }}/bookflex-frontend:latest
