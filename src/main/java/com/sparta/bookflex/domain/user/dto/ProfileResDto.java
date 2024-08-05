@@ -1,6 +1,7 @@
 package com.sparta.bookflex.domain.user.dto;
 
 import com.sparta.bookflex.domain.user.enums.UserGrade;
+import com.sparta.bookflex.domain.user.enums.UserState;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -20,4 +21,5 @@ public class ProfileResDto {
     private UserGrade grade;
     private LocalDate birthday;
     private LocalDateTime createdAt;
+    private String userState;
 }

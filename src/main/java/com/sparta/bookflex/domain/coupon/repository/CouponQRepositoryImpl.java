@@ -22,7 +22,7 @@ public class CouponQRepositoryImpl implements CouponQRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<Coupon> findAvailableByUserGrade(User user, Pageable pageable) {
+    public Page<Coupon> findAvailableByUserGrade(User user, Pageable pageable, List<Long> issuedCouponIds) {
         BooleanBuilder builder = new BooleanBuilder();
         builder.and(coupon.eligibleGrade.eq(user.getGrade()));
         builder.and(coupon.couponStatus.eq(CouponStatus.AVAILABLE));
@@ -54,6 +54,10 @@ public class CouponQRepositoryImpl implements CouponQRepository {
             }
         }
 
+        if (!issuedCouponIds.isEmpty()) {
+            builder.and(coupon.id.notIn(issuedCouponIds));
+        }
+
         List<Coupon> result = queryFactory.select(coupon)
                 .from(coupon)
                 .where(builder)
@@ -67,13 +71,15 @@ public class CouponQRepositoryImpl implements CouponQRepository {
                 .fetch();
 
         return new PageImpl<>(result, pageable, count.size());
+
     }
 
     @Override
     @Transactional
-    public void deleteExpiredCoupon() {
+    public void updateIssueExpiredCoupon() {
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
-        queryFactory.delete(coupon)
+        queryFactory.update(coupon)
+                .set(coupon.couponStatus, CouponStatus.NOT_AVAILABLE)
                 .where(coupon.expirationDate.before(now)
                         .and(coupon.couponType.notIn(CouponType.BIRTHDAY, CouponType.GRADE)))
                 .execute();

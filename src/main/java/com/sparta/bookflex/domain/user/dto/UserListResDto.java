@@ -1,6 +1,7 @@
 package com.sparta.bookflex.domain.user.dto;
 
 import com.sparta.bookflex.domain.user.enums.UserGrade;
+import com.sparta.bookflex.domain.user.enums.UserState;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +17,7 @@ public class UserListResDto {
     private String username;
     private String name;
     private UserGrade grade;
+    private String state;
     private BigDecimal purchaseTotal;
 
     @Builder
@@ -24,12 +26,14 @@ public class UserListResDto {
                           String username,
                           String name,
                           UserGrade grade,
+                          String state,
                           BigDecimal purchaseTotal) {
         this.id = id;
         this.createdAt = createdAt;
         this.username = username;
         this.name = name;
         this.grade = grade;
+        this.state = state;
         this.purchaseTotal = purchaseTotal;
     }
 

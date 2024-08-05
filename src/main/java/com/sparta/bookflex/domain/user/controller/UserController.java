@@ -61,14 +61,30 @@ public class UserController {
 
     @GetMapping("/all")
     public ResponseEntity<Page<UserListResDto>> getUsers(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
-                                                @RequestParam(name = "size", required = false, defaultValue = "10") int size,
-                                                @RequestParam(name = "direction", required = false, defaultValue = "true") boolean isAsc,
-                                                @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
-                                                @RequestParam(name = "username", required = false) String username) {
+                                                         @RequestParam(name = "size", required = false, defaultValue = "10") int size,
+                                                         @RequestParam(name = "direction", required = false, defaultValue = "true") boolean isAsc,
+                                                         @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
+                                                         @RequestParam(name = "username", required = false) String username) {
 
-       Page<UserListResDto> result = userService.getUsers(page, size, isAsc, sortBy, username);
+        Page<UserListResDto> result = userService.getUsers(page, size, isAsc, sortBy, username);
 
         return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<ProfileResDto> getUsers(@PathVariable(value = "userId") Long userId) {
+
+        ProfileResDto result = userService.getUserProfile(userId);
+
+        return ResponseEntity.ok().body(result);
+    }
+
+    @PutMapping("/{userId}")
+    public void editUserInfo(@PathVariable(value = "userId") Long userId,
+                             @RequestBody UserEditRequestDto userEditRequestDto) {
+
+        userService.editUserInfo(userId, userEditRequestDto);
+
     }
 
 

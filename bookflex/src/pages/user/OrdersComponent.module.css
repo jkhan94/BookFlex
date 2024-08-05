@@ -1,0 +1,98 @@
+/* OrdersComponent.module.css */
+.orderCard {
+    width: 500px; /* 너비를 좁히기 위한 값 */
+    height: auto; /* 높이를 자동으로 조절 */
+    margin: 10px auto; /* 카드 중앙 정렬 및 여백 추가 */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.orderHeader {
+    display: flex;
+    flex-direction: column;
+    cursor: default; /* 클릭할 필요 없음 */
+}
+
+.orderHeaderTop {
+    display: flex;
+    justify-content: space-between;
+}
+
+.orderHeaderBottom {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.orderNo {
+    font-weight: bold;
+}
+
+.orderStatus {
+    color: #ff6f61; /* 상태에 따라 색상 변경 */
+}
+
+.orderDate {
+    color: #888;
+}
+
+.toggleButton {
+    background: none;
+    border: none;
+    cursor: default; /* 클릭할 필요 없음 */
+    font-size: 16px;
+}
+
+.arrowDown {
+    display: none; /* 화살표 제거 */
+}
+
+.orderItems {
+    display: block; /* 기본적으로 보이도록 설정 */
+    padding-top: 10px;
+}
+
+.orderItem {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.orderItem img {
+    width: 50px; /* 이미지 크기 조정 */
+    height: auto;
+    margin-right: 10px;
+}
+
+/* OrdersComponent.module.css */
+.reviewButton {
+    background-color: #007bff; /* 활성화된 상태의 배경색 */
+    color: white; /* 텍스트 색상 */
+    border: none; /* 기본 테두리 제거 */
+    border-radius: 4px; /* 모서리 둥글게 */
+    padding: 5px 10px; /* 내부 여백 설정 */
+    cursor: pointer; /* 클릭할 수 있는 상태로 표시 */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* 그림자 추가 */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 전환 효과 */
+    font-size: 12px; /* 폰트 크기 설정 */
+    margin-left: 10px; /* 버튼과 텍스트 사이 여백 설정 */
+}
+
+.reviewButton:hover {
+    background-color: #0056b3; /* 배경 색상 변경 */
+}
+
+.reviewButton:active {
+    background-color: #004094; /* 배경 색상 어두워짐 */
+}
+
+.reviewButton.disabled {
+    background-color: #d3d3d3; /* 비활성화 상태의 배경색 */
+    color: #a9a9a9; /* 비활성화 상태의 텍스트 색상 */
+    cursor: not-allowed; /* 클릭할 수 없는 상태로 표시 */
+    box-shadow: none; /* 비활성화 상태에서는 그림자 없음 */
+}
+

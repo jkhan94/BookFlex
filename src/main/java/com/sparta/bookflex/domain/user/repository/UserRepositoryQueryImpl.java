@@ -33,7 +33,7 @@ public class UserRepositoryQueryImpl implements UserRepositoryQuery {
     }
 
     public Page<Tuple> getUsers(String username, Pageable pageable) {
-        List<Tuple> result = jpaQueryFactory.select(user.id, user.createdAt, user.username, user.name, user.grade, sale.total.sum() )
+        List<Tuple> result = jpaQueryFactory.select(user.id, user.createdAt, user.username, user.name, user.grade, sale.total.sum(), user.state )
                 .from(user)
                 .join(sale).on(user.id.eq(sale.user.id))
                 .where(eqUsername(username))

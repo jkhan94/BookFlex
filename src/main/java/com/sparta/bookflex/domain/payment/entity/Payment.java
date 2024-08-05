@@ -75,10 +75,13 @@ public class Payment extends Timestamped {
 
     public void updateStatus(PaymentStatus status) {
         this.status = status;
-
     }
 
     public void updateIsSuccessYN(boolean b) {
         this.paySuccessYN = b;
+    }
+
+    public void updatePayToken(String payToken) {
+        this.payToken = payToken;
     }
 }

@@ -125,8 +125,9 @@ public class User extends Timestamped {
                 .phoneNumber(user.getPhoneNumber())
                 .nickname(user.getNickname())
                 .grade(user.getGrade())
-                .birthday(user.birthDay)
+                .birthday(user.getBirthDay())
                 .createdAt(user.getCreatedAt())
+                .userState(user.getState().getStateString())
                 .build();
     }
 

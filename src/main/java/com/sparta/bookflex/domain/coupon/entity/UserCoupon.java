@@ -46,7 +46,6 @@ public class UserCoupon extends Timestamped {
 
     @ManyToOne
     @JoinColumn(name = "coupon_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Coupon coupon;
 
     @Builder
@@ -88,6 +87,7 @@ public class UserCoupon extends Timestamped {
         this.isUsed = true;
         this.usedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
     }
+
 }
 
 

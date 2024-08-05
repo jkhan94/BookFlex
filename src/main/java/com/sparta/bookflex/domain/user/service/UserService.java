@@ -6,6 +6,7 @@ import com.sparta.bookflex.common.exception.ErrorCode;
 import com.sparta.bookflex.domain.user.dto.*;
 import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.enums.UserGrade;
+import com.sparta.bookflex.domain.user.enums.UserState;
 import com.sparta.bookflex.domain.user.repository.UserRepository;
 import com.sparta.bookflex.domain.user.repository.UserRepositoryQueryImpl;
 import lombok.RequiredArgsConstructor;
@@ -89,8 +90,24 @@ public class UserService {
                         .name(tuple.get(3, String.class))
                         .grade(tuple.get(4, UserGrade.class))
                         .purchaseTotal(tuple.get(5, BigDecimal.class).setScale(0, RoundingMode.FLOOR))
+                        .state(tuple.get(6, UserState.class).getStateString())
                         .build());
 
         return userList;
+    }
+
+    public ProfileResDto getUserProfile(Long userId) {
+        User user = getUser(userId);
+        return getProfile(user);
+
+    }
+
+    @Transactional
+    public void editUserInfo(Long userId, UserEditRequestDto userEditRequestDto) {
+        User user = getUser(userId);
+
+        user.updateState(userEditRequestDto.getState());
+        user.updateGrade(userEditRequestDto.getGrade());
+
     }
 }

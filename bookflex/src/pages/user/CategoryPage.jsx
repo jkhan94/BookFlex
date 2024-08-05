@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../api/axiosInstance';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import styles from './CategoryPage.module.css'; // CSS 모듈 사용
 
 const CategoryPage = () => {
@@ -55,7 +55,9 @@ const CategoryPage = () => {
                         <div key={book.bookId} className={styles.bookCard}>
                             <img src={book.photoImagePath} alt={book.bookName} className={styles.bookImage} />
                             <div className={styles.bookDetails}>
-                                <h2 className={styles.CategoryBookTitle}>{book.bookName}</h2>
+                                <Link to={`/books/${book.bookId}`} className={styles.bookLink}>
+                                    <h2 className={styles.CategoryBookTitle}>{book.bookName}</h2>
+                                </Link>
                                 <p className={styles.bookAuthor}>Author: {book.author}</p>
                                 <p className={styles.bookPrice}>Price: ${book.price.toFixed(2)}</p>
                             </div>

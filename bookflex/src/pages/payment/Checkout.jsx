@@ -75,7 +75,7 @@ export function CheckoutPage() {
         // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
         // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
         try {
-            await paymentWidget?.requestPayment({
+            await paymentWidget.requestPayment({
                 orderId: paymentInfo.orderNo,
                 orderName: paymentInfo.orderName,
                 customerName: paymentInfo.customerName,
@@ -92,12 +92,21 @@ export function CheckoutPage() {
     return (
         <div>
             {/* 할인 쿠폰 */}
+            <h1>결제 페이지</h1>
+            <div>
+                <h2>주문 정보</h2>
+                <p><strong>주문 번호:</strong> {paymentInfo.orderNo}</p>
+                <p><strong>주문명:</strong> {paymentInfo.orderName}</p>
+                <p><strong>결제 금액:</strong> ₩{paymentInfo.price.toLocaleString()}</p>
+            </div>
 
             {/* 결제 UI, 이용약관 UI 영역 */}
-            <div id="payment-widget" />
-            <div id="agreement" />
+            <div id="payment-widget"/>
+            <div id="agreement"/>
             {/* 결제하기 버튼 */}
             <button onClick={handlePaymentRequest}>결제하기</button>
         </div>
     );
 }
+
+export default CheckoutPage

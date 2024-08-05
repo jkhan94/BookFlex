@@ -24,6 +24,8 @@ public class QOrderBook extends EntityPathBase<OrderBook> {
 
     public final com.sparta.bookflex.common.utill.QTimestamped _super = new com.sparta.bookflex.common.utill.QTimestamped(this);
 
+    public final StringPath carrier = createString("carrier");
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
@@ -46,9 +48,13 @@ public class QOrderBook extends EntityPathBase<OrderBook> {
 
     public final ListPath<com.sparta.bookflex.domain.sale.entity.Sale, com.sparta.bookflex.domain.sale.entity.QSale> saleList = this.<com.sparta.bookflex.domain.sale.entity.Sale, com.sparta.bookflex.domain.sale.entity.QSale>createList("saleList", com.sparta.bookflex.domain.sale.entity.Sale.class, com.sparta.bookflex.domain.sale.entity.QSale.class, PathInits.DIRECT2);
 
+    public final com.sparta.bookflex.domain.shipment.entity.QShipment shipment;
+
     public final EnumPath<com.sparta.bookflex.domain.orderbook.emuns.OrderState> status = createEnum("status", com.sparta.bookflex.domain.orderbook.emuns.OrderState.class);
 
     public final NumberPath<java.math.BigDecimal> total = createNumber("total", java.math.BigDecimal.class);
+
+    public final StringPath trackingNumber = createString("trackingNumber");
 
     public final com.sparta.bookflex.domain.user.entity.QUser user;
 
@@ -72,6 +78,7 @@ public class QOrderBook extends EntityPathBase<OrderBook> {
 
     public QOrderBook(Class<? extends OrderBook> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.shipment = inits.isInitialized("shipment") ? new com.sparta.bookflex.domain.shipment.entity.QShipment(forProperty("shipment"), inits.get("shipment")) : null;
         this.user = inits.isInitialized("user") ? new com.sparta.bookflex.domain.user.entity.QUser(forProperty("user"), inits.get("user")) : null;
         this.userCoupon = inits.isInitialized("userCoupon") ? new com.sparta.bookflex.domain.coupon.entity.QUserCoupon(forProperty("userCoupon"), inits.get("userCoupon")) : null;
     }

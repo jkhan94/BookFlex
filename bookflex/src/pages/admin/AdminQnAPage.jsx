@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 import axiosInstance from "../../api/axiosInstance";
 import styles from "../admin/adminqna.module.css";
 
 // QnaItem 컴포넌트 정의
-const QnaItem = ({ qna, onReplyClick, onDeleteClick }) => (
+const QnaItem = ({qna, onReplyClick, onDeleteClick}) => (
     <tr>
         <td>{qna.qnaType}</td>
         <td>{qna.inquiry}</td>
@@ -27,8 +27,8 @@ const AdminQnAPage = () => {
     const [qnaList, setQnaList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true); // 더 많은 데이터가 있는지 확인
+    const [currentPage, setCurrentPage] = useState(1); // 1부터 시작
+    const [totalPages, setTotalPages] = useState(1); // 전체 페이지 수
     const [selectedQna, setSelectedQna] = useState(null); // 선택된 QnA 저장
     const [replyText, setReplyText] = useState('');
     const [isReplyModalOpen, setIsReplyModalOpen] = useState(false); // 팝업 열기/닫기 상태
@@ -51,9 +51,9 @@ const AdminQnAPage = () => {
                 }
             });
 
-            if (Array.isArray(response.data)) {
-                setQnaList(response.data);
-                setHasMore(response.data.length === PAGE_SIZE);
+            if (response.data) {
+                setQnaList(response.data.content);
+                setTotalPages(response.data.totalPages);
             } else {
                 throw new Error('API response is not an array');
             }
@@ -75,7 +75,7 @@ const AdminQnAPage = () => {
     };
 
     const handleNextPage = () => {
-        if (hasMore) {
+        if (currentPage < totalPages) {
             setCurrentPage(currentPage + 1);
         }
     };
@@ -101,7 +101,7 @@ const AdminQnAPage = () => {
 
         const token = localStorage.getItem('Authorization');
         try {
-            await axiosInstance.post(`/qnas/admin/${selectedQna.qnaId}`, { reply: replyText }, {
+            await axiosInstance.post(`/qnas/admin/${selectedQna.qnaId}`, {reply: replyText}, {
                 headers: {
                     Authorization: token,
                     'Content-Type': 'application/json',
@@ -153,9 +153,10 @@ const AdminQnAPage = () => {
                 <tr>
                     <th>문의 유형</th>
                     <th>문의 내용</th>
-                    <th>생성일</th>
+                    <th>문의 접수일</th>
                     <th>답변</th>
-                    <th>작업</th> {/* 작업 열 추가 */}
+                    <th>작업</th>
+                    {/* 작업 열 추가 */}
                 </tr>
                 </thead>
                 <tbody>
@@ -170,9 +171,9 @@ const AdminQnAPage = () => {
                 </tbody>
             </table>
             <div className={styles.pagination}>
-                <button onClick={handlePreviousPage} disabled={currentPage === 1}>Previous</button>
-                <span>Page {currentPage}</span>
-                <button onClick={handleNextPage} disabled={!hasMore}>Next</button>
+                <button onClick={handlePreviousPage} disabled={currentPage === 1}>이전</button>
+                <span>페이지 {currentPage} / {totalPages}</span>
+                <button onClick={handleNextPage} disabled={currentPage === totalPages}>다음</button>
             </div>
 
             {isReplyModalOpen && (
