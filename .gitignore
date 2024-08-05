@@ -1,5 +1,6 @@
 HELP.md
 .gradle
+!build/libs/
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
@@ -16,7 +17,7 @@ build/
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
-!build/libs/
+
 ### IntelliJ IDEA ###
 .idea
 *.iws
