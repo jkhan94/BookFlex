@@ -1,0 +1,72 @@
+/* src/pages/admin/AdminDashboard.module.css */
+
+.dashboardContainer {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #2c3e50; /* 다크 블루 색상 */
+    color: white;
+    padding: 20px;
+}
+
+.sidebarTitle {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.navList {
+    list-style: none;
+    padding: 0;
+}
+
+.navList li {
+    margin-bottom: 10px;
+}
+
+.navList li a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.navList li a:hover {
+    color: #1abc9c; /* 라이트 그린 색상 */
+}
+
+.mainContent {
+    flex: 1;
+    padding: 20px;
+    background-color: #ecf0f1; /* 라이트 그레이 색상 */
+    overflow-y: auto;
+}
+
+main h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* 로그아웃 버튼 스타일 */
+.logoutButton {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: #f5f5dc; /* 베이지색 */
+    color: #333; /* 다크 텍스트 색상 */
+    font-size: 16px;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    margin-top: auto; /* 사이드바 하단으로 밀어내기 */
+    transition: all 0.3s ease; /* 모든 전환 효과 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 기본 입체감 추가 */
+}
+
+.logoutButton:hover {
+    background-color: #e0e0e0; /* 호버 시 더 밝은 베이지색 */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* 호버 시 입체감 증가 */
+    transform: translateY(-2px); /* 버튼을 약간 위로 이동 */
+}

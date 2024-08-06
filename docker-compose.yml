@@ -1,14 +1,46 @@
-version: "3.8"
+version: '3.8'
+
 services:
+  backend:
+    container_name: bookflex-backend
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/bookflex
+      - SPRING_DATASOURCE_USERNAME=${MYSQL_USER}
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}
+      # ... (other environment variables)
+    depends_on:
+      - db
+    restart: unless-stopped
+
   db:
+    container_name: bookflex-db
     image: mysql:8.0.28
     platform: linux/x86_64
     restart: always
     ports:
       - "13306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: bookflex
       TZ: Asia/Seoul
+    volumes:
+      - db-data:/var/lib/mysql
+
+  frontend:
+    container_name: bookflex-frontend
+    build:
+      context: ./bookflex
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+volumes:
+  db-data:

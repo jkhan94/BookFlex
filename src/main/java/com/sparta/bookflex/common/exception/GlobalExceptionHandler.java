@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -46,6 +47,16 @@ public class GlobalExceptionHandler {
 	 		HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
 	 		request.getRequestURI()
 	 	);
+	 }
+
+	 @ExceptionHandler(AuthenticationException.class)
+	 public ResponseEntity<?> handleAuthenticationException(AuthenticationException ex) {
+		 // Custom handling logic
+		 return EnvelopeResponse.wrapError(
+			 HttpStatus.UNAUTHORIZED,
+			 ex.getMessage(),
+			 null
+		 );
 	 }
 }
 

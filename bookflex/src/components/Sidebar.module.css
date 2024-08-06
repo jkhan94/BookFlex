@@ -1,0 +1,19 @@
+.sidebar {
+    width: 200px;
+    background-color: #f8f8f8;
+    padding: 20px;
+}
+
+.navList {
+    list-style-type: none;
+    padding: 0;
+}
+
+.navItem {
+    margin-bottom: 10px;
+}
+
+.navLink {
+    color: #333;
+    text-decoration: none;
+}

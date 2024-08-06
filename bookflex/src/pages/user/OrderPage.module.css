@@ -1,0 +1,123 @@
+.container {
+    /* 기존 스타일 */
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.orderContainer {
+    /* 기존 스타일 */
+    margin-bottom: 30px;
+}
+
+.orderItem {
+    /* 기존 스타일 */
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.itemImage {
+    /* 기존 스타일 */
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-right: 20px;
+}
+
+.itemDetails {
+    /* 기존 스타일 */
+    flex: 1;
+}
+
+.itemName {
+    /* 기존 스타일 */
+    font-size: 1.2em;
+    margin-bottom: 5px;
+}
+
+.itemPrice {
+    /* 기존 스타일 */
+    color: #555;
+}
+
+.total, .finalTotal {
+    /* 기존 스타일 */
+    font-size: 1.4em;
+    margin-top: 20px;
+}
+
+.couponList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.couponItem {
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    transition: transform 0.3s, background-color 0.3s;
+    display: flex;
+    align-items: center;
+}
+
+.couponItem:hover {
+    transform: translateY(-5px);
+}
+
+.couponItem.selected {
+    background-color: #e0f7fa;
+    border-color: #00acc1;
+}
+
+.couponDisabled {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.couponName {
+    font-weight: bold;
+    flex: 1;
+}
+
+.couponDetails {
+    margin-top: 5px;
+}
+
+.couponMinPrice {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.9em;
+    color: #555;
+}
+
+.couponValidity {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.8em;
+    color: #888;
+}
+
+.couponLabelDisabled {
+    pointer-events: none;
+}
+
+.payBtn {
+    /* 기존 스타일 */
+    padding: 15px 30px;
+    background-color: #00acc1;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s;
+}
+
+.payBtn:hover {
+    background-color: #00838f;
+}
