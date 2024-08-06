@@ -6,6 +6,7 @@ import com.sparta.bookflex.domain.coupon.repository.CouponRepository;
 import com.sparta.bookflex.domain.coupon.repository.UserCouponRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,14 +18,17 @@ public class CouponScheduleService {
     private final UserCouponRepository userCouponRepository;
     private final CouponService couponService;
 
+    @Transactional
     public void updateIssueExpiredCoupon() {
         couponRepository.updateIssueExpiredCoupon();
     }
 
+    @Transactional
     public void updateIssuedCoupon() {
         couponRepository.updateIssuedCoupon();
     }
 
+    @Transactional
     public void updateGradeCoupon() {
         userCouponRepository.deleteUserCoupon();
         couponRepository.updateGradeCoupon();
@@ -34,6 +38,7 @@ public class CouponScheduleService {
         }
     }
 
+    @Transactional
     public void updateBirthdayCoupon() {
         userCouponRepository.deleteUserCoupon();
         couponRepository.updateBirthdayCoupon();
@@ -43,6 +48,7 @@ public class CouponScheduleService {
         }
     }
 
+    @Transactional
     public void deleteUseExpiredCoupon() {
         userCouponRepository.deleteUserCoupon();
     }

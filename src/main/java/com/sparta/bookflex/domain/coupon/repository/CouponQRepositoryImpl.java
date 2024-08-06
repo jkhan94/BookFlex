@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.*;
 import java.util.List;
@@ -75,28 +74,28 @@ public class CouponQRepositoryImpl implements CouponQRepository {
     }
 
     @Override
-    @Transactional
     public void updateIssueExpiredCoupon() {
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         queryFactory.update(coupon)
                 .set(coupon.couponStatus, CouponStatus.NOT_AVAILABLE)
                 .where(coupon.expirationDate.before(now)
-                        .and(coupon.couponType.notIn(CouponType.BIRTHDAY, CouponType.GRADE)))
+                        .and(coupon.couponType.notIn(CouponType.BIRTHDAY, CouponType.GRADE))
+                )
                 .execute();
     }
 
     @Override
-    @Transactional
     public void updateIssuedCoupon() {
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         queryFactory.update(coupon)
                 .set(coupon.couponStatus, CouponStatus.AVAILABLE)
-                .where(coupon.startDate.before(now))
+                .where(coupon.startDate.before(now)
+                        .and(coupon.expirationDate.after(now))
+                )
                 .execute();
     }
 
     @Override
-    @Transactional
     public void updateGradeCoupon() {
         LocalDate start = YearMonth.now().atDay(1);
         LocalDate end = YearMonth.now().atEndOfMonth();
@@ -110,7 +109,6 @@ public class CouponQRepositoryImpl implements CouponQRepository {
     }
 
     @Override
-    @Transactional
     public void updateBirthdayCoupon() {
         LocalDate start = YearMonth.now().atDay(1);
         LocalDate end = YearMonth.now().atEndOfMonth();
