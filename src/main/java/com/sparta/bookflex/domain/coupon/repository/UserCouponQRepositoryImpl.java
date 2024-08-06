@@ -48,7 +48,6 @@ public class UserCouponQRepositoryImpl implements UserCouponQRepository {
     }
 
     @Override
-    @Transactional
     public void deleteUserCoupon() {
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         queryFactory.delete(userCoupon)

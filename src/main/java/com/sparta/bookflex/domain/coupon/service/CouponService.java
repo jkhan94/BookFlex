@@ -227,7 +227,7 @@ public class CouponService {
         Sort sort = Sort.by(Sort.Direction.ASC, sortBy);
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
 
-        return userCouponRepository.findAllByUserId(user.getId(), pageable).map(
+        return userCouponRepository.findByUserIdAndIsUsedFalse(user.getId(), pageable).map(
                 userCoupon -> toUserCouponResponseDto(userCoupon, toCouponResponseDto(userCoupon.getCoupon()))
         );
     }
