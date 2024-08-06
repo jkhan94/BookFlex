@@ -126,6 +126,9 @@ public class CouponServiceTest {
         assertEquals(couponQuantity, result.size() - preset);
 
         // delete test data
+        for(UserCoupon issuedCouopon : result) {
+            userCouponRepository.delete(issuedCouopon);
+        }
         couponRepository.deleteById(testCouponId);
         for (User testUser : testUsers) {
             userRepository.delete(testUser);
