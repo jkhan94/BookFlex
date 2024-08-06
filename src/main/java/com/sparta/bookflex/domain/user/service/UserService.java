@@ -1,8 +1,8 @@
 package com.sparta.bookflex.domain.user.service;
 
-import com.querydsl.core.Tuple;
 import com.sparta.bookflex.common.exception.BusinessException;
 import com.sparta.bookflex.common.exception.ErrorCode;
+import com.sparta.bookflex.domain.sale.entity.Sale;
 import com.sparta.bookflex.domain.user.dto.*;
 import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.enums.UserGrade;
@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -108,6 +109,23 @@ public class UserService {
 
         user.updateState(userEditRequestDto.getState());
         user.updateGrade(userEditRequestDto.getGrade());
+
+    }
+
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
+
+    public void updateUserRoleBySaleAmount(Long userId, LocalDateTime currentDateTime) {
+        User user = getUser(userId);
+
+        BigDecimal saleAmount = userRepositoryQueryImpl.getSaleAmount(userId, currentDateTime);
+
+        if(saleAmount.compareTo(new BigDecimal("100000"))>=1) {
+            user.updateGrade(UserGrade.VIP);
+        } else {
+            user.updateGrade(UserGrade.NORMAL);
+        }
 
     }
 }

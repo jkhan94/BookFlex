@@ -33,6 +33,11 @@ function EditProfilePage() {
     const handleSubmit = (event) => {
         event.preventDefault();
 
+        if (userEditRequestDto.grade === '' || userEditRequestDto.state === '') {
+            alert('모든 정보를 올바르게 입력해주세요.');
+            return;
+        }
+
         axiosInstance.put(`/users/${userId}`, userEditRequestDto)
             .then(response => {
                 alert('회원정보가 성공적으로 수정되었습니다.');
@@ -76,15 +81,17 @@ function EditProfilePage() {
                     <div className={styles.formValue}>{profile.email}</div>
                 </div>
                 <div className={styles.formGroup}>
-                    <label className={styles.formLabel}>회원 등급</label>
+                    <label className={styles.formLabel}>회원 상태</label>
                     <select
                         className={styles.formSelect}
                         name="grade"
                         value={userEditRequestDto.grade}
                         onChange={handleChange}
+                        required
                     >
-                        <option value="NORMAL">일반</option>
-                        <option value="VIP">VIP</option>
+                        <option value=""  >등급을 선택해주세요</option>
+                        <option value="일반">일반</option>
+                        <option value="VIP" >정지</option>
                     </select>
                 </div>
                 <div className={styles.formGroup}>
@@ -94,9 +101,12 @@ function EditProfilePage() {
                         name="state"
                         value={userEditRequestDto.state}
                         onChange={handleChange}
+                        required
                     >
+
+                        <option value="">상태를 선택해주세요</option>
                         <option value="ACTIVE">정상</option>
-                        <option value="BAN">밴</option>
+                        <option value="BAN">정지</option>
                     </select>
                 </div>
                 <button className={styles.submitBtn} type="submit">수정 완료</button>

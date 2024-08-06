@@ -5,9 +5,12 @@ import com.sparta.bookflex.domain.user.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface UserRepositoryQuery {
     Optional<User> findByUserName(String username);
     Page<Tuple> getUsers(String username, Pageable pageable);
+    BigDecimal getSaleAmount(Long userId, LocalDateTime currentTime);
 }

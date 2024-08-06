@@ -5,6 +5,7 @@ import com.sparta.bookflex.common.aop.Envelop;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
 import com.sparta.bookflex.domain.book.entity.BookStatus;
 import com.sparta.bookflex.domain.user.dto.*;
+import com.sparta.bookflex.domain.user.scheduler.UserRoleScheduler;
 import com.sparta.bookflex.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+
+    private final UserRoleScheduler userRoleScheduler;
 
 
     @GetMapping()
@@ -85,6 +88,11 @@ public class UserController {
 
         userService.editUserInfo(userId, userEditRequestDto);
 
+    }
+
+    @PostMapping("/userrole")
+    public void userRoleUpdateTest() {
+        userRoleScheduler.updateUserRole();
     }
 
 
