@@ -42,6 +42,8 @@ import OrdersComponent from "./pages/user/OrdersComponent";
 import AdminProfilePage from "./pages/admin/AdminProfilePage";
 import AdminProfileEditPage from "./pages/admin/AdminProfileEditPage";
 
+import OrdersComponent from "./pages/user/OrdersComponent";
+
 
 
 function App() {
