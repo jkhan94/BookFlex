@@ -58,7 +58,7 @@ public class UserController {
     public ResponseEntity<Void> updateGrade(@PathVariable long userId,
                                             @AuthenticationPrincipal UserDetailsImpl userDetails,
                                             @RequestBody StateReqDto reqDto) {
-        userService.updateState(userId, userDetails.getUser(), reqDto);
+        userService.updateState(userId, reqDto);
         return ResponseEntity.ok().body(null);
     }
 
@@ -81,19 +81,4 @@ public class UserController {
 
         return ResponseEntity.ok().body(result);
     }
-
-    @PutMapping("/{userId}")
-    public void editUserInfo(@PathVariable(value = "userId") Long userId,
-                             @RequestBody UserEditRequestDto userEditRequestDto) {
-
-        userService.editUserInfo(userId, userEditRequestDto);
-
-    }
-
-    @PostMapping("/userrole")
-    public void userRoleUpdateTest() {
-        userRoleScheduler.updateUserRole();
-    }
-
-
 }

@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, {useState, useEffect} from 'react';
+import {useParams, useNavigate} from 'react-router-dom';
 import axiosInstance from '../../api/axiosInstance';
 import styles from './AdminProfileEditPage.module.css';
 
 function EditProfilePage() {
-    const { userId } = useParams();
+    const {userId} = useParams();
     const navigate = useNavigate();
     const [profile, setProfile] = useState(null);
     const [userEditRequestDto, setUserEditRequestDto] = useState({
@@ -38,7 +38,7 @@ function EditProfilePage() {
             return;
         }
 
-        axiosInstance.put(`/users/${userId}`, userEditRequestDto)
+        axiosInstance.put(`/users/${userId}/state`, userEditRequestDto)
             .then(response => {
                 alert('회원정보가 성공적으로 수정되었습니다.');
                 navigate(`/admin/users/${userId}`);
@@ -50,7 +50,7 @@ function EditProfilePage() {
     };
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         setUserEditRequestDto((prevDto) => ({
             ...prevDto,
             [name]: value,
@@ -81,18 +81,20 @@ function EditProfilePage() {
                     <div className={styles.formValue}>{profile.email}</div>
                 </div>
                 <div className={styles.formGroup}>
-                    <label className={styles.formLabel}>회원 상태</label>
-                    <select
-                        className={styles.formSelect}
-                        name="grade"
-                        value={userEditRequestDto.grade}
-                        onChange={handleChange}
-                        required
-                    >
-                        <option value=""  >등급을 선택해주세요</option>
-                        <option value="일반">일반</option>
-                        <option value="VIP" >정지</option>
-                    </select>
+                    <label className={styles.formLabel}>전화번호</label>
+                    <div className={styles.formValue}>{profile.phoneNumber}</div>
+                </div>
+                <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>주소</label>
+                    <div className={styles.formValue}>{profile.address}</div>
+                </div>
+                <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>생년월일</label>
+                    <div className={styles.formValue}>{profile.birthday}</div>
+                </div>
+                <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>회원 등급</label>
+                    <div className={styles.formValue}>{profile.grade}</div>
                 </div>
                 <div className={styles.formGroup}>
                     <label className={styles.formLabel}>회원 상태</label>
@@ -103,11 +105,14 @@ function EditProfilePage() {
                         onChange={handleChange}
                         required
                     >
-
                         <option value="">상태를 선택해주세요</option>
                         <option value="ACTIVE">정상</option>
-                        <option value="BAN">정지</option>
+                        <option value="BAN">밴</option>
                     </select>
+                </div>
+                <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>가입일자</label>
+                    <div className={styles.formValue}>{new Date(profile.createdAt).toLocaleDateString('ko-KR')}</div>
                 </div>
                 <button className={styles.submitBtn} type="submit">수정 완료</button>
             </form>

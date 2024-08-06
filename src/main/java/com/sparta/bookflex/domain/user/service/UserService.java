@@ -56,7 +56,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateState(long userId, User user, StateReqDto reqDto) {
+    public void updateState(long userId, StateReqDto reqDto) {
         User inputUser = getUser(userId);
 
         inputUser.updateState(reqDto.getState());
@@ -103,16 +103,7 @@ public class UserService {
 
     }
 
-    @Transactional
-    public void editUserInfo(Long userId, UserEditRequestDto userEditRequestDto) {
-        User user = getUser(userId);
-
-        user.updateState(userEditRequestDto.getState());
-        user.updateGrade(userEditRequestDto.getGrade());
-
-    }
-
-    public List<User> getUsers() {
+       public List<User> getUsers() {
         return userRepository.findAll();
     }
 
@@ -124,7 +115,7 @@ public class UserService {
         if(saleAmount.compareTo(new BigDecimal("100000"))>=1) {
             user.updateGrade(UserGrade.VIP);
         } else {
-            user.updateGrade(UserGrade.NORMAL);
+            user.updateGrade(UserGrade.VIP);
         }
 
     }
