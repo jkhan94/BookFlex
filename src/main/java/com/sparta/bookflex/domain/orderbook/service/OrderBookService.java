@@ -25,7 +25,7 @@ import com.sparta.bookflex.domain.sale.repository.SaleRepository;
 import com.sparta.bookflex.domain.systemlog.enums.ActionType;
 import com.sparta.bookflex.domain.systemlog.repository.TraceOfUserLogRepository;
 import com.sparta.bookflex.domain.user.entity.User;
-import com.sparta.bookflex.domain.user.service.AuthService;
+import com.sparta.bookflex.domain.auth.service.AuthService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -48,7 +48,6 @@ public class OrderBookService {
     private OrderBookRepository orderBookRepository;
     private final AuthService authService;
     private final BookService bookService;
-    private final TraceOfUserLogRepository traceOfUserLogRepository;
 
     private final PhotoImageService photoImageService;
     private final SaleRepository saleRepository;
@@ -63,7 +62,6 @@ public class OrderBookService {
     public OrderBookService(OrderItemRepository orderItemRepository,
                             OrderBookRepository orderBookRepository,
                             AuthService authService, BookService bookService,
-                            TraceOfUserLogRepository traceOfUserLogRepository,
                             PhotoImageService photoImageService,
                             SaleRepository saleRepository,
                             CouponService couponService,
@@ -73,7 +71,6 @@ public class OrderBookService {
         this.authService = authService;
         this.bookService = bookService;
         this.orderBookRepository = orderBookRepository;
-        this.traceOfUserLogRepository = traceOfUserLogRepository;
         this.orderItemRepository = orderItemRepository;
         this.photoImageService = photoImageService;
         this.saleRepository = saleRepository;
@@ -125,13 +122,6 @@ public class OrderBookService {
         for (OrderItem orderItem : orderItemList) {
             orderItem.updateOrderBook(orderBook);
         }
-// 로그를 남긴다.
-        for (OrderItem orderItem : orderItemList) {
-            String bookName = orderItem.getBook().getBookName();
-            traceOfUserLogRepository.save(
-                LoggingSingleton.userLogging(ActionType.BOOK_PURCHASE, user, bookName, 0, orderItem.getBook()));
-        }
-
 
         orderBookRepository.save(orderBook);
         orderBook.generateOrderNo();
