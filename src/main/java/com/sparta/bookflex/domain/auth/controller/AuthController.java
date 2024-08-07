@@ -1,13 +1,13 @@
-package com.sparta.bookflex.domain.user.controller;
+package com.sparta.bookflex.domain.auth.controller;
 
 import com.sparta.bookflex.common.aop.Envelop;
 import com.sparta.bookflex.common.config.JwtConfig;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
-import com.sparta.bookflex.domain.user.dto.LoginReqDto;
-import com.sparta.bookflex.domain.user.dto.LoginResDto;
-import com.sparta.bookflex.domain.user.dto.RefreshResDto;
-import com.sparta.bookflex.domain.user.dto.SignUpReqDto;
-import com.sparta.bookflex.domain.user.service.AuthService;
+import com.sparta.bookflex.domain.auth.dto.LoginReqDto;
+import com.sparta.bookflex.domain.auth.dto.LoginResDto;
+import com.sparta.bookflex.domain.auth.dto.RefreshResDto;
+import com.sparta.bookflex.domain.auth.dto.SignUpReqDto;
+import com.sparta.bookflex.domain.auth.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;

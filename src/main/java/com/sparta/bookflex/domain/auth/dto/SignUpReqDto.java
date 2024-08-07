@@ -1,4 +1,4 @@
-package com.sparta.bookflex.domain.user.dto;
+package com.sparta.bookflex.domain.auth.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sparta.bookflex.domain.user.enums.RoleType;
