@@ -137,7 +137,7 @@ public class CouponController {
     @GetMapping
     public ResponseEntity<Page<UserCouponResponseDto>> getMyCoupons(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                     @RequestParam(value = "page", defaultValue = "1") int page,
-                                                                    @RequestParam(value = "sortBy", defaultValue = "isUsed") String sortBy) {
+                                                                    @RequestParam(value = "sortBy", defaultValue = "expirationDate") String sortBy) {
         User user = authService.findByUserName(userDetails.getUser().getUsername());
         if (user.getAuth() != RoleType.USER) {
             throw new BusinessException(COUPON_VIEW_NOT_ALLOWED);

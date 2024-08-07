@@ -101,7 +101,7 @@ public class QnaService {
 
     @Transactional
     public QnaResponseDto createQnaReply(ReplyRequestDto requestDto, long qnaId) {
-        Qna qna = qnaRepository.findById(qnaId).orElseThrow(
+        Qna qna = qnaRepository.findByIdWithLock(qnaId).orElseThrow(
                 () -> new BusinessException(QNA_NOT_FOUND)
         );
 
