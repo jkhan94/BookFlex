@@ -138,51 +138,6 @@ public class CouponService {
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public UserCouponResponseDto issueCouponToUser(long couponId, long userId) {
-        Coupon coupon = findCouponByIdWithPessimisticLock(couponId);
-
-        // 쿠폰이 발급가능 상태인지
-        if (coupon.getCouponStatus() == CouponStatus.NOT_AVAILABLE) {
-            throw new BusinessException(COUPON_CANNOT_BE_ISSUED);
-        }
-
-        // 쿠폰 잔여수량이 남아있는지
-        if (coupon.getTotalCount() == 0) {
-            throw new BusinessException(COUPON_CANNOT_BE_ISSUED);
-        }
-
-        // 사용자의 회원 등급으로 발급받을 수 있는 쿠폰인지
-        User user = authService.findById(userId);
-        if (user.getGrade() != coupon.getEligibleGrade()) {
-            throw new BusinessException(COUPON_CANNOT_BE_ISSUED);
-        }
-
-        // 유저가 이미 쿠폰을 받았는지.
-        UserCoupon issuedCoupon = userCouponRepository.findByUserAndCoupon(user, coupon);
-        if (issuedCoupon != null) {
-            throw new BusinessException(COUPON_ALREADY_ISSUED);
-        }
-
-        String couponCode = RandomStringUtils.randomAlphanumeric(20);
-        coupon.decreaseTotalCount();
-
-        LocalDateTime issuedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
-        LocalDateTime expirationDate;
-        if (coupon.getValidityDays() == 0) {
-            expirationDate = coupon.getExpirationDate();
-        } else {
-            expirationDate = issuedAt.plusDays(coupon.getValidityDays());
-        }
-
-        UserCoupon userCoupon = toUserCouponEntity(couponCode, issuedAt, expirationDate, false, null, user, coupon);
-
-        couponRepository.save(coupon);
-        userCouponRepository.save(userCoupon);
-
-        return toUserCouponResponseDto(userCoupon, toCouponResponseDto(coupon));
-    }
-
-    @Transactional(isolation = Isolation.READ_COMMITTED)
     public UserCouponResponseDto issueCoupon(long couponId, User user) {
         Coupon coupon = findCouponByIdWithPessimisticLock(couponId);
 
