@@ -93,7 +93,7 @@ public class AuthService {
         tokenList.add(accessToken);
         tokenList.add(refreshToken);
 
-        systemLogRepository.save(LoggingSingleton.Logging(ActionType.LOGIN, curUser, curUser.getUsername()));
+        systemLogRepository.save(LoggingSingleton.Logging(ActionType.LOGIN, curUser));
 
         return tokenList;
     }

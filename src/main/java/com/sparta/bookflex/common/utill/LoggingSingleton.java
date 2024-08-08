@@ -1,5 +1,6 @@
 package com.sparta.bookflex.common.utill;
 
+import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.coupon.entity.UserCoupon;
 import com.sparta.bookflex.domain.orderbook.entity.OrderBook;
 import com.sparta.bookflex.domain.systemlog.entity.SystemLog;
@@ -24,7 +25,6 @@ public class LoggingSingleton {
         return SingletonGetter.INSTANCE;
     }
 
-    // Logging 매개변수 일반화 작업
     public static SystemLog Logging(ActionType type, Object target) {
         String name = "";
         User user = null;
@@ -62,13 +62,13 @@ public class LoggingSingleton {
         return log;
     }
 
-    // UserTraceLogging 매개변수 일반화 작업
-    public static TraceOfUserLog userLogging(ActionType type, Object target) {
+    public static TraceOfUserLog userLogging(ActionType type, User user, Object target) {
         String name = "";
-        User user = null;
         Object value = null;
         switch (type) {
             case BOOK_PURCHASE -> {
+                Book book = (Book)target;
+                name = book.getBookName();
             }
         }
         
@@ -78,35 +78,35 @@ public class LoggingSingleton {
         return userLog;
     }
 
-    public static SystemLog Logging(ActionType type, User user, String name) {
-        type.apply(name, null);
-        String description = type.getDescriptionMsg();
-
-        SystemLog log = new SystemLog(type, description, user);
-        return log;
-    }
-
-    public static SystemLog Logging(ActionType type, User user, String name, Object value) {
-        type.apply(name, value);
-        String description = type.getDescriptionMsg();
-
-        SystemLog log = new SystemLog(type, description, user);
-        return log;
-    }
-
-    public static TraceOfUserLog userLogging(ActionType type, User user, String name) {
-        type.apply(name,null);
-        String description = type.getDescriptionMsg();
-        TraceOfUserLog userLog = new TraceOfUserLog(type, description, user);
-        return userLog;
-    }
-
-    public static TraceOfUserLog userLogging(ActionType type, User user, String name, String objectName, Object value) {
-        type.apply(name, value);
-        String description = type.getDescriptionMsg();
-        TraceOfUserLog userLog = new TraceOfUserLog(type, description, user);
-        return userLog;
-    }
+//    public static SystemLog Logging(ActionType type, User user, String name) {
+//        type.apply(name, null);
+//        String description = type.getDescriptionMsg();
+//
+//        SystemLog log = new SystemLog(type, description, user);
+//        return log;
+//    }
+//
+//    public static SystemLog Logging(ActionType type, User user, String name, Object value) {
+//        type.apply(name, value);
+//        String description = type.getDescriptionMsg();
+//
+//        SystemLog log = new SystemLog(type, description, user);
+//        return log;
+//    }
+//
+//    public static TraceOfUserLog userLogging(ActionType type, User user, String name) {
+//        type.apply(name,null);
+//        String description = type.getDescriptionMsg();
+//        TraceOfUserLog userLog = new TraceOfUserLog(type, description, user);
+//        return userLog;
+//    }
+//
+//    public static TraceOfUserLog userLogging(ActionType type, User user, String name, String objectName, Object value) {
+//        type.apply(name, value);
+//        String description = type.getDescriptionMsg();
+//        TraceOfUserLog userLog = new TraceOfUserLog(type, description, user);
+//        return userLog;
+//    }
 
 
 }

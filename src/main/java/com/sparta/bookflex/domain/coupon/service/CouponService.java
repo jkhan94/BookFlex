@@ -9,12 +9,14 @@ import com.sparta.bookflex.domain.coupon.enums.CouponStatus;
 import com.sparta.bookflex.domain.coupon.repository.CouponRepository;
 import com.sparta.bookflex.domain.coupon.repository.UserCouponRepository;
 import com.sparta.bookflex.domain.systemlog.enums.ActionType;
+import com.sparta.bookflex.domain.systemlog.repository.SystemLogRepository;
 import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.enums.RoleType;
 import com.sparta.bookflex.domain.user.enums.UserGrade;
 import com.sparta.bookflex.domain.auth.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -40,6 +42,7 @@ public class CouponService {
     private final CouponRepository couponRepository;
     private final UserCouponRepository userCouponRepository;
     private final AuthService authService;
+    private final SystemLogRepository systemLogRepository;
 
     @Transactional
     public CouponResponseDto createCoupon(CouponRequestDto requestDto) {
@@ -178,8 +181,6 @@ public class CouponService {
 
         UserCoupon userCoupon = toUserCouponEntity(couponCode, issuedAt, expirationDate, false, null, user, coupon);
 
-        LoggingSingleton.Logging(ActionType.COUPON_GET, userCoupon.getUser(), userCoupon.getUser().getUsername(), userCoupon.getCoupon().getCouponName());
-
         couponRepository.save(coupon);
         userCouponRepository.save(userCoupon);
 
@@ -222,6 +223,10 @@ public class CouponService {
 
         couponRepository.save(coupon);
         userCouponRepository.save(userCoupon);
+
+        systemLogRepository.save(
+            LoggingSingleton.Logging(ActionType.COUPON_GET, userCoupon)
+        );
 
         return toUserCouponResponseDto(userCoupon, toCouponResponseDto(coupon));
     }

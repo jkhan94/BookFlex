@@ -211,11 +211,11 @@ public class PaymentService {
         for(OrderItem item : orderBook.getOrderItemList()) {
             String bookName = item.getBook().getBookName();
             traceOfUserLogRepository.save(
-                LoggingSingleton.userLogging(ActionType.BOOK_PURCHASE, user, bookName));
+                LoggingSingleton.userLogging(ActionType.BOOK_PURCHASE, user, item.getBook()));
         }
 
         systemLogRepository.save(
-            LoggingSingleton.Logging(ActionType.PAYMENT_COMPLETE, user, orderBook.getOrderNo(), orderBook.getTotal()));
+            LoggingSingleton.Logging(ActionType.PAYMENT_COMPLETE, orderBook));
 
         //emailService.sendEmail(EmailMessage.builder()
         //        .to(user.getEmail())
@@ -236,6 +236,6 @@ public class PaymentService {
         orderBook.updateStatus(OrderState.ORDER_CANCELLED);
 
         systemLogRepository.save(
-            LoggingSingleton.Logging(ActionType.PAYMENT_CANCEL, orderBook.getUser(), orderBook.getOrderNo(), orderBook.getTotal()));
+            LoggingSingleton.Logging(ActionType.PAYMENT_CANCEL, orderBook));
     }
 }
