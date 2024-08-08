@@ -45,17 +45,6 @@ public class QnaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
-
-    @GetMapping("/{qnaId}")
-    public ResponseEntity<QnaResponseDto> getSingleQna(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                       @PathVariable long qnaId) {
-
-        User user = authService.findByUserName(userDetails.getUser().getUsername());
-
-        QnaResponseDto responseDto = qnaService.getSingleQna(qnaId);
-        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
-    }
-
     @GetMapping
     public ResponseEntity<Page<QnaResponseDto>> getUserQnas(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                             @RequestParam(value = "page", defaultValue = "1") int page,
