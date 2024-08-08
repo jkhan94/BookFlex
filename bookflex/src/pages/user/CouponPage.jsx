@@ -111,7 +111,7 @@ const CouponPage = () => {
             <table className={styles.table}>
                 <thead>
                 <tr>
-                    <th className={styles.th}>쿠폰 코드</th>
+                    {/*<th className={styles.th}>쿠폰 코드</th>*/}
                     <th className={styles.th}>쿠폰 발급일</th>
                     <th className={styles.th}>사용 만료일</th>
                     <th className={styles.th}>사용 여부</th>
@@ -127,7 +127,7 @@ const CouponPage = () => {
                 <tbody>
                 {myCoupons.map(coupon => (
                     <tr key={coupon.userCouponId}>
-                        <td className={styles.td}>{coupon.couponCode}</td>
+                        {/*<td className={styles.td}>{coupon.couponCode}</td>*/}
                         <td className={styles.td}>{coupon.issuedAt}</td>
                         <td className={styles.td}>{coupon.expirationDate}</td>
                         <td className={styles.td}>{coupon.isUsed ? '사용됨' : '미사용'}</td>
