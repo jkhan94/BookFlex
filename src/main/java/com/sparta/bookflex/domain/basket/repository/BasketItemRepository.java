@@ -16,4 +16,6 @@ public interface BasketItemRepository extends JpaRepository<BasketItem, Long> {
     boolean existsByIdAndBasketId(Long basketItemId, Long basketId);
 
     Optional<BasketItem> findByBookId(Long bookId);
+
+    Optional<BasketItem> findByBasketIdAndBookId(Long id, Long bookId);
 }
