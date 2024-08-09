@@ -68,7 +68,7 @@ const BookList = () => {
     };
 
     const handleRegisterClick = () => {
-        navigate('/register-book');
+        navigate('/admin/register-book');
     };
 
     const handleBookDetailClick = (bookId) => {

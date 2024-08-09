@@ -16,10 +16,10 @@ public class OrderItemResponseDto {
     private BigDecimal total;;
     private String photoImagePath;
     private LocalDateTime createdAt;
-    private boolean isReviewed;
+    private Boolean isReviewed;
 
     @Builder
-    public OrderItemResponseDto(Long orderItemId, String bookName, BigDecimal price, int quantity,  LocalDateTime createdAt, BigDecimal total,String photoImagePath,boolean isReviewed) {
+    public OrderItemResponseDto(Long orderItemId, String bookName, BigDecimal price, int quantity,  LocalDateTime createdAt, BigDecimal total,String photoImagePath,Boolean isReviewed) {
         this.orderItemId = orderItemId;
         this.bookName = bookName;
         this.price = price;

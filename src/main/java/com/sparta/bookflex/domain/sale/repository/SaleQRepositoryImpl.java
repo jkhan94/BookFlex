@@ -24,6 +24,7 @@ import java.util.List;
 
 import static com.sparta.bookflex.domain.book.entity.QBook.book;
 import static com.sparta.bookflex.domain.sale.entity.QSale.sale;
+import static com.sparta.bookflex.domain.user.entity.QUser.user;
 
 @RequiredArgsConstructor
 @Repository
@@ -104,6 +105,33 @@ public class SaleQRepositoryImpl implements SaleQRepository {
         return new PageImpl<>(result, pageable, count.size());
     }
 
+    @Override
+    public Page<Tuple> findSales(String username, String status, LocalDate startDate, LocalDate endDate, Pageable pageable) {
+        List<Tuple> result = queryFactory
+                .select(sale.createdAt, sale.id, user.username, sale.book.id, sale.status, sale.total, sale.quantity, sale.price)
+                .from(sale)
+                .join(user).on(sale.user.id.eq(user.id))
+                .where(eqUserName(username))
+                .where(eqStatus(status))
+                .where(searchDateFilter(startDate, endDate))
+                .orderBy(tupleSort(pageable))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        List<Tuple> count = queryFactory
+                .select(sale.createdAt, sale.id, user.username, sale.book.id, sale.status)
+                .from(sale)
+                .join(user).on(sale.user.id.eq(user.id))
+                .where(eqUserName(username))
+                .where(eqStatus(status))
+                .where(searchDateFilter(startDate, endDate))
+                .orderBy(tupleSort(pageable))
+                .fetch();
+
+        return new PageImpl<>(result, pageable, count.size());
+    }
+
     private BooleanExpression eqBookName(String bookName) {
         if (bookName == null || bookName.isEmpty()) {
             return null;
@@ -117,6 +145,40 @@ public class SaleQRepositoryImpl implements SaleQRepository {
         }
         Category category = Category.of(categoryName);
         return book.subCategory.eq(category);
+    }
+
+    private BooleanExpression eqUserName(String userName) {
+        if (userName == null || userName.isEmpty()) {
+            return null;
+        }
+
+        return sale.user.username.eq(userName);
+    }
+
+    private BooleanExpression eqStatus(String status) {
+
+        if (status == null || status.isEmpty()) {
+            return null;
+        }
+
+        switch (status) {
+            case "pendingPayment":
+                return sale.status.eq(OrderState.PENDING_PAYMENT);
+            case "itemPrepairng":
+                return sale.status.eq(OrderState.ITEM_PREPARING);
+            case "inDelivery":
+                return sale.status.eq(OrderState.IN_DELIVERY);
+            case "deliveryCompleted":
+                return sale.status.eq(OrderState.DELIVERY_COMPLETED);
+            case "saleCompleted":
+                return sale.status.eq(OrderState.SALE_COMPLETED);
+            case "orderCancelled":
+                return sale.status.eq(OrderState.ORDER_CANCELLED);
+            case "refundProcessing":
+                return sale.status.eq(OrderState.REFUND_PROCESSING);
+            default:
+                return null;
+        }
     }
 
     private BooleanExpression searchDateFilter(LocalDate searchStartDate, LocalDate searchEndDate) {
@@ -142,11 +204,14 @@ public class SaleQRepositoryImpl implements SaleQRepository {
                         return new OrderSpecifier(direction, sale.total.sum());
                     case "category":
                         return new OrderSpecifier(direction, book.subCategory);
+                    case "createdAt":
+                        return new OrderSpecifier(direction, sale.createdAt);
                 }
             }
         }
 
         return null;
     }
+
 
 }

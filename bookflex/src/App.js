@@ -41,8 +41,8 @@ import MemberListPage from "./pages/admin/MemberListPage";
 import OrdersComponent from "./pages/user/OrdersComponent";
 import AdminProfilePage from "./pages/admin/AdminProfilePage";
 import AdminProfileEditPage from "./pages/admin/AdminProfileEditPage";
+import OrderHistory from "./pages/admin/OrderHistory";
 
-import OrdersComponent from "./pages/user/OrdersComponent";
 
 
 
@@ -131,6 +131,8 @@ function App() {
                         <Route path="member-list" element={<MemberListPage/>}/>
                         <Route path="users/:userId" element={<AdminProfilePage/>}/>
                         <Route path="users/:userId/edit" element={<AdminProfileEditPage/>}/>
+
+                        <Route path="order-history" element={<OrderHistory/>}/>
 
 
                         {/* 추가적인 관리자 하위 라우트 설정 */}

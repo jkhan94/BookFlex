@@ -23,7 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Service
 public class SaleService {
@@ -185,5 +186,28 @@ public class SaleService {
                 .firstData(saleVolumeRowDtos)
                 .secondData(totalSaleVolume).build();
 
+    }
+
+    public Page<SaleListDto> getAllSales(int page, int size, boolean isAsc, String sortBy, String status, String username, LocalDate startDate, LocalDate endDate) {
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+
+        Sort sort = Sort.by(direction, sortBy);
+
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+
+        Page<SaleListDto> saleListDtos = saleQRepositoryImpl.findSales(username, status, startDate, endDate, pageable)
+                .map(tuple -> SaleListDto
+                        .builder()
+                        .createdAt(tuple.get(0, LocalDateTime.class))
+                        .saleId(tuple.get(1, Long.class))
+                        .username(tuple.get(2, String.class))
+                        .bookName(bookService.getBookById(tuple.get(3, Long.class)).getBookName())
+                        .orderState(Objects.requireNonNull(tuple.get(4, OrderState.class)).getDesscription())
+                        .totalAmount(tuple.get(5, BigDecimal.class).setScale(0, RoundingMode.FLOOR))
+                        .quantity((tuple.get(6, Integer.class)))
+                        .price(tuple.get(7, BigDecimal.class).setScale(0, RoundingMode.FLOOR))
+                        .build());
+
+        return saleListDtos;
     }
 }

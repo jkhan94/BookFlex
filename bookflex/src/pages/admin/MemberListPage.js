@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './MemberListPage.css';
+import styles from './MemberListPage.module.css';
+import {useNavigate} from "react-router-dom";
+import axiosInstance from "../../api/axiosInstance";
 
 function MemberListPage() {
     const [members, setMembers] = useState([]);
