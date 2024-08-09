@@ -1,18 +1,22 @@
 package com.sparta.bookflex.domain.coupon.service;
 
 import com.sparta.bookflex.common.exception.BusinessException;
+import com.sparta.bookflex.common.utill.LoggingSingleton;
 import com.sparta.bookflex.domain.coupon.dto.*;
 import com.sparta.bookflex.domain.coupon.entity.Coupon;
 import com.sparta.bookflex.domain.coupon.entity.UserCoupon;
 import com.sparta.bookflex.domain.coupon.enums.CouponStatus;
 import com.sparta.bookflex.domain.coupon.repository.CouponRepository;
 import com.sparta.bookflex.domain.coupon.repository.UserCouponRepository;
+import com.sparta.bookflex.domain.systemlog.enums.ActionType;
+import com.sparta.bookflex.domain.systemlog.repository.SystemLogRepository;
 import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.enums.RoleType;
 import com.sparta.bookflex.domain.user.enums.UserGrade;
-import com.sparta.bookflex.domain.user.service.AuthService;
+import com.sparta.bookflex.domain.auth.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -38,6 +42,7 @@ public class CouponService {
     private final CouponRepository couponRepository;
     private final UserCouponRepository userCouponRepository;
     private final AuthService authService;
+    private final SystemLogRepository systemLogRepository;
 
     @Transactional
     public CouponResponseDto createCoupon(CouponRequestDto requestDto) {
@@ -138,51 +143,6 @@ public class CouponService {
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public UserCouponResponseDto issueCouponToUser(long couponId, long userId) {
-        Coupon coupon = findCouponByIdWithPessimisticLock(couponId);
-
-        // 쿠폰이 발급가능 상태인지
-        if (coupon.getCouponStatus() == CouponStatus.NOT_AVAILABLE) {
-            throw new BusinessException(COUPON_CANNOT_BE_ISSUED);
-        }
-
-        // 쿠폰 잔여수량이 남아있는지
-        if (coupon.getTotalCount() == 0) {
-            throw new BusinessException(COUPON_CANNOT_BE_ISSUED);
-        }
-
-        // 사용자의 회원 등급으로 발급받을 수 있는 쿠폰인지
-        User user = authService.findById(userId);
-        if (user.getGrade() != coupon.getEligibleGrade()) {
-            throw new BusinessException(COUPON_CANNOT_BE_ISSUED);
-        }
-
-        // 유저가 이미 쿠폰을 받았는지.
-        UserCoupon issuedCoupon = userCouponRepository.findByUserAndCoupon(user, coupon);
-        if (issuedCoupon != null) {
-            throw new BusinessException(COUPON_ALREADY_ISSUED);
-        }
-
-        String couponCode = RandomStringUtils.randomAlphanumeric(20);
-        coupon.decreaseTotalCount();
-
-        LocalDateTime issuedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
-        LocalDateTime expirationDate;
-        if (coupon.getValidityDays() == 0) {
-            expirationDate = coupon.getExpirationDate();
-        } else {
-            expirationDate = issuedAt.plusDays(coupon.getValidityDays());
-        }
-
-        UserCoupon userCoupon = toUserCouponEntity(couponCode, issuedAt, expirationDate, false, null, user, coupon);
-
-        couponRepository.save(coupon);
-        userCouponRepository.save(userCoupon);
-
-        return toUserCouponResponseDto(userCoupon, toCouponResponseDto(coupon));
-    }
-
-    @Transactional(isolation = Isolation.READ_COMMITTED)
     public UserCouponResponseDto issueCoupon(long couponId, User user) {
         Coupon coupon = findCouponByIdWithPessimisticLock(couponId);
 
@@ -219,6 +179,10 @@ public class CouponService {
         couponRepository.save(coupon);
         userCouponRepository.save(userCoupon);
 
+        systemLogRepository.save(
+            LoggingSingleton.Logging(ActionType.COUPON_GET, userCoupon)
+        );
+
         return toUserCouponResponseDto(userCoupon, toCouponResponseDto(coupon));
     }
 
@@ -227,7 +191,7 @@ public class CouponService {
         Sort sort = Sort.by(Sort.Direction.ASC, sortBy);
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
 
-        return userCouponRepository.findAllByUserId(user.getId(), pageable).map(
+        return userCouponRepository.findByUserIdAndIsUsedFalse(user.getId(), pageable).map(
                 userCoupon -> toUserCouponResponseDto(userCoupon, toCouponResponseDto(userCoupon.getCoupon()))
         );
     }

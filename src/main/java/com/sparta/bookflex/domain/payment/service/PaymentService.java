@@ -1,43 +1,40 @@
 package com.sparta.bookflex.domain.payment.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.bookflex.common.config.TossPaymentConfig;
-import com.sparta.bookflex.common.exception.BusinessException;
-import com.sparta.bookflex.common.exception.ErrorCode;
+import com.sparta.bookflex.common.utill.LoggingSingleton;
 import com.sparta.bookflex.common.utill.Timestamped;
+import com.sparta.bookflex.domain.auth.service.AuthService;
+import com.sparta.bookflex.domain.book.entity.Book;
+import com.sparta.bookflex.domain.book.repository.BookRepository;
 import com.sparta.bookflex.domain.coupon.service.CouponService;
-import com.sparta.bookflex.domain.orderbook.dto.OrderStatusRequestDto;
 import com.sparta.bookflex.domain.orderbook.emuns.OrderState;
 import com.sparta.bookflex.domain.orderbook.entity.OrderBook;
+import com.sparta.bookflex.domain.orderbook.entity.OrderItem;
 import com.sparta.bookflex.domain.orderbook.service.OrderBookService;
-import com.sparta.bookflex.domain.payment.dto.*;
+import com.sparta.bookflex.domain.payment.dto.FailPayReqDto;
+import com.sparta.bookflex.domain.payment.dto.SuccessPayReqDto;
 import com.sparta.bookflex.domain.payment.entity.Payment;
-import com.sparta.bookflex.domain.payment.enums.PayType;
 import com.sparta.bookflex.domain.payment.enums.PaymentStatus;
 import com.sparta.bookflex.domain.payment.repository.PaymentRepository;
 import com.sparta.bookflex.domain.sale.entity.Sale;
+import com.sparta.bookflex.domain.sale.repository.SaleRepository;
+import com.sparta.bookflex.domain.shipment.service.ShipmentService;
+import com.sparta.bookflex.domain.systemlog.enums.ActionType;
+import com.sparta.bookflex.domain.systemlog.repository.SystemLogRepository;
+import com.sparta.bookflex.domain.systemlog.repository.TraceOfUserLogRepository;
 import com.sparta.bookflex.domain.user.entity.User;
-import com.sparta.bookflex.domain.user.service.AuthService;
 import jakarta.mail.MessagingException;
-import org.json.simple.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PaymentService {
 
     private String tossSecretKey="sk_test_w5lNQylNqa5lNQe013Nq";
@@ -47,6 +44,12 @@ public class PaymentService {
     private final OrderBookService orderBookService;
     private final ObjectMapper objectMapper;
     private final CouponService couponService;
+    private final BookRepository bookRepository;
+    private final SaleRepository saleRepository;
+    private final TraceOfUserLogRepository traceOfUserLogRepository;
+    private final SystemLogRepository systemLogRepository;
+    private final ShipmentService shipmentService;
+
 
     @Value("${payment.toss.success_url}")
     private String successUrl;
@@ -56,18 +59,6 @@ public class PaymentService {
 
 
 
-    @Autowired
-    public PaymentService(AuthService authService, PaymentRepository paymentRepository,
-                          OrderBookService orderBookService,
-                          RestTemplate restTemplate, ObjectMapper objectMapper,
-                             CouponService couponService) {
-        this.restTemplate = restTemplate;
-        this.authService = authService;
-        this.paymentRepository = paymentRepository;
-        this.orderBookService = orderBookService;
-        this.objectMapper = objectMapper;
-        this.couponService = couponService;
-    }
 
 //    @Transactional
 //    public String createPayment(TossPaymentRequestDto requestDto, User user) {
@@ -200,7 +191,12 @@ public class PaymentService {
         payment.updatePayToken(successPayReqDto.getPaymentKey());
         payment.updateIsSuccessYN(true);
         paymentRepository.save(payment);
-
+        List<OrderItem> orderItemList = orderBook.getOrderItemList();
+        for(OrderItem orderItem : orderItemList){
+            Book book = orderItem.getBook();
+            book.decreaseStock(orderItem.getQuantity());
+            bookRepository.save(book);
+        }
         if(orderBook.isCoupon()){
             orderBook.getUserCoupon().updateStatus();
         }
@@ -208,15 +204,25 @@ public class PaymentService {
         List<Sale> saleList = orderBook.getSaleList();
         for(Sale sale : saleList){
             sale.updateStatus(OrderState.SALE_COMPLETED);
+            saleRepository.save(sale);
         }
+
+        for(OrderItem item : orderBook.getOrderItemList()) {
+            String bookName = item.getBook().getBookName();
+            traceOfUserLogRepository.save(
+                LoggingSingleton.userLogging(ActionType.BOOK_PURCHASE, user, item.getBook()));
+        }
+
+        shipmentService.createShipment(orderBook, user);
+
+        systemLogRepository.save(
+            LoggingSingleton.Logging(ActionType.PAYMENT_COMPLETE, orderBook));
 
         //emailService.sendEmail(EmailMessage.builder()
         //        .to(user.getEmail())
         //        .subject("[bookFlex] 배송현황안내")
         //        .message("배송 현황을 아래와 같이 안내드립니다.").build(),
         //        orderBook);
-
-
 
     }
 
@@ -227,5 +233,8 @@ public class PaymentService {
         payment.updateIsSuccessYN(false);
         paymentRepository.save(payment);
         orderBook.updateStatus(OrderState.ORDER_CANCELLED);
+
+        systemLogRepository.save(
+            LoggingSingleton.Logging(ActionType.PAYMENT_CANCEL, orderBook));
     }
 }

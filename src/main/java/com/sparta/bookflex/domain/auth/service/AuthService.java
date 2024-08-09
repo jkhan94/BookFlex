@@ -1,4 +1,4 @@
-package com.sparta.bookflex.domain.user.service;
+package com.sparta.bookflex.domain.auth.service;
 
 import com.sparta.bookflex.common.config.JwtConfig;
 import com.sparta.bookflex.common.exception.BusinessException;
@@ -8,8 +8,8 @@ import com.sparta.bookflex.common.security.UserDetailsImpl;
 import com.sparta.bookflex.common.utill.LoggingSingleton;
 import com.sparta.bookflex.domain.systemlog.enums.ActionType;
 import com.sparta.bookflex.domain.systemlog.repository.SystemLogRepository;
-import com.sparta.bookflex.domain.user.dto.LoginReqDto;
-import com.sparta.bookflex.domain.user.dto.SignUpReqDto;
+import com.sparta.bookflex.domain.auth.dto.LoginReqDto;
+import com.sparta.bookflex.domain.auth.dto.SignUpReqDto;
 import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.enums.RoleType;
 import com.sparta.bookflex.domain.user.enums.UserGrade;
@@ -93,7 +93,7 @@ public class AuthService {
         tokenList.add(accessToken);
         tokenList.add(refreshToken);
 
-        systemLogRepository.save(LoggingSingleton.Logging(ActionType.LOGIN, curUser, curUser.getUsername(), 0));
+        systemLogRepository.save(LoggingSingleton.Logging(ActionType.LOGIN, curUser));
 
         return tokenList;
     }

@@ -1,22 +1,18 @@
 package com.sparta.bookflex.domain.wish.service;
 
+import com.sparta.bookflex.domain.auth.service.AuthService;
 import com.sparta.bookflex.domain.book.entity.Book;
-import com.sparta.bookflex.domain.book.repository.BookRepository;
 import com.sparta.bookflex.domain.book.service.BookService;
 import com.sparta.bookflex.domain.user.entity.User;
-import com.sparta.bookflex.domain.user.repository.UserRepository;
-import com.sparta.bookflex.domain.user.service.AuthService;
 import com.sparta.bookflex.domain.wish.dto.WishResDto;
 import com.sparta.bookflex.domain.wish.entity.Wish;
 import com.sparta.bookflex.domain.wish.repository.WishRepository;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

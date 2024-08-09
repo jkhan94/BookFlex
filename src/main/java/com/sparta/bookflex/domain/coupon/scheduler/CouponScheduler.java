@@ -3,13 +3,15 @@ package com.sparta.bookflex.domain.coupon.scheduler;
 import com.sparta.bookflex.domain.coupon.service.CouponScheduleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Slf4j(topic = "CouponScheduler")
 @Component
 @RequiredArgsConstructor
-public class CouponScheduler {
+public class CouponScheduler implements ApplicationRunner {
     private final CouponScheduleService couponScheduleService;
 
     @Scheduled(cron = "0 0 0 * * *") //  매일 오전 12시
@@ -42,4 +44,13 @@ public class CouponScheduler {
         couponScheduleService.updateBirthdayCoupon();
     }
 
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        log.info("서버 시작 시 쿠폰 스케줄러 작업 실행");
+        updateIssueExpiredCoupon();
+        deleteUseExpiredCoupon();
+        updateIssuedCoupon();
+        updateGradeCoupon();
+        updateBirthdayCoupon();
+    }
 }
