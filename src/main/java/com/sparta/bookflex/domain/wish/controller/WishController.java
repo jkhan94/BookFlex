@@ -37,9 +37,8 @@ public class WishController {
     public ResponseEntity<?> getWishs(
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             Pageable pageable) {
-        Page<WishResDto> wislList =  wishService.getWishList(userDetails.getUser(), pageable);
-        CommonDto<Page<WishResDto>> response = new CommonDto<>(HttpStatus.OK.value(), "위시리스트를 조회했습닏다.", wislList);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        Page<WishResDto> wishList =  wishService.getWishList(userDetails.getUser(), pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(wishList);
     }
 
     @DeleteMapping("/{wishId}")

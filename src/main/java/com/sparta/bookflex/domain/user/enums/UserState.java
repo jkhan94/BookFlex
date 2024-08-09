@@ -15,8 +15,8 @@ public enum UserState {
     }
 
     private static class State {
-        public static final String BAN_STATE = "접근 금지 상태입니다";
-        public static final String ACTIVE_STATE = "활성화 상태입니다";
-        public static final String WITHDRAW = "회원탈퇴 상태입니다";
+        public static final String BAN_STATE = "밴";
+        public static final String ACTIVE_STATE = "정상";
+        public static final String WITHDRAW = "회원탈퇴";
     }
 }
