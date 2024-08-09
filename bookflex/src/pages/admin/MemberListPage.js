@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import styles from './MemberListPage.module.css'; // CSS 모듈 임포트
+import styles from './MemberListPage.module.css';
+import {useNavigate} from "react-router-dom";
+import axiosInstance from "../../api/axiosInstance";
 
 function MemberListPage() {
     const [members, setMembers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchMembers(currentPage, searchTerm);
     }, [currentPage, searchTerm]);
 
     const fetchMembers = (page = 1, username = '') => {
-        axios.get('/users/all', {
+        axiosInstance.get('/users/all', {
             params: {
                 page: page,
                 size: 10,
@@ -45,6 +48,10 @@ function MemberListPage() {
         setCurrentPage(1);
     };
 
+    const handleProfileDetailClick = (id) => {
+        navigate(`/admin/users/${id}`);
+    };
+
     return (
         <div className={styles.container}>
             <h1>회원 목록 조회</h1>
@@ -66,21 +73,34 @@ function MemberListPage() {
                 <tr>
                     <th>회원번호</th>
                     <th>회원ID</th>
+                    <th>이름</th>
                     <th>가입일</th>
                     <th>구매금액</th>
-                    <th>배송액</th>
                     <th>회원등급</th>
+                    <th>회원상태</th>
                 </tr>
                 </thead>
                 <tbody id="memberList">
                 {members.map(member => (
                     <tr key={member.id}>
-                        <td>{member.id}</td>
-                        <td>{member.userId}</td>
-                        <td>{new Date(member.joinDate).toLocaleDateString('ko-KR')}</td>
-                        <td>{member.purchaseAmount.toLocaleString()}원</td>
-                        <td>{member.shippingAmount.toLocaleString()}원</td>
-                        <td>{member.grade}</td>
+                        <td  className={styles.memberName}
+                             onClick={() => handleProfileDetailClick(member.id)}>{member.id}</td>
+                        <td
+                            className={styles.memberName}
+                            onClick={() => handleProfileDetailClick(member.id)}
+                        >
+                            {member.username}
+                        </td>
+                        <td  className={styles.memberName}
+                             onClick={() => handleProfileDetailClick(member.id)}>{member.name}</td>
+                        <td  className={styles.memberName}
+                             onClick={() => handleProfileDetailClick(member.id)}>{new Date(member.createdAt).toLocaleDateString('ko-KR')}</td>
+                        <td  className={styles.memberName}
+                             onClick={() => handleProfileDetailClick(member.id)}>{member.purchaseTotal}원</td>
+                        <td  className={styles.memberName}
+                             onClick={() => handleProfileDetailClick(member.id)}>{member.grade}</td>
+                        <td  className={styles.memberName}
+                             onClick={() => handleProfileDetailClick(member.id)}>{member.state}</td>
                     </tr>
                 ))}
                 </tbody>

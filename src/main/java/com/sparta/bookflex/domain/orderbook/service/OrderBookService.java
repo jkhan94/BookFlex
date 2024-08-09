@@ -324,7 +324,7 @@ public class OrderBookService {
                 .total(orderItem.getTotal())
                 .createdAt(orderItem.getCreatedAt())
                 .photoImagePath(photoImagePath)
-                .isReviewed(orderItem.isReviewed())
+                .isReviewed(orderItem.getIsReviewed())
                 .build();
     }
 }

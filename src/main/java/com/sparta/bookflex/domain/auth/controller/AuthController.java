@@ -82,7 +82,7 @@ public class AuthController {
         return ResponseEntity.ok().body(resDto);
     }
 
-//    @GetMapping("kakao/callback")
+//    @GetMapping("/kakao/callback")
 //    public ResponseEntity<String> kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
 //        List<String> tokens = socialService.kakaoLogin(code);
 //        response.addHeader(JwtConfig.ACCESS_TOKEN_HEADER, tokens.get(0));

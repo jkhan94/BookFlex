@@ -1,12 +1,11 @@
 package com.sparta.bookflex.domain.user.controller;
 
+import com.querydsl.core.Tuple;
 import com.sparta.bookflex.common.aop.Envelop;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
 import com.sparta.bookflex.domain.book.entity.BookStatus;
-import com.sparta.bookflex.domain.user.dto.GradeReqDto;
-import com.sparta.bookflex.domain.user.dto.ProfileReqDto;
-import com.sparta.bookflex.domain.user.dto.ProfileResDto;
-import com.sparta.bookflex.domain.user.dto.StateReqDto;
+import com.sparta.bookflex.domain.user.dto.*;
+import com.sparta.bookflex.domain.user.scheduler.UserRoleScheduler;
 import com.sparta.bookflex.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+
+    private final UserRoleScheduler userRoleScheduler;
 
 
     @GetMapping()
@@ -57,21 +58,27 @@ public class UserController {
     public ResponseEntity<Void> updateGrade(@PathVariable long userId,
                                             @AuthenticationPrincipal UserDetailsImpl userDetails,
                                             @RequestBody StateReqDto reqDto) {
-        userService.updateState(userId, userDetails.getUser(), reqDto);
+        userService.updateState(userId, reqDto);
         return ResponseEntity.ok().body(null);
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Page<ProfileResDto>> getUsers(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
-                                                        @RequestParam(name = "size", required = false, defaultValue = "10") int size,
-                                                        @RequestParam(name = "direction", required = false, defaultValue = "true") boolean isAsc,
-                                                        @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
-                                                        @RequestParam(name = "username", required = false) String username) {
+    public ResponseEntity<Page<UserListResDto>> getUsers(@RequestParam(name = "page", required = false, defaultValue = "1") int page,
+                                                         @RequestParam(name = "size", required = false, defaultValue = "10") int size,
+                                                         @RequestParam(name = "direction", required = false, defaultValue = "true") boolean isAsc,
+                                                         @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
+                                                         @RequestParam(name = "username", required = false) String username) {
 
-       Page<ProfileResDto> result = userService.getUsers(page, size, isAsc, sortBy, username);
+        Page<UserListResDto> result = userService.getUsers(page, size, isAsc, sortBy, username);
 
         return ResponseEntity.ok().body(result);
     }
 
+    @GetMapping("/{userId}")
+    public ResponseEntity<ProfileResDto> getUsers(@PathVariable(value = "userId") Long userId) {
 
+        ProfileResDto result = userService.getUserProfile(userId);
+
+        return ResponseEntity.ok().body(result);
+    }
 }

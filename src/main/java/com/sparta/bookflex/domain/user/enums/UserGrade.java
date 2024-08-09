@@ -30,7 +30,7 @@ public enum UserGrade {
     }
 
     private static class UserGradeCode {
-        public static final String NORMAL = "일반회원";
+        public static final String NORMAL = "일반";
         public static final String VIP = "VIP";
     }
 }
