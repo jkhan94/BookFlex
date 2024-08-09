@@ -1,45 +1,36 @@
 package com.sparta.bookflex.domain.payment.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.bookflex.common.config.TossPaymentConfig;
-import com.sparta.bookflex.common.exception.BusinessException;
-import com.sparta.bookflex.common.exception.ErrorCode;
+import com.sparta.bookflex.common.utill.LoggingSingleton;
 import com.sparta.bookflex.common.utill.Timestamped;
+import com.sparta.bookflex.domain.auth.service.AuthService;
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.repository.BookRepository;
 import com.sparta.bookflex.domain.coupon.service.CouponService;
-import com.sparta.bookflex.domain.orderbook.dto.OrderStatusRequestDto;
 import com.sparta.bookflex.domain.orderbook.emuns.OrderState;
 import com.sparta.bookflex.domain.orderbook.entity.OrderBook;
 import com.sparta.bookflex.domain.orderbook.entity.OrderItem;
 import com.sparta.bookflex.domain.orderbook.service.OrderBookService;
-import com.sparta.bookflex.domain.payment.dto.*;
+import com.sparta.bookflex.domain.payment.dto.FailPayReqDto;
+import com.sparta.bookflex.domain.payment.dto.SuccessPayReqDto;
 import com.sparta.bookflex.domain.payment.entity.Payment;
-import com.sparta.bookflex.domain.payment.enums.PayType;
 import com.sparta.bookflex.domain.payment.enums.PaymentStatus;
 import com.sparta.bookflex.domain.payment.repository.PaymentRepository;
 import com.sparta.bookflex.domain.sale.entity.Sale;
 import com.sparta.bookflex.domain.sale.repository.SaleRepository;
+import com.sparta.bookflex.domain.shipment.service.ShipmentService;
+import com.sparta.bookflex.domain.systemlog.enums.ActionType;
+import com.sparta.bookflex.domain.systemlog.repository.SystemLogRepository;
+import com.sparta.bookflex.domain.systemlog.repository.TraceOfUserLogRepository;
 import com.sparta.bookflex.domain.user.entity.User;
-import com.sparta.bookflex.domain.user.service.AuthService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
-import org.json.simple.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
@@ -55,6 +46,10 @@ public class PaymentService {
     private final CouponService couponService;
     private final BookRepository bookRepository;
     private final SaleRepository saleRepository;
+    private final TraceOfUserLogRepository traceOfUserLogRepository;
+    private final SystemLogRepository systemLogRepository;
+    private final ShipmentService shipmentService;
+
 
     @Value("${payment.toss.success_url}")
     private String successUrl;
@@ -212,6 +207,17 @@ public class PaymentService {
             saleRepository.save(sale);
         }
 
+        for(OrderItem item : orderBook.getOrderItemList()) {
+            String bookName = item.getBook().getBookName();
+            traceOfUserLogRepository.save(
+                LoggingSingleton.userLogging(ActionType.BOOK_PURCHASE, user, item.getBook()));
+        }
+
+        shipmentService.createShipment(orderBook, user);
+
+        systemLogRepository.save(
+            LoggingSingleton.Logging(ActionType.PAYMENT_COMPLETE, orderBook));
+
         //emailService.sendEmail(EmailMessage.builder()
         //        .to(user.getEmail())
         //        .subject("[bookFlex] 배송현황안내")
@@ -227,5 +233,8 @@ public class PaymentService {
         payment.updateIsSuccessYN(false);
         paymentRepository.save(payment);
         orderBook.updateStatus(OrderState.ORDER_CANCELLED);
+
+        systemLogRepository.save(
+            LoggingSingleton.Logging(ActionType.PAYMENT_CANCEL, orderBook));
     }
 }

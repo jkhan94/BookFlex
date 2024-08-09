@@ -7,7 +7,6 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -18,13 +17,9 @@ public class QTraceOfUserLog extends EntityPathBase<TraceOfUserLog> {
 
     private static final long serialVersionUID = 52695595L;
 
-    private static final PathInits INITS = PathInits.DIRECT2;
-
     public static final QTraceOfUserLog traceOfUserLog = new QTraceOfUserLog("traceOfUserLog");
 
     public final EnumPath<com.sparta.bookflex.domain.systemlog.enums.ActionType> activityType = createEnum("activityType", com.sparta.bookflex.domain.systemlog.enums.ActionType.class);
-
-    public final com.sparta.bookflex.domain.book.entity.QBook book;
 
     public final DateTimePath<java.time.LocalDateTime> createdAt = createDateTime("createdAt", java.time.LocalDateTime.class);
 
@@ -35,24 +30,15 @@ public class QTraceOfUserLog extends EntityPathBase<TraceOfUserLog> {
     public final StringPath username = createString("username");
 
     public QTraceOfUserLog(String variable) {
-        this(TraceOfUserLog.class, forVariable(variable), INITS);
+        super(TraceOfUserLog.class, forVariable(variable));
     }
 
     public QTraceOfUserLog(Path<? extends TraceOfUserLog> path) {
-        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
+        super(path.getType(), path.getMetadata());
     }
 
     public QTraceOfUserLog(PathMetadata metadata) {
-        this(metadata, PathInits.getFor(metadata, INITS));
-    }
-
-    public QTraceOfUserLog(PathMetadata metadata, PathInits inits) {
-        this(TraceOfUserLog.class, metadata, inits);
-    }
-
-    public QTraceOfUserLog(Class<? extends TraceOfUserLog> type, PathMetadata metadata, PathInits inits) {
-        super(type, metadata, inits);
-        this.book = inits.isInitialized("book") ? new com.sparta.bookflex.domain.book.entity.QBook(forProperty("book"), inits.get("book")) : null;
+        super(TraceOfUserLog.class, metadata);
     }
 
 }

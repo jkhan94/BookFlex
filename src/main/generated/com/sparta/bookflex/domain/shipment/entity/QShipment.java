@@ -42,8 +42,6 @@ public class QShipment extends EntityPathBase<Shipment> {
 
     public final DateTimePath<java.time.LocalDateTime> shippedAt = createDateTime("shippedAt", java.time.LocalDateTime.class);
 
-    public final EnumPath<com.sparta.bookflex.domain.shipment.enums.ShipmentEnum> status = createEnum("status", com.sparta.bookflex.domain.shipment.enums.ShipmentEnum.class);
-
     public final StringPath trackingNumber = createString("trackingNumber");
 
     public final com.sparta.bookflex.domain.user.entity.QUser user;

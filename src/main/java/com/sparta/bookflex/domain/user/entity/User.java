@@ -8,12 +8,10 @@ import com.sparta.bookflex.domain.qna.entity.Qna;
 import com.sparta.bookflex.domain.reveiw.entity.Review;
 import com.sparta.bookflex.domain.sale.entity.Sale;
 import com.sparta.bookflex.domain.shipment.entity.Shipment;
-import com.sparta.bookflex.domain.systemlog.entity.TraceOfUserLog;
 import com.sparta.bookflex.domain.user.dto.ProfileResDto;
-import com.sparta.bookflex.domain.user.enums.UserGrade;
 import com.sparta.bookflex.domain.user.enums.RoleType;
+import com.sparta.bookflex.domain.user.enums.UserGrade;
 import com.sparta.bookflex.domain.user.enums.UserState;
-
 import com.sparta.bookflex.domain.wish.entity.Wish;
 import jakarta.persistence.*;
 import lombok.*;
@@ -92,7 +90,7 @@ public class User extends Timestamped {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviewList;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Shipment> shipmentList;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -158,5 +156,9 @@ public class User extends Timestamped {
     public User kakaoIdUpdate(Long kakaoId) {
         this.kakaoId = kakaoId;
         return this;
+    }
+
+    public void setShipmentInfo(Shipment shipmentInfo) {
+        this.shipmentList.add(shipmentInfo);
     }
 }

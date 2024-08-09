@@ -3,6 +3,7 @@ package com.sparta.bookflex.domain.orderbook.service;
 import com.sparta.bookflex.common.exception.BusinessException;
 import com.sparta.bookflex.common.exception.ErrorCode;
 import com.sparta.bookflex.common.utill.LoggingSingleton;
+import com.sparta.bookflex.domain.auth.service.AuthService;
 import com.sparta.bookflex.domain.basket.service.BasketService;
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.service.BookService;
@@ -23,11 +24,9 @@ import com.sparta.bookflex.domain.payment.repository.PaymentRepository;
 import com.sparta.bookflex.domain.photoimage.service.PhotoImageService;
 import com.sparta.bookflex.domain.sale.entity.Sale;
 import com.sparta.bookflex.domain.sale.repository.SaleRepository;
-import com.sparta.bookflex.domain.systemlog.enums.ActionType;
-import com.sparta.bookflex.domain.systemlog.repository.TraceOfUserLogRepository;
 import com.sparta.bookflex.domain.user.entity.User;
-import com.sparta.bookflex.domain.user.service.AuthService;
 import jakarta.mail.MessagingException;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -48,10 +47,10 @@ import java.util.stream.Collectors;
 public class OrderBookService {
 
     private final OrderItemRepository orderItemRepository;
+    @Getter
     private final OrderBookRepository orderBookRepository;
     private final AuthService authService;
     private final BookService bookService;
-    private final TraceOfUserLogRepository traceOfUserLogRepository;
 
     private final PhotoImageService photoImageService;
     private final SaleRepository saleRepository;
@@ -111,17 +110,9 @@ public class OrderBookService {
         for (OrderItem orderItem : orderItemList) {
             orderItem.updateOrderBook(orderBook);
         }
-// 로그를 남긴다.
-        for (OrderItem orderItem : orderItemList) {
-            String bookName = orderItem.getBook().getBookName();
-            traceOfUserLogRepository.save(
-                LoggingSingleton.userLogging(ActionType.BOOK_PURCHASE, user, bookName, 0, orderItem.getBook()));
-        }
-
 
         orderBookRepository.save(orderBook);
         orderBook.generateOrderNo();
-        orderBookRepository.save(orderBook);
 
         basketService.clear(bookIds, user);
 
@@ -203,16 +194,16 @@ public class OrderBookService {
             .build();
     }
 
-    public OrderBookTotalResDto getAllOrder(int page, int size) {
-
-        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-        Pageable pageable = PageRequest.of(page-1, size, sort);
-        Page<OrderShipResDto> pageResdto = orderBookRepository.findAllByPagable(pageable).map(
-            OrderBook::toOrderShipRes);
-        Long totalCount = orderBookRepository.findTotalCount();
-
-        return new OrderBookTotalResDto(totalCount, pageResdto);
-    }
+//    public OrderBookTotalResDto getAllOrder(int page, int size) {
+//
+//        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+//        Pageable pageable = PageRequest.of(page-1, size, sort);
+//        Page<OrderShipResDto> pageResdto = orderBookRepository.findAllByPagable(pageable).map(
+//            OrderBook::toOrderShipRes);
+//        Long totalCount = orderBookRepository.findTotalCount();
+//
+//        return new OrderBookTotalResDto(totalCount, pageResdto);
+//    }
 
 
     @Transactional

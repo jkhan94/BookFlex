@@ -1,4 +1,4 @@
-package com.sparta.bookflex.domain.user.dto;
+package com.sparta.bookflex.domain.auth.dto;
 
 import com.sparta.bookflex.domain.user.enums.RoleType;
 import lombok.Builder;

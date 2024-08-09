@@ -12,7 +12,7 @@ import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.service.BookService;
 import com.sparta.bookflex.domain.photoimage.service.PhotoImageService;
 import com.sparta.bookflex.domain.user.entity.User;
-import com.sparta.bookflex.domain.user.service.AuthService;
+import com.sparta.bookflex.domain.auth.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
