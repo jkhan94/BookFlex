@@ -45,15 +45,6 @@ public class QnaService {
     }
 
     @Transactional(readOnly = true)
-    public QnaResponseDto getSingleQna(long qnaId) {
-        Qna qna = qnaRepository.findById(qnaId).orElseThrow(
-                () -> new BusinessException(QNA_NOT_FOUND)
-        );
-
-        return toQnaResponseDto(qna);
-    }
-
-    @Transactional(readOnly = true)
     public Page<QnaResponseDto> getUserQnas(User user, int page, String sortBy) {
         Sort sort = Sort.by(Sort.Direction.DESC, sortBy);
         Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);

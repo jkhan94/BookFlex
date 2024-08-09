@@ -106,21 +106,6 @@ public class CouponController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("/issue/{userId}/{couponId}")
-//    @Envelop("사용자에게 쿠폰이 발급되었습니다.")
-    public ResponseEntity<UserCouponResponseDto> issueCouponToUser(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                                   @PathVariable long userId,
-                                                                   @PathVariable long couponId) {
-        User user = authService.findByUserName(userDetails.getUser().getUsername());
-        if (user.getAuth() != RoleType.ADMIN) {
-            throw new BusinessException(COUPON_ISSUE_NOT_ALLOWED);
-        }
-
-        UserCouponResponseDto responseDto = couponService.issueCouponToUser(couponId, userId);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
-    }
-
     @PostMapping("/issue/{couponId}")
     public ResponseEntity<UserCouponResponseDto> issueCoupon(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                              @PathVariable long couponId) {

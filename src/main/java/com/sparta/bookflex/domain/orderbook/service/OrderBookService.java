@@ -4,6 +4,7 @@ import com.sparta.bookflex.common.exception.BusinessException;
 import com.sparta.bookflex.common.exception.ErrorCode;
 import com.sparta.bookflex.common.utill.LoggingSingleton;
 import com.sparta.bookflex.domain.auth.service.AuthService;
+import com.sparta.bookflex.domain.basket.service.BasketService;
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.service.BookService;
 import com.sparta.bookflex.domain.coupon.entity.Coupon;
@@ -26,6 +27,7 @@ import com.sparta.bookflex.domain.sale.repository.SaleRepository;
 import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.mail.MessagingException;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,11 +43,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class OrderBookService {
 
-    private OrderItemRepository orderItemRepository;
+    private final OrderItemRepository orderItemRepository;
     @Getter
-    private OrderBookRepository orderBookRepository;
+    private final OrderBookRepository orderBookRepository;
     private final AuthService authService;
     private final BookService bookService;
 
@@ -58,24 +61,9 @@ public class OrderBookService {
 
     private final PaymentRepository paymentRepository;
 
-    @Autowired
-    public OrderBookService(OrderItemRepository orderItemRepository,
-                            OrderBookRepository orderBookRepository,
-                            AuthService authService, BookService bookService,
-                            PhotoImageService photoImageService,
-                            SaleRepository saleRepository,
-                            CouponService couponService,
-                            PaymentRepository paymentRepository) {
+    private final BasketService basketService;
 
-        this.paymentRepository = paymentRepository;
-        this.authService = authService;
-        this.bookService = bookService;
-        this.orderBookRepository = orderBookRepository;
-        this.orderItemRepository = orderItemRepository;
-        this.photoImageService = photoImageService;
-        this.saleRepository = saleRepository;
-        this.couponService = couponService;
-    }
+
 
     private Book getBook(Long bookId) {
         return bookService.getBookByBookId(bookId);
@@ -95,10 +83,10 @@ public class OrderBookService {
     public OrderCreateResponseDto createOrder(OrderRequestDto orderRequestDto, User user) {
         BigDecimal total = BigDecimal.ZERO;
         List<OrderItem> orderItemList = new ArrayList<>();
-
+        List<Long> bookIds = new ArrayList<>();
         for (OrderRequestDto.OrderItemDto item : orderRequestDto.getItems()) {
             Book book = getBook(item.getBookId());
-            book.decreaseStock(item.getQuantity());
+            bookIds.add(book.getId());
             BigDecimal price = item.getPrice();
             BigDecimal itemTotal = BigDecimal.valueOf(item.getQuantity()).multiply(price);
             total = total.add(itemTotal);
@@ -125,7 +113,8 @@ public class OrderBookService {
 
         orderBookRepository.save(orderBook);
         orderBook.generateOrderNo();
-        orderBookRepository.save(orderBook);
+
+        basketService.clear(bookIds, user);
 
         return OrderCreateResponseDto.builder()
                 .orderId(orderBook.getId())
@@ -205,16 +194,16 @@ public class OrderBookService {
             .build();
     }
 
-    public OrderBookTotalResDto getAllOrder(int page, int size) {
-
-        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-        Pageable pageable = PageRequest.of(page-1, size, sort);
-        Page<OrderShipResDto> pageResdto = orderBookRepository.findAllByPagable(pageable).map(
-            OrderBook::toOrderShipRes);
-        Long totalCount = orderBookRepository.findTotalCount();
-
-        return new OrderBookTotalResDto(totalCount, pageResdto);
-    }
+//    public OrderBookTotalResDto getAllOrder(int page, int size) {
+//
+//        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+//        Pageable pageable = PageRequest.of(page-1, size, sort);
+//        Page<OrderShipResDto> pageResdto = orderBookRepository.findAllByPagable(pageable).map(
+//            OrderBook::toOrderShipRes);
+//        Long totalCount = orderBookRepository.findTotalCount();
+//
+//        return new OrderBookTotalResDto(totalCount, pageResdto);
+//    }
 
 
     @Transactional
@@ -259,6 +248,8 @@ public class OrderBookService {
                     .price(orderItem.getPrice())
                     .quantity(orderItem.getQuantity())
                     .total(orderItem.getTotal())
+                    .orderBook(orderBook)
+                    .user(user)
                     .status(OrderState.PENDING_PAYMENT)
                     .build();
             if( discount != null) {
@@ -302,6 +293,7 @@ public class OrderBookService {
 
     @Transactional
     public Page<OrderGetsResponseDto> getOrders(User user, Pageable pageable) {
+
         Page<OrderBook> orderBookList = orderBookRepository.findByUser(user, pageable);
         return orderBookList.map(orderBook -> OrderGetsResponseDto.builder()
             .orderId(orderBook.getId())
