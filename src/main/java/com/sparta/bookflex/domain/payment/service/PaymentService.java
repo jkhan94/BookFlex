@@ -3,21 +3,23 @@ package com.sparta.bookflex.domain.payment.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta.bookflex.common.utill.LoggingSingleton;
 import com.sparta.bookflex.common.utill.Timestamped;
+import com.sparta.bookflex.domain.auth.service.AuthService;
 import com.sparta.bookflex.domain.coupon.service.CouponService;
 import com.sparta.bookflex.domain.orderbook.emuns.OrderState;
 import com.sparta.bookflex.domain.orderbook.entity.OrderBook;
 import com.sparta.bookflex.domain.orderbook.entity.OrderItem;
 import com.sparta.bookflex.domain.orderbook.service.OrderBookService;
-import com.sparta.bookflex.domain.payment.dto.*;
+import com.sparta.bookflex.domain.payment.dto.FailPayReqDto;
+import com.sparta.bookflex.domain.payment.dto.SuccessPayReqDto;
 import com.sparta.bookflex.domain.payment.entity.Payment;
 import com.sparta.bookflex.domain.payment.enums.PaymentStatus;
 import com.sparta.bookflex.domain.payment.repository.PaymentRepository;
 import com.sparta.bookflex.domain.sale.entity.Sale;
+import com.sparta.bookflex.domain.shipment.service.ShipmentService;
 import com.sparta.bookflex.domain.systemlog.enums.ActionType;
 import com.sparta.bookflex.domain.systemlog.repository.SystemLogRepository;
 import com.sparta.bookflex.domain.systemlog.repository.TraceOfUserLogRepository;
 import com.sparta.bookflex.domain.user.entity.User;
-import com.sparta.bookflex.domain.auth.service.AuthService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,6 +42,7 @@ public class PaymentService {
     private final CouponService couponService;
     private final TraceOfUserLogRepository traceOfUserLogRepository;
     private final SystemLogRepository systemLogRepository;
+    private final ShipmentService shipmentService;
 
 
     @Value("${payment.toss.success_url}")
@@ -56,7 +59,8 @@ public class PaymentService {
                           RestTemplate restTemplate, ObjectMapper objectMapper,
                              CouponService couponService,
                           TraceOfUserLogRepository traceOfUserLogRepository,
-                          SystemLogRepository systemLogRepository) {
+                          SystemLogRepository systemLogRepository,
+                          ShipmentService shipmentService) {
         this.restTemplate = restTemplate;
         this.authService = authService;
         this.paymentRepository = paymentRepository;
@@ -65,6 +69,7 @@ public class PaymentService {
         this.couponService = couponService;
         this.traceOfUserLogRepository = traceOfUserLogRepository;
         this.systemLogRepository = systemLogRepository;
+        this.shipmentService = shipmentService;
     }
 
 //    @Transactional
@@ -213,6 +218,8 @@ public class PaymentService {
             traceOfUserLogRepository.save(
                 LoggingSingleton.userLogging(ActionType.BOOK_PURCHASE, user, item.getBook()));
         }
+
+        shipmentService.createShipment(orderBook, user);
 
         systemLogRepository.save(
             LoggingSingleton.Logging(ActionType.PAYMENT_COMPLETE, orderBook));

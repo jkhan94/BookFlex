@@ -1,10 +1,8 @@
 package com.sparta.bookflex.domain.shipment.entity;
 
 import com.sparta.bookflex.common.utill.Timestamped;
-import com.sparta.bookflex.domain.orderbook.emuns.OrderState;
 import com.sparta.bookflex.domain.orderbook.entity.OrderBook;
-import com.sparta.bookflex.domain.orderbook.entity.OrderItem;
-import com.sparta.bookflex.domain.shipment.enums.ShipmentEnum;
+import com.sparta.bookflex.domain.shipment.dto.ShipmentResDto;
 import com.sparta.bookflex.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -12,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
@@ -29,9 +26,6 @@ public class Shipment extends Timestamped {
 
     @Column(name = "carrier",nullable = false)
     private String carrier;
-
-    @Column(name = "status",nullable = false)
-    private ShipmentEnum status;
 
     @Column(name = "shipped_at")
     private LocalDateTime shippedAt;
@@ -50,14 +44,30 @@ public class Shipment extends Timestamped {
     User user;
 
     @Builder
-    public Shipment(String trackingNumber, String carrier, ShipmentEnum status, LocalDateTime shippedAt, LocalDateTime deliveredAt, OrderBook orderBook,User user,String address) {
+    public Shipment(String trackingNumber, String carrier, LocalDateTime shippedAt, LocalDateTime deliveredAt, OrderBook orderBook,User user,String address) {
         this.trackingNumber = trackingNumber;
         this.carrier = carrier;
-        this.status = status;
         this.shippedAt = shippedAt;
         this.deliveredAt = deliveredAt;
         this.orderBook = orderBook;
         this.user = user;
         this.address = address;
+    }
+
+    public static ShipmentResDto toShipmentResDto(Shipment shipment){
+        String orderNo = "";
+        if(shipment.orderBook == null) {
+            orderNo = "NoData";
+        } else {
+            orderNo = shipment.orderBook.getOrderNo();
+        }
+        return ShipmentResDto.builder()
+            .username(shipment.getUser().getUsername())
+            .orderNo(orderNo)
+            .carrierName(shipment.getCarrier())
+            .trackingNumber(shipment.getTrackingNumber())
+            .shippedAt(shipment.getShippedAt())
+            .deliveredAt(shipment.getDeliveredAt())
+            .build();
     }
 }

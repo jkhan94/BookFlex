@@ -1,15 +1,19 @@
 package com.sparta.bookflex.domain.shipment.service;
 
-import com.sparta.bookflex.domain.shipment.dto.ShipmentReqDto;
+import com.sparta.bookflex.common.utill.ShipmentJsonUtil;
+import com.sparta.bookflex.domain.orderbook.entity.OrderBook;
+import com.sparta.bookflex.domain.orderbook.service.OrderBookService;
 import com.sparta.bookflex.domain.shipment.dto.ShipmentResDto;
-import com.sparta.bookflex.domain.shipment.enums.ShipmentEnum;
+import com.sparta.bookflex.domain.shipment.dto.TotalShipmentResDto;
+import com.sparta.bookflex.domain.shipment.entity.Shipment;
+import com.sparta.bookflex.domain.shipment.repository.ShipmentRepository;
 import com.sparta.bookflex.domain.user.dto.shipmentJsonDto;
+import com.sparta.bookflex.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
-import org.joda.time.DateTime;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -20,60 +24,118 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class ShipmentService {
 
-    private static final Logger log = LoggerFactory.getLogger(ShipmentService.class);
     private final RestTemplate restTemplate;
+    private final ShipmentRepository shipmentRepository;
+    private final OrderBookService orderBookService;
 
-    public ShipmentResDto getShipment(ShipmentReqDto reqDto) {
+    public void createShipment(OrderBook orderBook, User user) {
+        List<LocalDateTime> timelist = getShipAndDeliverTime(orderBook.getTrackingNumber(), orderBook.getCarrier());
 
-        List<shipmentJsonDto> dtoList = shipmentCheck(reqDto.getTrackingNumber(), reqDto.getCarrier());
+        Shipment shipment = Shipment.builder()
+            .address(user.getAddress())
+            .orderBook(orderBook)
+            .carrier(orderBook.getCarrier())
+            .trackingNumber(orderBook.getTrackingNumber())
+            .shippedAt(timelist.get(0))
+            .deliveredAt(timelist.get(1))
+            .user(user)
+            .build();
+        shipmentRepository.save(shipment);
+        orderBook.updateShipment(shipment);
+        user.setShipmentInfo(shipment);
+        orderBookService.getOrderBookRepository().save(orderBook);
+    }
 
-        ShipmentResDto tempDto = getStatus(reqDto);
+    public TotalShipmentResDto getAllShipmentInfo(int page, int size, boolean isAsc){
+
+        Sort.Direction direction = isAsc ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = Sort.by(direction, "createdAt");
+        Pageable pageable = PageRequest.of(page-1, size, sort);
+
+        Page<Shipment> shipmentPage = shipmentRepository.findAll(pageable);
+        long totalCount = shipmentRepository.count();
+
+        Page<ShipmentResDto> shipmentResDtos = shipmentPage.map(Shipment::toShipmentResDto).map((status) ->
+        {
+            status.updateStatus(getShipmentStatus(status.getTrackingNumber(), status.getCarrierName()));
+            return status;
+        });
+
+        return new TotalShipmentResDto(shipmentResDtos, totalCount);
+    }
+
+    public TotalShipmentResDto getUserShipmentInfo(int page, int size, boolean isAsc, User user){
+
+        Sort.Direction direction = isAsc ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = Sort.by(direction, "createdAt");
+        Pageable pageable = PageRequest.of(page-1, size, sort);
+
+        Page<Shipment> shipmentPage = shipmentRepository.findAllByUserId(user.getId(), pageable);
+        long totalCount = shipmentRepository.userShipInfoCount(user.getId());
+
+        Page<ShipmentResDto> shipmentResDtos = shipmentPage.map(Shipment::toShipmentResDto).map((status) ->
+        {
+            status.updateStatus(getShipmentStatus(status.getTrackingNumber(), status.getCarrierName()));
+            return status;
+        });
+
+        return new TotalShipmentResDto(shipmentResDtos, totalCount);
+    }
+
+//    public ShipmentResDto getShipment(ShipmentReqDto reqDto, User user) {
+//
+//        List<shipmentJsonDto> dtoList = shipmentCheck(reqDto.getTrackingNumber(), reqDto.getCarrier());
+//
+//        ShipmentResDto tempDto = shipmentStatus(reqDto.getTrackingNumber(), reqDto.getCarrier());
+//
+//        int listSize = dtoList.size();
+//         LocalDateTime shippedAt = LocalDateTime.now();
+//         LocalDateTime deliveredAt = LocalDateTime.now();
+//        for (int i = 0; i < listSize; i++) {
+//            if(i==0){
+//                shippedAt = ShipmentJsonUtil.getTimeParse(dtoList.get(i).getTime());
+//            }
+//            else if(i == listSize-1) {
+//                deliveredAt = ShipmentJsonUtil.getTimeParse(dtoList.get(i).getTime());
+//            }
+//        }
+//
+//        ShipmentResDto dto = new ShipmentResDto(shippedAt, deliveredAt, tempDto.getStatus());
+//
+//        return dto;
+//    }
+
+    public List<LocalDateTime> getShipAndDeliverTime(String trackingNumber, String carrier){
+        List<shipmentJsonDto> dtoList = shipmentCheck(trackingNumber, carrier);
 
         int listSize = dtoList.size();
-         LocalDateTime shippedAt = LocalDateTime.now();
-         LocalDateTime deliveredAt = LocalDateTime.now();
+        LocalDateTime shippedAt = LocalDateTime.now();
+        LocalDateTime deliveredAt = LocalDateTime.now();
         for (int i = 0; i < listSize; i++) {
             if(i==0){
-                shippedAt = getTimeParse(dtoList.get(i).getTime());
+                shippedAt = ShipmentJsonUtil.getTimeParse(dtoList.get(i).getTime());
             }
             else if(i == listSize-1) {
-                deliveredAt = getTimeParse(dtoList.get(i).getTime());
+                deliveredAt = ShipmentJsonUtil.getTimeParse(dtoList.get(i).getTime());
             }
         }
+        List<LocalDateTime> timeList = new ArrayList<>();
+        timeList.add(shippedAt);
+        timeList.add(deliveredAt);
 
-        ShipmentResDto dto = new ShipmentResDto(shippedAt, deliveredAt, tempDto.getStatus());
-
-//        for (shipmentJsonDto item : dtoList) {
-//            ShipmentResDto dto = new ShipmentResDto(item.getTime(), item.getName());
-//            shipmentResDtoList.add(dto);
-//        }
-
-        return dto;
+        return timeList;
     }
 
-    public LocalDateTime getTimeParse(String time) {
-        String thisTime;
-        if(time.contains("+")){
-            thisTime = time.replace("T", " ").substring(0, time.indexOf("+"));
-        }
-        else {
-            thisTime = time.replace("T", " ").replace("Z","");
-        }
-        return LocalDateTime.parse(thisTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
-    }
-
-    public ShipmentResDto getStatus(ShipmentReqDto reqDto) {
-        return shipmentStatus(reqDto.getTrackingNumber(), reqDto.getCarrier());
-    }
-
-    public ShipmentResDto shipmentStatus(String trackingNumber, String carrier) {
+    public String getShipmentStatus(String trackingNumber, String carrier) {
 
         URI uri = UriComponentsBuilder
             .fromUriString("https://apis.tracker.delivery")
@@ -111,9 +173,9 @@ public class ShipmentService {
             .body(requestBody);
 
         ResponseEntity<String> responseEntity = restTemplate.exchange(requestEntity, String.class);
-        String status = fromJSONtoString(responseEntity.getBody());
-        ShipmentResDto dto = new ShipmentResDto(DateTime.now().toString(), status);
-        return dto;
+        String status = ShipmentJsonUtil.fromJSONtoString(responseEntity.getBody());
+
+        return status;
     }
 
     public List<shipmentJsonDto> shipmentCheck(String trackingNumber, String carrier) {
@@ -168,45 +230,9 @@ public class ShipmentService {
 
         ResponseEntity<String> responseEntity = restTemplate.exchange(requestEntity, String.class);
 
-        List<shipmentJsonDto> dtoList = fromJSONtoItems(responseEntity.getBody());
-        for (shipmentJsonDto item : dtoList) {
-            log.info(item.getName());
-        }
+        List<shipmentJsonDto> dtoList = ShipmentJsonUtil.fromJSONtoItems(responseEntity.getBody());
 
         return dtoList;
     }
 
-    public String fromJSONtoString(String responseEntity) {
-        JSONObject jsonObject = new JSONObject(responseEntity);
-        String status = jsonObject
-            .getJSONObject("data")
-            .getJSONObject("track")
-            .getJSONObject("lastEvent")
-            .getJSONObject("status")
-            .getString("code");
-
-        return status;
-    }
-
-    public List<shipmentJsonDto> fromJSONtoItems(String responseEntityJson) {
-        JSONObject jsonObject = new JSONObject(responseEntityJson);
-
-        JSONArray jsonArray = jsonObject.getJSONObject("data")
-            .getJSONObject("track")
-            .getJSONObject("events")
-            .getJSONArray("edges");
-
-        List<shipmentJsonDto> itemDtoList = new ArrayList<>();
-
-        for (Object item : jsonArray) {
-            JSONObject tempJson = ((JSONObject) item).getJSONObject("node");
-            JSONObject itemJson = new JSONObject();
-            itemJson.put("time", tempJson.getString("time"));
-            itemJson.put("name", tempJson.getJSONObject("status").getString("name"));
-            shipmentJsonDto itemDto = new shipmentJsonDto(itemJson);
-            itemDtoList.add(itemDto);
-        }
-
-        return itemDtoList;
-    }
 }

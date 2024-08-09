@@ -3,6 +3,7 @@ package com.sparta.bookflex.domain.orderbook.service;
 import com.sparta.bookflex.common.exception.BusinessException;
 import com.sparta.bookflex.common.exception.ErrorCode;
 import com.sparta.bookflex.common.utill.LoggingSingleton;
+import com.sparta.bookflex.domain.auth.service.AuthService;
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.service.BookService;
 import com.sparta.bookflex.domain.coupon.entity.Coupon;
@@ -22,11 +23,9 @@ import com.sparta.bookflex.domain.payment.repository.PaymentRepository;
 import com.sparta.bookflex.domain.photoimage.service.PhotoImageService;
 import com.sparta.bookflex.domain.sale.entity.Sale;
 import com.sparta.bookflex.domain.sale.repository.SaleRepository;
-import com.sparta.bookflex.domain.systemlog.enums.ActionType;
-import com.sparta.bookflex.domain.systemlog.repository.TraceOfUserLogRepository;
 import com.sparta.bookflex.domain.user.entity.User;
-import com.sparta.bookflex.domain.auth.service.AuthService;
 import jakarta.mail.MessagingException;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,6 +44,7 @@ import java.util.stream.Collectors;
 public class OrderBookService {
 
     private OrderItemRepository orderItemRepository;
+    @Getter
     private OrderBookRepository orderBookRepository;
     private final AuthService authService;
     private final BookService bookService;
