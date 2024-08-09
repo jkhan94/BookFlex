@@ -3,33 +3,32 @@ package com.sparta.bookflex.domain.wish.service;
 import com.sparta.bookflex.domain.auth.service.AuthService;
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.service.BookService;
+import com.sparta.bookflex.domain.photoimage.service.PhotoImageService;
 import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.wish.dto.WishResDto;
 import com.sparta.bookflex.domain.wish.entity.Wish;
 import com.sparta.bookflex.domain.wish.repository.WishRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class WishService {
 
     private final WishRepository wishRepository;
     private final BookService bookService;
     private final AuthService authService;
+    private final PhotoImageService photoImageService;
 
 
-    @Autowired
-    public WishService(WishRepository wishRepository, BookService bookService, AuthService authService) {
-        this.wishRepository = wishRepository;
-        this.bookService = bookService;
-        this.authService = authService;
-    }
+
     private User getUser(String username) {
         return authService.findByUserName(username);
     }
@@ -68,6 +67,7 @@ public class WishService {
         wishRepository.save(wish);
     }
 
+    @Transactional
     public Page<WishResDto> getWishList(User user, Pageable pageable) {
         if(!isUserExist(user.getUsername())) {
             throw new IllegalArgumentException("사용자가 존재하지 않습니다.");
@@ -78,6 +78,8 @@ public class WishService {
                 .map(wish -> WishResDto.builder()
                         .wishId(wish.getId())
                         .bookName(wish.getBook().getBookName())
+                        .bookId(wish.getBook().getId())
+                        .photoUrl(photoImageService.getPhotoImageUrl(wish.getBook().getPhotoImage().getFilePath()))
                         .build())
                 .collect(Collectors.toList());
         return new PageImpl<>(wishResDtoList, pageable, wishPage.getTotalElements());
