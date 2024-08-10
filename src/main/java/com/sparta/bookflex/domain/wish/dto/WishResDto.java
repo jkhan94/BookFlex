@@ -8,13 +8,15 @@ import lombok.Getter;
 @Getter
 public class WishResDto {
     Long wishId;
-    //PhotoImage photoImage;
     String bookName;
+    Long bookId;
+    String photoUrl;
 
     @Builder
-    public WishResDto(Long wishId, String bookName) {
+    public WishResDto(Long wishId, String bookName, Long bookId, String photoUrl) {
         this.wishId = wishId;
-        //this.photoImage = wish.getBook().getPhotoImage();
         this.bookName = bookName;
+        this.bookId = bookId;
+        this.photoUrl = photoUrl;
     }
 }
