@@ -1,9 +1,6 @@
 package com.sparta.bookflex.domain.user.controller;
 
-import com.querydsl.core.Tuple;
-import com.sparta.bookflex.common.aop.Envelop;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
-import com.sparta.bookflex.domain.book.entity.BookStatus;
 import com.sparta.bookflex.domain.user.dto.*;
 import com.sparta.bookflex.domain.user.scheduler.UserRoleScheduler;
 import com.sparta.bookflex.domain.user.service.UserService;
@@ -33,7 +30,6 @@ public class UserController {
         return ResponseEntity.ok().body(resDto);
     }
 
-    @Envelop("프로필 수정에 성공하였습니다.")
     @PutMapping()
     public ResponseEntity<ProfileResDto> updateProfile(@AuthenticationPrincipal UserDetailsImpl userDetails
             , @Valid @RequestBody ProfileReqDto reqDto) {
@@ -44,7 +40,6 @@ public class UserController {
         return ResponseEntity.ok().body(resDto);
     }
 
-    @Envelop("회원 등급을 적용했습니다.")
     @PutMapping("/{userId}/grade")
     public ResponseEntity<Void> updateGrade(@PathVariable long userId,
                                             @AuthenticationPrincipal UserDetailsImpl userDetails,
@@ -53,7 +48,6 @@ public class UserController {
         return ResponseEntity.ok().body(null);
     }
 
-    @Envelop("회원 상태를 변경했습니다.")
     @PutMapping("/{userId}/state")
     public ResponseEntity<Void> updateGrade(@PathVariable long userId,
                                             @AuthenticationPrincipal UserDetailsImpl userDetails,

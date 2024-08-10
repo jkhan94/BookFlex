@@ -25,8 +25,7 @@ public class ShipmentController {
 //        return ResponseEntity.ok().body(shipmentResDto);
 //    }
 
-    //    @Envelop("배송상태 조회")
-//    @GetMapping("/status")
+    //    @GetMapping("/status")
 //    public ResponseEntity<ShipmentResDto> getStatus(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody ShipmentReqDto reqDto){
 //
 //        ShipmentResDto shipmentResDtoList = shipmentService.getShipmentStatus(reqDto.getTrackingNumber(), reqDto.getCarrier());
