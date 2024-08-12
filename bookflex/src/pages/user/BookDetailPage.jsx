@@ -8,6 +8,9 @@ const BookDetailPage = () => {
     const { bookId } = useParams(); // URL에서 책 ID 가져오기
     const [book, setBook] = useState(null);
     const [quantity, setQuantity] = useState(1);
+    const [reviews, setReviews] = useState([]);
+    const [reviewPage, setReviewPage] = useState(1);
+    const [reviewTotalPages, setReviewTotalPages] = useState(10);
     const navigator = useNavigate();
 
     useEffect(() => {
@@ -21,6 +24,28 @@ const BookDetailPage = () => {
         };
         fetchBookDetails();
     }, [bookId]);
+
+    useEffect(() => {
+        const fetchReviews = async () => {
+            try {
+                const response = await axiosInstance.get(`/reviews/book/${bookId}`, {
+                    params: {
+                        page: reviewPage,
+                        size: 5,
+                        direction: false,
+                        sortBy: 'createdAt',
+                    },
+                });
+                setReviews(response.data.data.content);
+                setReviewTotalPages(response.data.data.totalPages);
+            } catch (error) {
+                console.error('There was an error!', error);
+
+            }
+        };
+
+        fetchReviews();
+    }, [bookId, reviewPage]);
 
     const handleAddToCart = async () => {
         try {
@@ -53,6 +78,22 @@ const BookDetailPage = () => {
         setQuantity(Number(e.target.value));
     };
 
+    const handlePreviousReviewPage = () => {
+        if (reviewPage > 1) {
+            setReviewPage(reviewPage - 1);
+        }
+    };
+
+    const handleNextReviewPage = () => {
+        if (reviewPage < reviewTotalPages) {
+            setReviewPage(reviewPage + 1);
+        }
+    };
+
+    function renderStars(rating) {
+        return '★'.repeat(rating) + '☆'.repeat(5 - rating);
+    }
+
     if (!book) {
         return <div>Loading...</div>; // 로딩 중 표시
     }
@@ -61,7 +102,7 @@ const BookDetailPage = () => {
         <div className={styles.bookDetailPage}>
             <h1>{book.bookName}</h1>
             <div className={styles.bookDetails}>
-                <img src={book.photoImagePath} alt={book.bookName} className={styles.bookImage} />
+                <img src={book.photoImagePath} alt={book.bookName} className={styles.bookImage}/>
                 <div className={styles.bookInfo}>
                     <h2>{book.bookName}</h2>
                     <p><strong>Author:</strong> {book.author}</p>
@@ -91,8 +132,43 @@ const BookDetailPage = () => {
                     </button>
                 </div>
             </div>
-        </div>
-    );
+
+            <div className="reviews-section">
+                <h2>상품 리뷰</h2>
+                {reviews.length > 0 ? (
+                    <>
+                        <ul className="reviews-list">
+                            {reviews.map((review) => (
+                                <li key={review.createdAt}>
+                                    <h3>{review.title}</h3>
+                                    <p>{review.content}</p>
+                                    <p>별점: <td className="stars">{renderStars(parseInt(review.star, 10))}</td></p>
+                                    <p>작성자: {review.username}</p>
+                                    <p>작성일: {new Date(review.createdAt).toLocaleString()}</p>
+                                    {review.createdAt !== review.modifiedAt && (
+                                        <p>수정일: {new Date(review.modifiedAt).toLocaleString()}</p>
+                                    )}
+                                </li>
+                            ))}
+                        </ul>
+                        <div className="pagination">
+                            <button onClick={handlePreviousReviewPage} disabled={reviewPage === 1}>이전</button>
+                            <span>{reviewPage} / {reviewTotalPages}</span>
+                            <button onClick={handleNextReviewPage} disabled={reviewPage === reviewTotalPages}>다음
+                            </button>
+                        </div>
+                    </>
+                ) : (
+                    <p>리뷰가 없습니다.</p>
+                )}
+            </div>
+
+
+
+</div>
+
+)
+    ;
 };
 
 export default BookDetailPage;

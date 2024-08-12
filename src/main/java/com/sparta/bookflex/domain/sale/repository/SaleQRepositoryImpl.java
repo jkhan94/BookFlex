@@ -8,7 +8,6 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.bookflex.domain.category.enums.Category;
 import com.sparta.bookflex.domain.orderbook.emuns.OrderState;
-import com.sparta.bookflex.domain.sale.dto.BestSellerDto;
 import com.sparta.bookflex.domain.sale.entity.Sale;
 import com.sparta.bookflex.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -133,20 +132,7 @@ public class SaleQRepositoryImpl implements SaleQRepository {
         return new PageImpl<>(result, pageable, count.size());
     }
 
-    @Override
-    public List<Tuple> findBestSeller(LocalDateTime currentDateTime) {
-        List<Tuple> result = queryFactory
-                .select(sale.book.id, sale.quantity.sum(), book.photoImage)
-                .from(sale)
-                .join(book).on(sale.book.id.eq(book.id))
-                .where(searchDateFilterForBestSeller(currentDateTime.minusDays(7), currentDateTime))
-                .groupBy(sale.book.id)
-                .orderBy(sale.quantity.sum().desc())
-                .limit(10)
-                .fetch();
 
-        return result;
-    }
 
     private BooleanExpression eqBookName(String bookName) {
         if (bookName == null || bookName.isEmpty()) {

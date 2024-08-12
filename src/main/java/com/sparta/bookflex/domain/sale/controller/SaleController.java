@@ -86,18 +86,6 @@ public class SaleController {
     }
 
 
-//    @PutMapping("/{saleId}/status")
-//    public ResponseEntity<CommonDto<Void>> updateSaleStatus(
-//            @PathVariable Long saleId,
-//            @RequestBody SaleStateReqestDto saleStateReqDto,
-//            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//
-//        saleService.updateSaleStatus(saleId, saleStateReqDto.getSaleState(), userDetails.getUser());
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(new CommonDto<>(HttpStatus.OK.value(), "판매 상태가 변경되었습니다.", null));
-//    }
-
     @GetMapping("/bybookname")
     public ResponseEntity<CommonDto<SaleVolumeResponseDto>> getSaleVoulmesByBookName(@RequestParam(name = "page", defaultValue = "1") int page,
                                                                                      @RequestParam(name = "size", defaultValue = "5") int size,
@@ -135,16 +123,7 @@ public class SaleController {
                 .body(new CommonDto<>(HttpStatus.OK.value(), "카테고리별 매출내역 조회가 완료되었습니다.", saleVolumeResponseDto));
     }
 
-    @GetMapping("/bestseller")
-    public ResponseEntity<CommonDto<List<BestSellerDto>>> getBestSeller() {
 
-        List<BestSellerDto> bestSellerDtoList =
-                saleService.getBestSeller();
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new CommonDto<>(HttpStatus.OK.value(), "카테고리별 매출내역 조회가 완료되었습니다.", bestSellerDtoList));
-    }
 
 
 }

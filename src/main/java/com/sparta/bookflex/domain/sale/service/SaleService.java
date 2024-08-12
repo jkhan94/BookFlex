@@ -217,17 +217,5 @@ public class SaleService {
         return saleListDtos;
     }
 
-    public List<BestSellerDto> getBestSeller() {
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        return saleQRepositoryImpl.findBestSeller(currentDateTime).stream()
-                .map(tuple -> BestSellerDto
-                        .builder()
-                        .bookName(tuple.get(0, String.class))
-                        .imagePath(photoImageService.getPhotoImageUrl(tuple.get(1,String.class)))
-                        .build())
-                .toList();
 
-
-
-    }
 }

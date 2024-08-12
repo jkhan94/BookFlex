@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from "../../api/axiosInstance";
-import { Link } from 'react-router-dom'; // Link 임포트
-import styles from './OrdersComponent.module.css';
 import { useNavigate } from 'react-router-dom';
+import styles from './OrdersComponent.module.css';
 
 const orderStateLabels = {
     PENDING_PAYMENT: '결제대기',
@@ -37,12 +36,17 @@ const OrdersComponent = () => {
         fetchOrders();
     }, []);
 
+    console.log(orders)
     const getOrderStateLabel = (state) => {
         return orderStateLabels[state] || state;
     };
 
     const handleOrderClick = (orderId) => {
         navigate(`/main/order/${orderId}`);
+    };
+
+    const handleReviewButtonClick = (orderId, itemId) => {
+        navigate(`/main/register-review?orderId=${orderId}&itemId=${itemId}`);
     };
 
     if (loading) return <p>Loading...</p>;
@@ -75,17 +79,25 @@ const OrdersComponent = () => {
                                             <img src={item.photoImagePath} alt={item.bookName} />
                                             <p>{item.bookName} - ${item.price.toFixed(2)} x {item.quantity}</p>
                                             {order.orderState === 'SALE_COMPLETED' && (
-                                                <button
-                                                    className={`${styles.reviewButton} ${item.reviewed ? styles.disabledButton : ''}`}
-                                                    onClick={() => {
-                                                        if (!item.reviewed) {
-                                                            window.location.href = `/main/register-review?orderId=${order.orderId}&itemId=${item.orderItemId}`;
-                                                        }
-                                                    }}
-                                                    disabled={item.reviewed}
-                                                >
-                                                    {item.reviewed ? '리뷰 작성됨' : '리뷰 작성'}
-                                                </button>
+                                                <>
+                                                    <button
+                                                        className={styles.reviewButton}
+                                                        onClick={() => handleReviewButtonClick(order.orderId, item.orderItemId)}
+                                                    >
+                                                        리뷰 등록하기
+                                                    </button>
+                                                    <button
+                                                        className={`${styles.reviewButton} ${item.reviewed ? styles.disabledButton : ''}`}
+                                                        onClick={() => {
+                                                            if (!item.reviewed) {
+                                                                window.location.href = `/main/register-review?orderId=${order.orderId}&itemId=${item.orderItemId}`;
+                                                            }
+                                                        }}
+                                                        disabled={item.reviewed}
+                                                    >
+                                                        {item.reviewed ? '리뷰 작성됨' : '리뷰 작성'}
+                                                    </button>
+                                                </>
                                             )}
                                         </li>
                                     ))}

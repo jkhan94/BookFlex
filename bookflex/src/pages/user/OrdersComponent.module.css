@@ -2,7 +2,7 @@
 .orderCard {
     width: 500px; /* 너비를 좁히기 위한 값 */
     height: auto; /* 높이를 자동으로 조절 */
-    margin: 10px auto; /* 카드 중앙 정렬 및 여백 추가 */
+    margin-top: 100px; /* 카드 중앙 정렬 및 여백 추가 */
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 8px;
