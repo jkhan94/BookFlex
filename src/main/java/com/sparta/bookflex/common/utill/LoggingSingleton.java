@@ -77,36 +77,4 @@ public class LoggingSingleton {
         TraceOfUserLog userLog = new TraceOfUserLog(type, description, user);
         return userLog;
     }
-
-//    public static SystemLog Logging(ActionType type, User user, String name) {
-//        type.apply(name, null);
-//        String description = type.getDescriptionMsg();
-//
-//        SystemLog log = new SystemLog(type, description, user);
-//        return log;
-//    }
-//
-//    public static SystemLog Logging(ActionType type, User user, String name, Object value) {
-//        type.apply(name, value);
-//        String description = type.getDescriptionMsg();
-//
-//        SystemLog log = new SystemLog(type, description, user);
-//        return log;
-//    }
-//
-//    public static TraceOfUserLog userLogging(ActionType type, User user, String name) {
-//        type.apply(name,null);
-//        String description = type.getDescriptionMsg();
-//        TraceOfUserLog userLog = new TraceOfUserLog(type, description, user);
-//        return userLog;
-//    }
-//
-//    public static TraceOfUserLog userLogging(ActionType type, User user, String name, String objectName, Object value) {
-//        type.apply(name, value);
-//        String description = type.getDescriptionMsg();
-//        TraceOfUserLog userLog = new TraceOfUserLog(type, description, user);
-//        return userLog;
-//    }
-
-
 }

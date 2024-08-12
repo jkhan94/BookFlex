@@ -1,17 +1,19 @@
 package com.sparta.bookflex.domain.sale.service;
 
+import com.sparta.bookflex.domain.auth.service.AuthService;
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.service.BookService;
 import com.sparta.bookflex.domain.category.enums.Category;
 import com.sparta.bookflex.domain.orderbook.dto.OrderRequestDto;
 import com.sparta.bookflex.domain.orderbook.emuns.OrderState;
+import com.sparta.bookflex.domain.orderbook.entity.OrderBook;
 import com.sparta.bookflex.domain.orderbook.repository.OrderBookRepository;
 import com.sparta.bookflex.domain.sale.dto.*;
 import com.sparta.bookflex.domain.sale.entity.Sale;
 import com.sparta.bookflex.domain.sale.repository.SaleQRepositoryImpl;
 import com.sparta.bookflex.domain.sale.repository.SaleRepository;
+import com.sparta.bookflex.domain.shipment.service.ShipmentService;
 import com.sparta.bookflex.domain.user.entity.User;
-import com.sparta.bookflex.domain.auth.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +26,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -33,17 +36,20 @@ public class SaleService {
     private final BookService bookService;
     private final OrderBookRepository orderBookRepository;
     private final SaleQRepositoryImpl saleQRepositoryImpl;
+    private final ShipmentService shipmentService;
 
     @Autowired
     public SaleService(SaleRepository saleRepository,
                        AuthService authService,
                        BookService bookService,
-                       OrderBookRepository orderBookRepository, SaleQRepositoryImpl saleQRepositoryImpl) {
+                       OrderBookRepository orderBookRepository, SaleQRepositoryImpl saleQRepositoryImpl,
+                       ShipmentService shipmentService) {
         this.saleRepository = saleRepository;
         this.authService = authService;
         this.bookService = bookService;
         this.orderBookRepository = orderBookRepository;
         this.saleQRepositoryImpl = saleQRepositoryImpl;
+        this.shipmentService = shipmentService;
     }
 
     private Book getBook(Long bookId) {
@@ -52,6 +58,10 @@ public class SaleService {
 
     private Sale getSale(Long saleId) {
         return saleRepository.findById(saleId).orElseThrow(() -> new IllegalArgumentException("해당 상품이 존재하지 않습니다."));
+    }
+
+    private List<Sale> getSaleListStatusChageable()  {
+        return saleRepository.findAllSalesStatusChagable();
     }
 
     @Transactional
@@ -124,11 +134,29 @@ public class SaleService {
         saleRepository.save(sale);
     }
 
-//    public void updateSaleStatus(Long saleId, SaleState saleState, User user) {
-//        Sale sale = getSale(saleId);
-//        sale.updateStatus(saleState);
-//        saleRepository.save(sale);
-//    }
+    public void updateSaleStatus() {
+        List<Sale> salelist = getSaleListStatusChageable();
+        for(Sale saleInfo : salelist) {
+            OrderBook orderBook = saleInfo.getOrderBook();
+            if(orderBook == null) {
+                continue;
+            }
+            String trackingNumber = orderBook.getTrackingNumber();
+            String carrier = orderBook.getCarrier();
+            String status = shipmentService.getShipmentStatus(trackingNumber, carrier);
+
+            if(status.equalsIgnoreCase("DELIVERED")) {
+                saleInfo.updateStatus(OrderState.IN_DELIVERY);
+            }
+            else if(status.equalsIgnoreCase("IN_TRANSIT") || status.equalsIgnoreCase("In Transit")) {
+                saleInfo.updateStatus(OrderState.IN_TRANSIT);
+            }
+            else {
+                saleInfo.updateStatus(OrderState.DELIVERY_COMPLETED);
+            }
+        }
+        saleRepository.saveAll(salelist);
+    }
 
     public SaleVolumeResponseDto getSaleVoulmesByBookName(int page, int size, boolean isAsc, String sortBy, String bookName, LocalDate startDate, LocalDate endDate) {
 
