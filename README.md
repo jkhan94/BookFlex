@@ -135,7 +135,7 @@ Bookflex는 고객과 관리자의 요구를 모두 만족시키는 온라인 �
 <div id="g">
 
 ## 📊 ERD DIAGRAM
-![ERD bookflex](https://github.com/user-attachments/assets/2d0a3a0e-60d6-468b-b75d-ea1fdd87b6ac)
+![ERD](https://github.com/user-attachments/assets/60074327-dca3-4567-b4a6-0c1e2e9d28e1)
 
 </div>
 
@@ -144,7 +144,7 @@ Bookflex는 고객과 관리자의 요구를 모두 만족시키는 온라인 �
 <div id="h">
 
 ## 📜 API 명세서
-![API명세서](https://github.com/user-attachments/assets/b9a02ce5-bbea-4d1b-8ee8-acb8de8f3f33)
+![API명세서](https://github.com/user-attachments/assets/184bb42c-8a01-4bb6-9d5a-16022f069570)
 [API 명세서](https://www.notion.so/teamsparta/13-647e5be3039d4e29b69be9b9efa70cf2)
 </div>
 
