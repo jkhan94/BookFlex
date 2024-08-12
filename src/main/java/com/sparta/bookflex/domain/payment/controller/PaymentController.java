@@ -33,7 +33,7 @@ public class PaymentController {
 //    }
 
     @PostMapping("/success")
-    public ResponseEntity<CommonDto<Void>> handlePaymentSuccess(@RequestBody SuccessPayReqDto successPayReqDto, @AuthenticationPrincipal UserDetailsImpl userDetails) throws MessagingException, UnsupportedEncodingException {
+    public ResponseEntity<CommonDto<Void>> handlePaymentSuccess(@RequestBody SuccessPayReqDto successPayReqDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         paymentService.processPayment(userDetails.getUser(), successPayReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(new CommonDto<>(HttpStatus.CREATED.value(), "결제가 완료되었습니다.", null));

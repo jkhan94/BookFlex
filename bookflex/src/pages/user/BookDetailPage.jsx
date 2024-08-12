@@ -8,7 +8,7 @@ const BookDetailPage = () => {
     const { bookId } = useParams(); // URL에서 책 ID 가져오기
     const [book, setBook] = useState(null);
     const [quantity, setQuantity] = useState(1);
-    const navigator = useNavigate();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchBookDetails = async () => {
