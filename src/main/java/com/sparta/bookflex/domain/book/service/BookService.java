@@ -77,9 +77,6 @@ public class BookService {
 
         Pageable pageble = PageRequest.of(page - 1, size, sort);
 
-//        return bookCustomRepositoryImpl.findBooks(bookName, bookStatus, pageble).stream()
-//                .map(book -> book.toResponseDto(photoImageService.getPhotoImageUrl(book.getPhotoImage().getFilePath())))
-//                .toList();
 
         Page<Book> bookList = bookCustomRepositoryImpl.findBooks(bookName, bookStatus, pageble);
 

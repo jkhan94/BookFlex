@@ -1,11 +1,13 @@
 package com.sparta.bookflex.domain.sale.service;
 
+import com.querydsl.core.Tuple;
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.service.BookService;
 import com.sparta.bookflex.domain.category.enums.Category;
 import com.sparta.bookflex.domain.orderbook.dto.OrderRequestDto;
 import com.sparta.bookflex.domain.orderbook.emuns.OrderState;
 import com.sparta.bookflex.domain.orderbook.repository.OrderBookRepository;
+import com.sparta.bookflex.domain.photoimage.service.PhotoImageService;
 import com.sparta.bookflex.domain.sale.dto.*;
 import com.sparta.bookflex.domain.sale.entity.Sale;
 import com.sparta.bookflex.domain.sale.repository.SaleQRepositoryImpl;
@@ -24,6 +26,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -33,17 +36,21 @@ public class SaleService {
     private final BookService bookService;
     private final OrderBookRepository orderBookRepository;
     private final SaleQRepositoryImpl saleQRepositoryImpl;
+    private final PhotoImageService photoImageService;
 
     @Autowired
     public SaleService(SaleRepository saleRepository,
                        AuthService authService,
                        BookService bookService,
-                       OrderBookRepository orderBookRepository, SaleQRepositoryImpl saleQRepositoryImpl) {
+                       OrderBookRepository orderBookRepository,
+                       SaleQRepositoryImpl saleQRepositoryImpl,
+                       PhotoImageService photoImageService) {
         this.saleRepository = saleRepository;
         this.authService = authService;
         this.bookService = bookService;
         this.orderBookRepository = orderBookRepository;
         this.saleQRepositoryImpl = saleQRepositoryImpl;
+        this.photoImageService = photoImageService;
     }
 
     private Book getBook(Long bookId) {
@@ -177,7 +184,6 @@ public class SaleService {
                         .build());
 
 
-
         TotalSaleVolumeDto totalSaleVolume = TotalSaleVolumeDto.builder()
                 .totalSaleVolume(saleVolumeRowDtos.stream()
                         .map(saleVolume -> saleVolume.getTotalPrice()).reduce(BigDecimal.ZERO, BigDecimal::add)).build();
@@ -209,5 +215,19 @@ public class SaleService {
                         .build());
 
         return saleListDtos;
+    }
+
+    public List<BestSellerDto> getBestSeller() {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        return saleQRepositoryImpl.findBestSeller(currentDateTime).stream()
+                .map(tuple -> BestSellerDto
+                        .builder()
+                        .bookName(tuple.get(0, String.class))
+                        .imagePath(photoImageService.getPhotoImageUrl(tuple.get(1,String.class)))
+                        .build())
+                .toList();
+
+
+
     }
 }

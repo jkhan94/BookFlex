@@ -2,10 +2,7 @@ package com.sparta.bookflex.domain.sale.controller;
 
 import com.sparta.bookflex.common.dto.CommonDto;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
-import com.sparta.bookflex.domain.sale.dto.SaleListDto;
-import com.sparta.bookflex.domain.sale.dto.SaleRequestDto;
-import com.sparta.bookflex.domain.sale.dto.SaleResponseDto;
-import com.sparta.bookflex.domain.sale.dto.SaleVolumeResponseDto;
+import com.sparta.bookflex.domain.sale.dto.*;
 import com.sparta.bookflex.domain.sale.service.SaleService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/sales")
@@ -135,6 +133,17 @@ public class SaleController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new CommonDto<>(HttpStatus.OK.value(), "카테고리별 매출내역 조회가 완료되었습니다.", saleVolumeResponseDto));
+    }
+
+    @GetMapping("/bestseller")
+    public ResponseEntity<CommonDto<List<BestSellerDto>>> getBestSeller() {
+
+        List<BestSellerDto> bestSellerDtoList =
+                saleService.getBestSeller();
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new CommonDto<>(HttpStatus.OK.value(), "카테고리별 매출내역 조회가 완료되었습니다.", bestSellerDtoList));
     }
 
 
