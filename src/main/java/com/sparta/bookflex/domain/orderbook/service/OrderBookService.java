@@ -194,16 +194,7 @@ public class OrderBookService {
             .build();
     }
 
-//    public OrderBookTotalResDto getAllOrder(int page, int size) {
-//
-//        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-//        Pageable pageable = PageRequest.of(page-1, size, sort);
-//        Page<OrderShipResDto> pageResdto = orderBookRepository.findAllByPagable(pageable).map(
-//            OrderBook::toOrderShipRes);
-//        Long totalCount = orderBookRepository.findTotalCount();
-//
-//        return new OrderBookTotalResDto(totalCount, pageResdto);
-//    }
+
 
 
     @Transactional

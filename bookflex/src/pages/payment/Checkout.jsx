@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-// import { loadPaymentWidget, ANONYMOUS } from "@tosspayments/payment-widget-sdk";
+import { loadPaymentWidget, ANONYMOUS } from "@tosspayments/payment-widget-sdk";
 import { nanoid } from "nanoid";
 import { useLocation } from 'react-router-dom';
 

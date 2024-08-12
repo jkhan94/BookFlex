@@ -2,6 +2,7 @@ package com.sparta.bookflex.domain.shipment.service;
 
 import com.sparta.bookflex.common.utill.ShipmentJsonUtil;
 import com.sparta.bookflex.domain.orderbook.entity.OrderBook;
+import com.sparta.bookflex.domain.orderbook.repository.OrderBookRepository;
 import com.sparta.bookflex.domain.orderbook.service.OrderBookService;
 import com.sparta.bookflex.domain.shipment.dto.ShipmentResDto;
 import com.sparta.bookflex.domain.shipment.dto.TotalShipmentResDto;
@@ -19,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -36,25 +38,26 @@ public class ShipmentService {
     private final RestTemplate restTemplate;
     private final ShipmentRepository shipmentRepository;
     private final OrderBookService orderBookService;
+    private final OrderBookRepository orderBookRepository;
 
+    @Transactional
     public void createShipment(OrderBook orderBook, User user) {
         List<LocalDateTime> timelist = getShipAndDeliverTime(orderBook.getTrackingNumber(), orderBook.getCarrier());
 
         Shipment shipment = Shipment.builder()
-            .address(user.getAddress())
-            .orderBook(orderBook)
-            .carrier(orderBook.getCarrier())
-            .trackingNumber(orderBook.getTrackingNumber())
-            .shippedAt(timelist.get(0))
-            .deliveredAt(timelist.get(1))
-            .user(user)
-            .build();
+                .address(user.getAddress())
+                .orderBook(orderBook)
+                .carrier(orderBook.getCarrier())
+                .trackingNumber(orderBook.getTrackingNumber())
+                .shippedAt(timelist.get(0))
+                .deliveredAt(timelist.get(1))
+                .user(user)
+                .build();
         shipmentRepository.save(shipment);
         orderBook.updateShipment(shipment);
         user.setShipmentInfo(shipment);
-        orderBookService.getOrderBookRepository().save(orderBook);
+        orderBookRepository.save(orderBook);
     }
-
     public TotalShipmentResDto getAllShipmentInfo(int page, int size, boolean isAsc){
 
         Sort.Direction direction = isAsc ? Sort.Direction.DESC : Sort.Direction.ASC;
