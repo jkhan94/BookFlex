@@ -189,6 +189,7 @@ const CouponManagement = () => {
                 }
             });
             alert('쿠폰이 모든 사용자에게 발급되었습니다.');
+            fetchCoupons(currentPage); // 쿠폰 발급 후 목록 새로고침
         } catch (error) {
             alert('쿠폰을 발급하는 중 오류가 발생했습니다: ' + error.message);
         }
