@@ -135,7 +135,7 @@ Bookflex는 고객과 관리자의 요구를 모두 만족시키는 온라인 �
 <div id="g">
 
 ## 📊 ERD DIAGRAM
-![ERD bookflex](https://github.com/user-attachments/assets/2d0a3a0e-60d6-468b-b75d-ea1fdd87b6ac)
+![ERD](https://github.com/user-attachments/assets/60074327-dca3-4567-b4a6-0c1e2e9d28e1)
 
 </div>
 
