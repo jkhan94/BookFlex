@@ -32,7 +32,7 @@ const LoginPage = () => {
                 if (auth === 'ADMIN') {
                     navigate('/admin');
                 } else {
-                    navigate('/main');
+                    navigate('/main/dashboard');
                 }
 
             })

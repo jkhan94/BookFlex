@@ -22,7 +22,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/orders")
+@RequestMapping("/api/orders")
 public class OrderBookController {
 
     private OrderBookService orderBookService;

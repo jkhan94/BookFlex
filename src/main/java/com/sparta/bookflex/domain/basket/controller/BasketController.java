@@ -15,7 +15,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/baskets")
+@RequestMapping("/api/baskets")
 public class BasketController {
     private final BasketService basketService;
 

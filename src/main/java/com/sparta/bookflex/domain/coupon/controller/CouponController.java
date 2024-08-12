@@ -29,7 +29,7 @@ import static com.sparta.bookflex.common.exception.ErrorCode.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/coupons")
+@RequestMapping("/api/coupons")
 public class CouponController {
 
     private final CouponService couponService;
