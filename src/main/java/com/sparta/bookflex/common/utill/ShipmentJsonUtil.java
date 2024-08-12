@@ -13,6 +13,9 @@ public class ShipmentJsonUtil {
 
     public static String fromJSONtoString(String responseEntity) {
         JSONObject jsonObject = new JSONObject(responseEntity);
+        if(jsonObject.getJSONObject("data").isNull("track")){
+            return "No Data";
+        }
         String status = jsonObject
             .getJSONObject("data")
             .getJSONObject("track")
@@ -25,13 +28,18 @@ public class ShipmentJsonUtil {
 
     public static List<shipmentJsonDto> fromJSONtoItems(String responseEntityJson) {
         JSONObject jsonObject = new JSONObject(responseEntityJson);
+        List<shipmentJsonDto> itemDtoList = new ArrayList<>();
+
+        if(jsonObject.getJSONObject("data").isNull("track")){
+            return itemDtoList;
+        }
 
         JSONArray jsonArray = jsonObject.getJSONObject("data")
             .getJSONObject("track")
             .getJSONObject("events")
             .getJSONArray("edges");
 
-        List<shipmentJsonDto> itemDtoList = new ArrayList<>();
+
 
         for (Object item : jsonArray) {
             JSONObject tempJson = ((JSONObject) item).getJSONObject("node");

@@ -20,6 +20,8 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static com.sparta.bookflex.domain.book.entity.QBook.book;
@@ -130,6 +132,30 @@ public class SaleQRepositoryImpl implements SaleQRepository {
                 .fetch();
 
         return new PageImpl<>(result, pageable, count.size());
+    }
+
+    @Override
+    public List<Sale> findAllSalesStatusChagable() {
+        List<Sale> result = queryFactory
+            .select(sale)
+            .from(sale)
+            .where(chageableStatus())
+            .fetch();
+
+        return result;
+    }
+
+    private BooleanExpression chageableStatus() {
+        Collection<OrderState> states = new ArrayList<>();
+        int count = 0;
+        for(OrderState state : OrderState.values()) {
+            if(count > 2) {
+                break;
+            }
+            states.add(state);
+            count++;
+        }
+        return sale.status.in(states);
     }
 
     private BooleanExpression eqBookName(String bookName) {
