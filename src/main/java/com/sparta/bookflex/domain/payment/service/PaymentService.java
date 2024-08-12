@@ -1,6 +1,8 @@
 package com.sparta.bookflex.domain.payment.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.bookflex.common.exception.BusinessException;
+import com.sparta.bookflex.common.exception.ErrorCode;
 import com.sparta.bookflex.common.utill.LoggingSingleton;
 import com.sparta.bookflex.common.utill.Timestamped;
 import com.sparta.bookflex.domain.auth.service.AuthService;
@@ -193,7 +195,9 @@ public class PaymentService {
         paymentRepository.save(payment);
         List<OrderItem> orderItemList = orderBook.getOrderItemList();
         for(OrderItem orderItem : orderItemList){
-            Book book = orderItem.getBook();
+            Book book = bookRepository.findByIdForUpdate(orderItem.getBook().getId())
+                    .orElseThrow(() -> new BusinessException(ErrorCode.BOOK_NOT_FOUND));
+
             book.decreaseStock(orderItem.getQuantity());
             bookRepository.save(book);
         }
