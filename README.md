@@ -117,7 +117,7 @@ Bookflex는 고객과 관리자의 요구를 모두 만족시키는 온라인 �
 <div id="e">
 
 ## 🗃️ Project Architecture
-![서비스 아키택처](https://github.com/user-attachments/assets/81f32f47-83da-48fe-98e9-d7ab3bb31e13)
+![서비스 아키택처 최종](https://github.com/user-attachments/assets/c7ba1e56-5fc6-4149-b476-d93800f1d855)
 
 </div>
 
@@ -135,7 +135,7 @@ Bookflex는 고객과 관리자의 요구를 모두 만족시키는 온라인 �
 <div id="g">
 
 ## 📊 ERD DIAGRAM
-![ERD](https://github.com/user-attachments/assets/60074327-dca3-4567-b4a6-0c1e2e9d28e1)
+![ERD](https://github.com/user-attachments/assets/268b5a78-ac26-45ae-b50e-10dc58952977)
 
 </div>
 
