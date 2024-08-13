@@ -12,6 +12,7 @@ import com.sparta.bookflex.domain.category.enums.Category;
 import com.sparta.bookflex.domain.category.service.CategoryService;
 import com.sparta.bookflex.domain.photoimage.entity.PhotoImage;
 import com.sparta.bookflex.domain.photoimage.service.PhotoImageService;
+import com.sparta.bookflex.domain.book.dto.BestSellerDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -77,9 +79,6 @@ public class BookService {
 
         Pageable pageble = PageRequest.of(page - 1, size, sort);
 
-//        return bookCustomRepositoryImpl.findBooks(bookName, bookStatus, pageble).stream()
-//                .map(book -> book.toResponseDto(photoImageService.getPhotoImageUrl(book.getPhotoImage().getFilePath())))
-//                .toList();
 
         Page<Book> bookList = bookCustomRepositoryImpl.findBooks(bookName, bookStatus, pageble);
 
@@ -175,6 +174,30 @@ public class BookService {
                 .collect(Collectors.toList());
 
         return new PageImpl<>(bookResponseDtos, pageable, bookPage.getTotalElements());
+
+    }
+
+    @Transactional
+    public List<BookResponseDto> getRecentBooks() {
+       return bookRepository.findNewBooks()
+               .stream()
+               .map((book -> book.toResponseDto(photoImageService.getPhotoImageUrl(book.getPhotoImage().getFilePath()))))
+               .toList();
+    }
+
+    public List<BestSellerDto> getBestSeller() {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        List<BestSellerDto> BestSellerDtos = bookCustomRepositoryImpl.findBestSeller(currentDateTime).stream()
+                .map(tuple -> BestSellerDto
+                        .builder()
+                        .bookId(tuple.get(0, Long.class))
+                        .bookName(tuple.get(1, String.class))
+                        .quantity(tuple.get(2, Integer.class))
+                        .imagePath(photoImageService.getPhotoImageUrl(tuple.get(3,String.class)))
+                        .build())
+                .toList();
+
+        return BestSellerDtos;
 
     }
 }
