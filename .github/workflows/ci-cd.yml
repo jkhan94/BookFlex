@@ -65,7 +65,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ./bookflex
-          file: ./Dockerfile
+          file: ./bookflex/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/bookflex-frontend:latest
 
