@@ -1,49 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axiosInstance from "../../api/axiosInstance";
 import styles from './ShippingManagement.module.css';
 
 const ShippingManagement = () => {
-    const [orders, setOrders] = useState([]);
-    const [shipinfos, setShipInfos] = useState([]);
+    const [shipInfos, setShipInfos] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
-    const [ordersPerPage, setOrdersPerPage] = useState(5);
+    const [shipInfoPerPage, setShipInfoPerPage] = useState(5);
     const [totalCount, setTotalCount] = useState(0);
+    const [sortOrder, setSortOrder] = useState(true); // 정렬 순서 상태 추가
+    const [newShipInfoPerPage, setNewShipInfoPerPage] = useState(shipInfoPerPage); // 입력된 페이지당 항목 수 상태 추가
 
-    const totalPages = Math.ceil(totalCount / ordersPerPage);
+    const totalPages = Math.ceil(totalCount / shipInfoPerPage);
 
-    const getOrders = async (page, size) => {
+    const getOrders = async (page, size, sort) => {
         try {
-            const response = await axiosInstance.get('/orders', {
+            const response = await axiosInstance.get('/shipments', {
                 params: {
                     page: page,
-                    size: size
+                    size: size,
+                    isAsc: sortOrder
                 }
             });
-            const { totalCount, orderShipResDtos } = response.data;
-            setTotalCount(totalCount)
-            setOrders(orderShipResDtos.content);
+            const { totalCount, shipmentResDtos } = response.data;
+            setTotalCount(totalCount);
+            setShipInfos(shipmentResDtos.content);
         } catch (error) {
             console.error("주문정보 불러오기 실패", error);
-        }
-    };
-
-    const getShipInfo = async (orders) => {
-        const shipInfoPromises = orders.map(order =>
-            axiosInstance.post('/shipments', {
-                trackingNumber: order.trackingNumber,
-                carrier: order.carrier
-            }).then(response => ({
-                orderNumber: order.orderNumber,
-                ...response.data
-            }))
-        );
-
-        try {
-            const shipInfoResults = await Promise.all(shipInfoPromises);
-            setShipInfos(shipInfoResults);
-        } catch (error) {
-            console.error("배송정보 불러오기 실패", error);
         }
     };
 
@@ -59,18 +42,28 @@ const ShippingManagement = () => {
         setCurrentPage(prev => Math.min(prev + 1, totalPages));
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            await getOrders(currentPage, ordersPerPage);
-        };
-        fetchData();
-    }, [currentPage, ordersPerPage]);
+    const handleSortOrderChange = (e) => {
+        if(e.target.value === "asc") {
+            setSortOrder(true)
+        }
+        else {
+            setSortOrder(false);
+        }
+    };
+
+    const handleShipInfoPerPageChange = () => {
+        setShipInfoPerPage(newShipInfoPerPage); // 새로운 페이지당 항목 수 설정
+        setCurrentPage(1); // 페이지를 처음으로 리셋
+    };
 
     useEffect(() => {
-        if (orders.length > 0) {
-            getShipInfo(orders);
-        }
-    }, [orders]);
+        const fetchData = async () => {
+            // 페이지가 변경될 때마다 shipInfos 상태를 초기화
+            setShipInfos([]);
+            await getOrders(currentPage, shipInfoPerPage, sortOrder);
+        };
+        fetchData();
+    }, [currentPage, shipInfoPerPage, sortOrder]);
 
     return (
         <div>
@@ -92,6 +85,13 @@ const ShippingManagement = () => {
                     Search
                 </button>
             </div>
+            <div className={styles.sortContainer}>
+                <label htmlFor="sortOrder">정렬 기준: </label>
+                <select id="sortOrder" value={sortOrder ? "asc" : "desc"} onChange={handleSortOrderChange}>
+                    <option value="asc">오름차순</option>
+                    <option value="desc">내림차순</option>
+                </select>
+            </div>
             <table id="order-list" className={styles.orderList}>
                 <thead>
                 <tr>
@@ -104,21 +104,28 @@ const ShippingManagement = () => {
                 </tr>
                 </thead>
                 <tbody id="order-body">
-                {orders.map(order => {
-                    const shipInfo = shipinfos.find(info => info.orderNumber === order.orderNumber) || {};
-                    return (
-                        <tr key={order.orderNumber}>
-                            <td>{order.orderNumber}</td>
-                            <td>{order.username}</td>
-                            <td>{shipInfo.shippedAt || 'N/A'}</td>
-                            <td>{shipInfo.deliveredAt || 'N/A'}</td>
-                            <td>{shipInfo.status || 'N/A'}</td>
-                            <td>{shipInfo.carrierName || 'N/A'}</td>
-                        </tr>
-                    );
-                })}
+                {shipInfos.map(shipInfo => (
+                    <tr key={shipInfo.orderNo}>
+                        <td>{shipInfo.orderNo}</td>
+                        <td>{shipInfo.username}</td>
+                        <td>{shipInfo.shippedAt || 'N/A'}</td>
+                        <td>{shipInfo.deliveredAt || 'N/A'}</td>
+                        <td>{shipInfo.status || 'N/A'}</td>
+                        <td>{shipInfo.carrierName || 'N/A'}</td>
+                    </tr>
+                ))}
                 </tbody>
             </table>
+            <div className={styles.pageSizeContainer}>
+                <label htmlFor="page-size">페이지당 항목 수: </label>
+                <input
+                    id="page-size"
+                    type="number"
+                    value={newShipInfoPerPage}
+                    onChange={(e) => setNewShipInfoPerPage(Number(e.target.value))}
+                />
+                <button onClick={handleShipInfoPerPageChange}>적용</button>
+            </div>
             <div id="pagination" className={styles.pagination}>
                 <button
                     id="prev-page"

@@ -12,13 +12,14 @@ import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.service.BookService;
 import com.sparta.bookflex.domain.photoimage.service.PhotoImageService;
 import com.sparta.bookflex.domain.user.entity.User;
-import com.sparta.bookflex.domain.user.service.AuthService;
+import com.sparta.bookflex.domain.auth.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -212,5 +213,23 @@ public class BasketService {
 
         basketItem.updateQuantity(basketCreateDto.getQuantity());
         basketItemRepository.save(basketItem);
+    }
+
+    @Transactional
+    public void deleteBasketItemByBookId(Long bookId, User user) {
+
+
+    }
+
+    @Transactional
+    public void clear(List<Long> bookIds, User user) {
+        Basket basket = basketRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new BusinessException(ErrorCode.BASKET_NOT_FOUND));
+        for(Long bookId : bookIds) {
+            BasketItem basketItem = basketItemRepository.findByBasketIdAndBookId(basket.getId(), bookId)
+                    .orElseThrow(() -> new BusinessException(ErrorCode.BASKET_ITEM_NOT_FOUND));
+            basketItemRepository.delete(basketItem);
+        }
+
     }
 }

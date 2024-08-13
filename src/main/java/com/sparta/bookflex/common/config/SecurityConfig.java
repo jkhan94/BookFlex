@@ -43,19 +43,19 @@ public class SecurityConfig {
         http.formLogin(AbstractHttpConfigurer::disable);
 
         http.sessionManagement(
-            (sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                (sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
         http.authorizeHttpRequests(
-            (authorizationHttpRequests) -> authorizationHttpRequests
-                .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                .requestMatchers(HttpMethod.POST, "/auth/signup").permitAll()
-                .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
-                .anyRequest().authenticated()
+                (authorizationHttpRequests) -> authorizationHttpRequests
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/signup").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
+                        .anyRequest().authenticated()
         );
 
         http.exceptionHandling((e) ->
-            e.authenticationEntryPoint(authenticationEntryPoint));
+                e.authenticationEntryPoint(authenticationEntryPoint));
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

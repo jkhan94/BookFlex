@@ -30,19 +30,19 @@ public class OrderBook extends Timestamped {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="status")
+    @Column(name = "status")
     private OrderState status;
 
-    @Column(name = "total",precision = 10, scale = 2)
+    @Column(name = "total", precision = 10, scale = 2)
     private BigDecimal total;
 
     @Column(name = "order_no")
     private String orderNo;
 
-    @Column(name = "discount",precision = 10, scale = 2)
+    @Column(name = "discount", precision = 10, scale = 2)
     private BigDecimal discount;
 
-    @Column(name = "discount_total",precision = 10, scale = 2)
+    @Column(name = "discount_total", precision = 10, scale = 2)
     private BigDecimal discountTotal;
 
     @Column(name = "is_coupon")
@@ -79,17 +79,19 @@ public class OrderBook extends Timestamped {
     private String trackingNumber;
 
     @Builder
-    public OrderBook(OrderState status, BigDecimal total, User user, BigDecimal discountPrice,String orderNo) {
+    public OrderBook(OrderState status, BigDecimal total, User user, BigDecimal discountPrice, String orderNo) {
         this.status = status;
         this.user = user;
         this.discount = discountPrice != null ? discountPrice : BigDecimal.ZERO;
-        this.total = total ;
+        this.total = total;
         this.orderNo = orderNo;
         this.discountTotal = total.subtract(discountPrice != null ? discountPrice : BigDecimal.ZERO);
         this.isCoupon = false;
         this.carrier = "dev.track.dummy";
 
-        LocalDateTime now = LocalDateTime.now().minusDays(1);
+        int nowHour = LocalDateTime.now().getHour();
+        int minusHour = nowHour % 3;
+        LocalDateTime now = LocalDateTime.now().minusHours(minusHour);
         ZonedDateTime zonedDateTime = now.atZone(ZoneOffset.UTC);
         this.trackingNumber = zonedDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'09:00:00'Z'"));
     }

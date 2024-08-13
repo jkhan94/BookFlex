@@ -10,6 +10,8 @@
     background-color: #2c3e50; /* 다크 블루 색상 */
     color: white;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebarTitle {
@@ -20,6 +22,8 @@
 .navList {
     list-style: none;
     padding: 0;
+    margin: 0;
+    flex: 1;
 }
 
 .navList li {
@@ -44,7 +48,7 @@
     overflow-y: auto;
 }
 
-main h1 {
+.mainTitle {
     font-size: 24px;
     margin-bottom: 20px;
 }

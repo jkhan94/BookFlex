@@ -1,13 +1,14 @@
+// BookDetailPage.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axiosInstance from '../../api/axiosInstance'; // API 호출을 위한 인스턴스
-import styles from './BookDetailPage.module.css'; // CSS 모듈 임포트
+import styles from './BookDetailPage.module.css'; // 스타일을 위한 CSS 모듈 임포트
 
 const BookDetailPage = () => {
     const { bookId } = useParams(); // URL에서 책 ID 가져오기
     const [book, setBook] = useState(null);
-    const [quantity, setQuantity] = useState(1); // 수량 상태 추가
-    const navigate = useNavigate(); // 페이지 이동을 위한 useNavigate 훅
+    const [quantity, setQuantity] = useState(1);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchBookDetails = async () => {
@@ -18,13 +19,12 @@ const BookDetailPage = () => {
                 console.error("Error fetching book details", error);
             }
         };
-
         fetchBookDetails();
     }, [bookId]);
 
     const handleAddToCart = async () => {
         try {
-            await axiosInstance.post('/baskets', {
+            const response = await axiosInstance.post('/baskets', {
                 bookId,
                 quantity
             });
@@ -34,6 +34,18 @@ const BookDetailPage = () => {
             }// 페이지 이동
         } catch (error) {
             console.log("장바구니 담기 실패", error);
+        }
+    };
+
+    const handleAddToWishlist = async () => {
+        try {
+            await axiosInstance.post(`/wishs/${bookId}`);
+            const shouldNavigate = window.confirm("위시리스트로 이동하시겠습니까?");
+            if (shouldNavigate) {
+                navigate('/main/wishlist'); // 위시리스트 페이지로 이동
+            }
+        } catch (error) {
+            console.log("위시리스트 담기 실패", error);
         }
     };
 
@@ -75,6 +87,8 @@ const BookDetailPage = () => {
                         />
                     </div>
                     <button onClick={handleAddToCart} className={styles.addToCartButton}>Add to Cart</button>
+                    <button onClick={handleAddToWishlist} className={styles.addToWishlistButton}>Add to Wishlist
+                    </button>
                 </div>
             </div>
         </div>

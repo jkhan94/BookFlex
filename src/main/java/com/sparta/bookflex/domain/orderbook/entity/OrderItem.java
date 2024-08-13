@@ -40,7 +40,7 @@ public class OrderItem extends Timestamped {
     private OrderBook orderBook;
 
     @Column(name = "is_reviewed")
-    private boolean isReviewed;
+    private Boolean isReviewed;
 
 
     @Builder

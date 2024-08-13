@@ -1,0 +1,23 @@
+/* OrderHistory.css */
+.container {
+    margin: 20px;
+}
+
+.filters {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.date-picker, .status-filter {
+    margin-right: 20px;
+}
+
+.status-button.status-completed {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.status-button.status-processing {
+    background-color: #f0ad4e;
+    color: white;
+}

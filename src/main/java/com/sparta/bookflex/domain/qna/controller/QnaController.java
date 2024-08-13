@@ -9,7 +9,7 @@ import com.sparta.bookflex.domain.qna.enums.QnaTypeCode;
 import com.sparta.bookflex.domain.qna.service.QnaService;
 import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.enums.RoleType;
-import com.sparta.bookflex.domain.user.service.AuthService;
+import com.sparta.bookflex.domain.auth.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,7 +26,7 @@ import static com.sparta.bookflex.common.exception.ErrorCode.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/qnas")
+@RequestMapping("/api/qnas")
 public class QnaController {
 
     private final QnaService qnaService;
@@ -43,17 +43,6 @@ public class QnaController {
 
         QnaResponseDto responseDto = qnaService.createQna(requestDto, user);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
-    }
-
-
-    @GetMapping("/{qnaId}")
-    public ResponseEntity<QnaResponseDto> getSingleQna(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                       @PathVariable long qnaId) {
-
-        User user = authService.findByUserName(userDetails.getUser().getUsername());
-
-        QnaResponseDto responseDto = qnaService.getSingleQna(qnaId);
-        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
     @GetMapping

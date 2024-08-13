@@ -7,9 +7,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public interface SaleQRepository {
     Page<Sale> findAllSalesByUser(User user, Pageable pageable);
+
     Page<Tuple> findSaleByBookName(String bookName, LocalDate startDate, LocalDate endDate, Pageable pageable);
+
     Page<Tuple> findSaleByCategory(String CategoryName, LocalDate startDate, LocalDate endDate, Pageable pageable);
+
+    Page<Tuple> findSales(String username, String status, LocalDate startDate, LocalDate endDate, Pageable pageable);
+
+    List<Sale> findAllSalesStatusChagable();
 }

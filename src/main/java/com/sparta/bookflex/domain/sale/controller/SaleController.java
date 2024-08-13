@@ -2,6 +2,7 @@ package com.sparta.bookflex.domain.sale.controller;
 
 import com.sparta.bookflex.common.dto.CommonDto;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
+import com.sparta.bookflex.domain.sale.dto.SaleListDto;
 import com.sparta.bookflex.domain.sale.dto.SaleRequestDto;
 import com.sparta.bookflex.domain.sale.dto.SaleResponseDto;
 import com.sparta.bookflex.domain.sale.dto.SaleVolumeResponseDto;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 
 @RestController
-@RequestMapping("/sales")
+@RequestMapping("/api/sales")
 public class SaleController {
 
     private final SaleService saleService;
@@ -69,6 +70,23 @@ public class SaleController {
                 .status(HttpStatus.OK)
                 .body(new CommonDto<>(HttpStatus.OK.value(), "주문 목록을 조회했습니다.", saleResponseDtoList));
     }
+
+    @GetMapping("/admin")
+    public ResponseEntity<CommonDto<Page<SaleListDto>>> getAllSales(@RequestParam(name = "page", defaultValue = "1") int page,
+                                                                        @RequestParam(name = "size", defaultValue = "5") int size,
+                                                                        @RequestParam(name = "direction", required = false, defaultValue = "true") boolean isAsc,
+                                                                        @RequestParam(name = "sortBy", required = false, defaultValue = "createdAt") String sortBy,
+                                                                        @RequestParam(name = "status", required = false) String status,
+                                                                        @RequestParam(name = "username", required = false) String username,
+                                                                        @RequestParam(name = "startDate", required = false, defaultValue = "19000101") @DateTimeFormat(pattern = "yyyyMMdd") LocalDate startDate,
+                                                                        @RequestParam(name = "endDate", required = false, defaultValue = "99991231") @DateTimeFormat(pattern = "yyyyMMdd") LocalDate endDate) {
+
+        Page<SaleListDto> saleResponseDtoList = saleService.getAllSales(page, size, isAsc, sortBy, status, username, startDate, endDate);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new CommonDto<>(HttpStatus.OK.value(), "주문 목록을 조회했습니다.", saleResponseDtoList));
+    }
+
 
 //    @PutMapping("/{saleId}/status")
 //    public ResponseEntity<CommonDto<Void>> updateSaleStatus(

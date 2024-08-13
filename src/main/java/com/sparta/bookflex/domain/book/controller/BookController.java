@@ -27,7 +27,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/books")
+@RequestMapping("/api/books")
 public class BookController {
 
     private final BookService bookService;
@@ -99,17 +99,6 @@ public class BookController {
                 .body(new CommonDto<>(HttpStatus.NO_CONTENT.value(), "상품 삭제에 성공하였습니다.", bookName + " 을 상품 목록에서 삭제하였습니다"));
     }
 
-    @PutMapping("/{bookId}/decreaseStock/quantity/{quantity}")
-    public void decreaseStock(@PathVariable Long bookId, @PathVariable int quantity) {
-
-        bookService.decreaseStock(bookId, quantity);
-    }
-
-    @PutMapping("/{bookId}/increaseStock/quantity/{quantity}")
-    public void increaseStock(@PathVariable Long bookId, @PathVariable int quantity) {
-
-        bookService.increaseStock(bookId, quantity);
-    }
 
     @GetMapping("/category/{category}")
     public ResponseEntity<CommonDto<Page<BookResponseDto>>> getBooksByCategory(

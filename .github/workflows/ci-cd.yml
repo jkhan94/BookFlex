@@ -16,6 +16,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+
+      - name: Set up Java JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew  # 실행 권한 부여
+
+      - name: Build Java Spring application with Gradle
+        run: |
+           ./gradlew build --no-daemon -x test
+
+      - name: Verify JAR file exists
+        run: |
+          if [ ! -f build/libs/BookFlex-0.0.1-SNAPSHOT.jar ]; then
+            echo "JAR file not found!"; exit 1;
+          fi
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
@@ -25,11 +45,14 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      #여기서 자바 스프링 빌드 하고 할 것 넵!!
+
+
       - name: Build and push Backend Docker image
         uses: docker/build-push-action@v3
         with:
           context: .
-          file: ./Dockerfile.backend
+          file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/bookflex-backend:latest
           build-args: |
@@ -37,13 +60,15 @@ jobs:
             AWS_BUCKET_URL=${{ secrets.AWS_BUCKET_URL }}
             AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }}
 
+
       - name: Build and push Frontend Docker image
         uses: docker/build-push-action@v3
         with:
           context: ./bookflex
-          file: ./bookflex/Dockerfile.frontend
+          file: ./bookflex/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/bookflex-frontend:latest
+
 
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
@@ -53,24 +78,25 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            # Pull the latest Docker images
-            docker pull ${{ secrets.DOCKER_USERNAME }}/bookflex-backend:latest
-            docker pull ${{ secrets.DOCKER_USERNAME }}/bookflex-frontend:latest
-
+            # Change directory
+            cd BookFlex
+            
             # Stop and remove existing containers
             docker stop bookflex-backend || true
             docker rm bookflex-backend || true
             docker stop bookflex-frontend || true
             docker rm bookflex-frontend || true
+            
+            # Remove old Docker images
+            docker image prune -a -f
+            
+            # Pull the latest Docker images
+            docker pull ${{ secrets.DOCKER_USERNAME }}/bookflex-backend:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/bookflex-frontend:latest
 
-            # Run new containers with environment variables
-            docker run -d --name bookflex-backend \
-              -e AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY }} \
-              -e AWS_BUCKET_URL=${{ secrets.AWS_BUCKET_URL }} \
-              -e AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }} \
-              -p 8080:8080 \
-              ${{ secrets.DOCKER_USERNAME }}/bookflex-backend:latest
-
-            docker run -d --name bookflex-frontend \
-              -p 80:3000 \
-              ${{ secrets.DOCKER_USERNAME }}/bookflex-frontend:latest
+            docker-compose build --no-cache
+            
+            docker-compose down
+       
+            # Start the new containers with the latest images
+            docker-compose up -d

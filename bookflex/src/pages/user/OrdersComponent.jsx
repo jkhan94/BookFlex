@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axiosInstance from "../../api/axiosInstance";
 import { Link } from 'react-router-dom'; // Link 임포트
 import styles from './OrdersComponent.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const orderStateLabels = {
     PENDING_PAYMENT: '결제대기',
@@ -17,6 +18,7 @@ const OrdersComponent = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -37,6 +39,10 @@ const OrdersComponent = () => {
 
     const getOrderStateLabel = (state) => {
         return orderStateLabels[state] || state;
+    };
+
+    const handleOrderClick = (orderId) => {
+        navigate(`/main/order/${orderId}`);
     };
 
     if (loading) return <p>Loading...</p>;
@@ -84,6 +90,14 @@ const OrdersComponent = () => {
                                         </li>
                                     ))}
                                 </ul>
+                                {order.orderState === 'PENDING_PAYMENT' && (
+                                    <button
+                                        className={styles.navigateButton}
+                                        onClick={() => handleOrderClick(order.orderId)}
+                                    >
+                                        결제하기
+                                    </button>
+                                )}
                             </div>
                         </div>
                     ))}

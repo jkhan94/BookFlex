@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping
+@RequestMapping("/api")
 public class ReviewController {
 
     private final ReviewService reviewService;
@@ -73,7 +73,7 @@ public class ReviewController {
 
         ReviewResponseDto reviewResponseDto = reviewService.modifyReview(userDetails.getUser(), reviewId, reviewRequestDto);
 
-        return new CommonDto<>(HttpStatus.OK.value(), "리뷰 등록에 성공하였습니다.", reviewResponseDto);
+        return new CommonDto<>(HttpStatus.OK.value(), "리뷰 수정에 성공하였습니다.", reviewResponseDto);
     }
 
     @DeleteMapping("/reviews/{reviewId}")

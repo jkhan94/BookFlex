@@ -9,7 +9,7 @@ import com.sparta.bookflex.domain.coupon.service.CouponService;
 import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.enums.RoleType;
 import com.sparta.bookflex.domain.user.enums.UserGrade;
-import com.sparta.bookflex.domain.user.service.AuthService;
+import com.sparta.bookflex.domain.auth.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,7 +29,7 @@ import static com.sparta.bookflex.common.exception.ErrorCode.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/coupons")
+@RequestMapping("/api/coupons")
 public class CouponController {
 
     private final CouponService couponService;
@@ -106,21 +106,6 @@ public class CouponController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("/issue/{userId}/{couponId}")
-//    @Envelop("사용자에게 쿠폰이 발급되었습니다.")
-    public ResponseEntity<UserCouponResponseDto> issueCouponToUser(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                                   @PathVariable long userId,
-                                                                   @PathVariable long couponId) {
-        User user = authService.findByUserName(userDetails.getUser().getUsername());
-        if (user.getAuth() != RoleType.ADMIN) {
-            throw new BusinessException(COUPON_ISSUE_NOT_ALLOWED);
-        }
-
-        UserCouponResponseDto responseDto = couponService.issueCouponToUser(couponId, userId);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
-    }
-
     @PostMapping("/issue/{couponId}")
     public ResponseEntity<UserCouponResponseDto> issueCoupon(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                              @PathVariable long couponId) {
@@ -137,7 +122,7 @@ public class CouponController {
     @GetMapping
     public ResponseEntity<Page<UserCouponResponseDto>> getMyCoupons(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                                                     @RequestParam(value = "page", defaultValue = "1") int page,
-                                                                    @RequestParam(value = "sortBy", defaultValue = "isUsed") String sortBy) {
+                                                                    @RequestParam(value = "sortBy", defaultValue = "expirationDate") String sortBy) {
         User user = authService.findByUserName(userDetails.getUser().getUsername());
         if (user.getAuth() != RoleType.USER) {
             throw new BusinessException(COUPON_VIEW_NOT_ALLOWED);

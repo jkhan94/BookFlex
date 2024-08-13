@@ -17,6 +17,6 @@ public interface OrderBookRepository extends JpaRepository<OrderBook, Long>, Ord
     Page<OrderBook> findByUser(User user, Pageable pageable);
 
 
-    @Query("SELECT COUNT(o.id) FROM OrderBook o")
-    Long findTotalCount();
+//    @Query("SELECT COUNT(o.id) FROM OrderBook o")
+//    Long findTotalCount();
 }
