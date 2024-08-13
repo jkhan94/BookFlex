@@ -1,9 +1,11 @@
 package com.sparta.bookflex.domain.book.repository;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.entity.BookStatus;
@@ -15,9 +17,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import static com.sparta.bookflex.domain.book.entity.QBook.book;
+import static com.sparta.bookflex.domain.sale.entity.QSale.sale;
 
 @Repository
 @RequiredArgsConstructor
@@ -44,6 +50,21 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
 
         return new PageImpl<>(result, pageable, count);
 
+    }
+
+    @Override
+    public List<Tuple> findBestSeller(LocalDateTime currentDateTime) {
+        List<Tuple> result = queryFactory
+                .select(sale.book.id, sale.book.bookName, sale.quantity.sum(), book.photoImage.filePath)
+                .from(sale)
+                .join(book).on(sale.book.id.eq(book.id))
+                .where(searchDateFilterForBestSeller(currentDateTime.minusDays(7), currentDateTime))
+                .groupBy(sale.book.id)
+                .orderBy(sale.quantity.sum().desc())
+                .limit(10)
+                .fetch();
+
+        return result;
     }
 
     private BooleanExpression eqBookName(String bookName) {
@@ -84,6 +105,15 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
         }
 
         return null;
+    }
+
+
+    private BooleanExpression searchDateFilterForBestSeller(LocalDateTime searchStartDate, LocalDateTime searchEndDate) {
+
+        BooleanExpression isGoeStartDate = sale.createdAt.goe(LocalDateTime.of(LocalDate.from(searchStartDate), LocalTime.MIN));
+        BooleanExpression isLoeEndDate = sale.createdAt.loe(LocalDateTime.of(LocalDate.from(searchEndDate), LocalTime.MAX).withNano(0));
+
+        return Expressions.allOf(isGoeStartDate, isLoeEndDate);
     }
 
 }

@@ -134,6 +134,8 @@ public class SaleQRepositoryImpl implements SaleQRepository {
         return new PageImpl<>(result, pageable, count.size());
     }
 
+
+
     @Override
     public List<Sale> findAllSalesStatusChagable() {
         List<Sale> result = queryFactory
@@ -211,6 +213,14 @@ public class SaleQRepositoryImpl implements SaleQRepository {
 
         BooleanExpression isGoeStartDate = sale.createdAt.goe(LocalDateTime.of(searchStartDate, LocalTime.MIN));
         BooleanExpression isLoeEndDate = sale.createdAt.loe(LocalDateTime.of(searchEndDate, LocalTime.MAX).withNano(0));
+
+        return Expressions.allOf(isGoeStartDate, isLoeEndDate);
+    }
+
+    private BooleanExpression searchDateFilterForBestSeller(LocalDateTime searchStartDate, LocalDateTime searchEndDate) {
+
+        BooleanExpression isGoeStartDate = sale.createdAt.goe(LocalDateTime.of(LocalDate.from(searchStartDate), LocalTime.MIN));
+        BooleanExpression isLoeEndDate = sale.createdAt.loe(LocalDateTime.of(LocalDate.from(searchEndDate), LocalTime.MAX).withNano(0));
 
         return Expressions.allOf(isGoeStartDate, isLoeEndDate);
     }

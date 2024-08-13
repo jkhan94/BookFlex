@@ -15,6 +15,7 @@ import com.sparta.bookflex.domain.orderbook.dto.*;
 import com.sparta.bookflex.domain.orderbook.emuns.OrderState;
 import com.sparta.bookflex.domain.orderbook.entity.OrderBook;
 import com.sparta.bookflex.domain.orderbook.entity.OrderItem;
+import com.sparta.bookflex.domain.orderbook.repository.OrderBookQRepositoryImpl;
 import com.sparta.bookflex.domain.orderbook.repository.OrderBookRepository;
 import com.sparta.bookflex.domain.orderbook.repository.OrderItemRepository;
 import com.sparta.bookflex.domain.payment.entity.Payment;
@@ -25,10 +26,12 @@ import com.sparta.bookflex.domain.photoimage.service.PhotoImageService;
 import com.sparta.bookflex.domain.sale.entity.Sale;
 import com.sparta.bookflex.domain.sale.repository.SaleRepository;
 import com.sparta.bookflex.domain.user.entity.User;
+import com.sparta.bookflex.domain.user.enums.RoleType;
 import jakarta.mail.MessagingException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,9 +41,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.sparta.bookflex.domain.user.enums.RoleType.ADMIN;
 
 @Service
 @RequiredArgsConstructor
@@ -62,7 +68,7 @@ public class OrderBookService {
     private final PaymentRepository paymentRepository;
 
     private final BasketService basketService;
-
+    private final OrderBookQRepositoryImpl orderBookQRepositoryImpl;
 
 
     private Book getBook(Long bookId) {
@@ -75,7 +81,7 @@ public class OrderBookService {
 
     public OrderBook getOrderBook(Long orderId) {
         return orderBookRepository.findById(orderId)
-            .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
 
     }
 
@@ -92,19 +98,19 @@ public class OrderBookService {
             total = total.add(itemTotal);
 
             OrderItem orderItem = OrderItem.builder()
-                .quantity(item.getQuantity())
-                .book(book)
-                .price(price)
-                .orderBook(null)
-                .build();
+                    .quantity(item.getQuantity())
+                    .book(book)
+                    .price(price)
+                    .orderBook(null)
+                    .build();
             orderItemList.add(orderItem);
         }
 //만든 orderitemList를 기반으로 orderbook을 만든다.
         OrderBook orderBook = OrderBook.builder()
-            .status(OrderState.PENDING_PAYMENT)
-            .total(total)
-            .user(user)
-            .build();
+                .status(OrderState.PENDING_PAYMENT)
+                .total(total)
+                .user(user)
+                .build();
         orderBook.updateOrderItemList(orderItemList);
 
         for (OrderItem orderItem : orderItemList) {
@@ -179,28 +185,28 @@ public class OrderBookService {
     public OrderResponsDto getOrderById(Long orderId, User user) {
         // 주문과 관련된 판매 항목을 포함하여 주문 내역을 조회합니다.
         OrderBook orderBook = orderBookRepository.findByIdAndUser(orderId, user)
-            .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
 
         List<OrderItemResponseDto> orderItemResponseDtoList = convertOrderItemsToDtoList(orderBook);
 
 
         return OrderResponsDto.builder()
-            .orderId(orderBook.getId())
-            .orderNo(orderBook.getOrderNo())
-            .total(orderBook.getTotal())
-            .total(orderBook.getTotal())
-            .status(orderBook.getStatus().toString())
-            .orderItemResponseDtoList(orderItemResponseDtoList)
-            .build();
+                .orderId(orderBook.getId())
+                .orderNo(orderBook.getOrderNo())
+                .total(orderBook.getTotal())
+                .total(orderBook.getTotal())
+                .status(orderBook.getStatus().toString())
+                .orderItemResponseDtoList(orderItemResponseDtoList)
+                .build();
     }
 
 
 
 
     @Transactional
-    public void setCouponToOrder(Long orderId,Long userCouponId) {
+    public void setCouponToOrder(Long orderId, Long userCouponId) {
         OrderBook orderBook = orderBookRepository.findById(orderId)
-            .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
+                .orElseThrow(() -> new BusinessException(ErrorCode.ORDER_NOT_FOUND));
 
         UserCoupon userCoupon = couponService.findUserCouponById(userCouponId);
 
@@ -217,11 +223,11 @@ public class OrderBookService {
         BigDecimal discountPerItem = null;
         BigDecimal total = orderBook.getTotal();
         List<OrderItem> orderItemList = orderBook.getOrderItemList();
-        if(orderPaymentRequestDto.getUserCouponId() != null) {
-            userCoupon = couponService.findUserCouponById( orderPaymentRequestDto.getUserCouponId());
+        if (orderPaymentRequestDto.getUserCouponId() != null) {
+            userCoupon = couponService.findUserCouponById(orderPaymentRequestDto.getUserCouponId());
             orderBook.updateUserCoupon(userCoupon);
             coupon = userCoupon.getCoupon();
-            if(coupon.getDiscountType().equals(DiscountType.FIXED_AMOUNT)) {
+            if (coupon.getDiscountType().equals(DiscountType.FIXED_AMOUNT)) {
                 discount = coupon.getDiscountPrice();
             } else {
                 discount = orderBook.getTotal().multiply(coupon.getDiscountPrice()).divide(BigDecimal.valueOf(100));
@@ -243,7 +249,7 @@ public class OrderBookService {
                     .user(user)
                     .status(OrderState.PENDING_PAYMENT)
                     .build();
-            if( discount != null) {
+            if (discount != null) {
                 sale.updateDiscount(discountPerItem);
             }
             saleRepository.save(sale);
@@ -264,7 +270,7 @@ public class OrderBookService {
         paymentRepository.save(payment);
 
 
-        String orderName = orderItemList.get(0).getBook().getBookName()+" 외 "+(orderItemList.size()-1)+"개";
+        String orderName = orderItemList.get(0).getBook().getBookName() + " 외 " + (orderItemList.size() - 1) + "개";
 
 
         return OrderPaymentResponseDto.builder()
@@ -278,23 +284,44 @@ public class OrderBookService {
                 .build();
     }
 
-    public OrderBook getOrderByOrderNo(String orderNo){
+    public OrderBook getOrderByOrderNo(String orderNo) {
         return orderBookRepository.findByOrderNo(orderNo);
     }
 
     @Transactional
-    public Page<OrderGetsResponseDto> getOrders(User user, Pageable pageable) {
+    public Page<OrderGetsResponseDto> getOrders(User user, Pageable pageable, OrderState status, LocalDate startDate, LocalDate endDate, String username) {
 
-        Page<OrderBook> orderBookList = orderBookRepository.findByUser(user, pageable);
-        return orderBookList.map(orderBook -> OrderGetsResponseDto.builder()
-            .orderId(orderBook.getId())
-            .orderNo(orderBook.getOrderNo())
-            .orderName(orderBook.getOrderItemList().get(0).getBook().getBookName()+" 외 "+(orderBook.getOrderItemList().size()-1)+"개")
-            .total(orderBook.getDiscountTotal().intValue())
-            .orderState(orderBook.getStatus())
-            .createdAt(orderBook.getCreatedAt())
-            .orderItemList(convertOrderItemsToDtoList(orderBook))
-            .build());
+        if (user.getAuth().equals(ADMIN)) {
+            Page<OrderBook> orderBookPage = orderBookQRepositoryImpl.getOrderBooksByStatus(pageable, status, startDate, endDate, username);
+
+            Page<OrderGetsResponseDto> orderGetsResponseDtoPage =
+                    orderBookPage.map(orderBook -> OrderGetsResponseDto.builder()
+                            .orderId(orderBook.getId())
+                            .orderNo(orderBook.getOrderNo())
+                            .orderName(orderBook.getOrderItemList().get(0).getBook().getBookName() + " 외 " + (orderBook.getOrderItemList().size() - 1) + "개")
+                            .username(orderBook.getUser().getUsername())
+                            .total(orderBook.getDiscountTotal().intValue())
+                            .orderState(orderBook.getStatus())
+                            .createdAt(orderBook.getCreatedAt())
+                            .orderItemList(convertOrderItemsToDtoList(orderBook))
+                            .build());
+
+            return orderGetsResponseDtoPage;
+        } else {
+            Page<OrderBook> orderBookList = orderBookRepository.findByUser(user, pageable);
+            return orderBookList.map(orderBook -> OrderGetsResponseDto.builder()
+                    .orderId(orderBook.getId())
+                    .orderNo(orderBook.getOrderNo())
+                    .orderName(orderBook.getOrderItemList().get(0).getBook().getBookName() + " 외 " + (orderBook.getOrderItemList().size() - 1) + "개")
+                    .username(orderBook.getUser().getUsername())
+                    .total(orderBook.getDiscountTotal().intValue())
+                    .orderState(orderBook.getStatus())
+                    .createdAt(orderBook.getCreatedAt())
+                    .orderItemList(convertOrderItemsToDtoList(orderBook))
+                    .build());
+        }
+
+
     }
 
     public List<OrderItemResponseDto> convertOrderItemsToDtoList(OrderBook orderBook) {
@@ -302,6 +329,7 @@ public class OrderBookService {
                 .map(this::convertToDto) // convertToDto 메서드 사용
                 .collect(Collectors.toList());
     }
+
     public OrderItemResponseDto convertToDto(OrderItem orderItem) {
         Book book = orderItem.getBook();
         String bookName = book != null ? book.getBookName() : "";

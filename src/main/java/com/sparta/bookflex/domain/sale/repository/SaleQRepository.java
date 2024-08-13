@@ -18,5 +18,7 @@ public interface SaleQRepository {
 
     Page<Tuple> findSales(String username, String status, LocalDate startDate, LocalDate endDate, Pageable pageable);
 
+
+
     List<Sale> findAllSalesStatusChagable();
 }

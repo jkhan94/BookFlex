@@ -65,6 +65,10 @@ dependencies {
 
 	// json, siomple 추가
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+
+	// spring batch 의존성 추가
+	implementation 'org.springframework.boot:spring-boot-starter-batch'
+	testImplementation 'org.springframework.batch:spring-batch-test'
 }
 
 // Querydsl 설정부

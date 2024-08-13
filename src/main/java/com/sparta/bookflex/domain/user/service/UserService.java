@@ -103,6 +103,15 @@ public class UserService {
 
     }
 
+    public void updateGrade() {
+
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        List<User> userList = getUsers();
+        userList.stream()
+                .filter(user -> !user.getSaleList().isEmpty())
+                .forEach(user -> updateUserRoleBySaleAmount(user.getId(), currentDateTime));
+    }
+
        public List<User> getUsers() {
         return userRepository.findAll();
     }
@@ -115,8 +124,9 @@ public class UserService {
         if(saleAmount.compareTo(new BigDecimal("100000"))>=1) {
             user.updateGrade(UserGrade.VIP);
         } else {
-            user.updateGrade(UserGrade.VIP);
+            user.updateGrade(UserGrade.NORMAL);
         }
 
     }
+
 }
