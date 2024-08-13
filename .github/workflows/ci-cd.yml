@@ -16,10 +16,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+
       - name: Set up Java JDK
         uses: actions/setup-java@v3
         with:
           java-version: '17'
+          distribution: 'temurin'
       - name: Build Java Spring application with Gradle
         run: |
            ./gradlew build --no-daemon -x test
