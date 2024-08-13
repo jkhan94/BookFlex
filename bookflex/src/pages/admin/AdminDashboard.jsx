@@ -24,7 +24,7 @@ const AdminDashboard = () => {
                     <li><Link to="/admin/shipping">주문상품 배송 정보</Link></li>
                     <li><Link to="/admin/member-list">회원 관리</Link></li>
                     <li><Link to="/admin/qna">고객문의 관리</Link></li>
-                    <li><Link to="/admin/best-seller">베스트셀러</Link></li>
+
 
                     {/* 새로운 링크 추가 */}
                 </ul>

@@ -13,6 +13,9 @@ public class ShipmentJsonUtil {
 
     public static String fromJSONtoString(String responseEntity) {
         JSONObject jsonObject = new JSONObject(responseEntity);
+       if(jsonObject.isNull("data")){
+           return "No Data";
+       }
         if(jsonObject.getJSONObject("data").isNull("track")){
             return "No Data";
         }
@@ -29,6 +32,10 @@ public class ShipmentJsonUtil {
     public static List<shipmentJsonDto> fromJSONtoItems(String responseEntityJson) {
         JSONObject jsonObject = new JSONObject(responseEntityJson);
         List<shipmentJsonDto> itemDtoList = new ArrayList<>();
+
+        if(jsonObject.isNull("data")){
+            return itemDtoList;
+        }
 
         if(jsonObject.getJSONObject("data").isNull("track")){
             return itemDtoList;
