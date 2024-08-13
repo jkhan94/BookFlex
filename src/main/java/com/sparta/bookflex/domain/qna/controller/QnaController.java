@@ -26,7 +26,7 @@ import static com.sparta.bookflex.common.exception.ErrorCode.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/qnas")
+@RequestMapping("/api/qnas")
 public class QnaController {
 
     private final QnaService qnaService;
