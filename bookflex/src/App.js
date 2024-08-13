@@ -33,7 +33,7 @@ import SuccessPage from "./pages/payment/Success";
 import axiosInstance from './api/axiosInstance';
 import CouponPage from "./pages/user/CouponPage";
 import ReviewListPage from "./pages/admin/ReviewListPage";
-import RegisterReviewPage from "./pages/admin/RegisterReviewPage";
+import RegisterReviewPage from "./pages/user/RegisterReviewPage";
 import ReviewDetailPage from "./pages/admin/ReviewDetailPage";
 import SaleReportByBookNamePage from "./pages/admin/SaleReportByBookNamePage";
 import SaleReportByCategoryNamePage from "./pages/admin/SaleReportByCategoryNamePage";
@@ -42,6 +42,7 @@ import OrdersComponent from "./pages/user/OrdersComponent";
 import AdminProfilePage from "./pages/admin/AdminProfilePage";
 import AdminProfileEditPage from "./pages/admin/AdminProfileEditPage";
 import OrderHistory from "./pages/admin/OrderHistory";
+import BestSellerPage from "./pages/admin/BestSellerPage";
 
 
 
@@ -103,6 +104,7 @@ function App() {
                         <Route path="book-detail/:bookId" element={<BookDetailPage/>}/>
 
                         <Route path="orders" element={<OrdersComponent/>}/>
+
                     </Route>
 
 
@@ -133,7 +135,7 @@ function App() {
                         <Route path="users/:userId/edit" element={<AdminProfileEditPage/>}/>
 
                         <Route path="order-history" element={<OrderHistory/>}/>
-
+                        <Route path="best-seller" element={<BestSellerPage/>}/>
 
                         {/* 추가적인 관리자 하위 라우트 설정 */}
                     </Route>

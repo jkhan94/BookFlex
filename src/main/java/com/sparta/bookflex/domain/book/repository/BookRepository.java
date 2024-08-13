@@ -24,4 +24,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
 
     Page<Book> findBySubCategory(Category subCategory, Pageable pageable);
+
+    @Query("SELECT b from Book b order by b.createdAt desc limit 10")
+    List<Book> findNewBooks();
+
 }

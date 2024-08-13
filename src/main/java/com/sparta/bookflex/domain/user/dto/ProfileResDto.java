@@ -1,5 +1,6 @@
 package com.sparta.bookflex.domain.user.dto;
 
+import com.sparta.bookflex.domain.user.enums.RoleType;
 import com.sparta.bookflex.domain.user.enums.UserGrade;
 import com.sparta.bookflex.domain.user.enums.UserState;
 import lombok.Builder;

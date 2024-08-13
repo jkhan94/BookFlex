@@ -2,10 +2,7 @@ package com.sparta.bookflex.domain.sale.controller;
 
 import com.sparta.bookflex.common.dto.CommonDto;
 import com.sparta.bookflex.common.security.UserDetailsImpl;
-import com.sparta.bookflex.domain.sale.dto.SaleListDto;
-import com.sparta.bookflex.domain.sale.dto.SaleRequestDto;
-import com.sparta.bookflex.domain.sale.dto.SaleResponseDto;
-import com.sparta.bookflex.domain.sale.dto.SaleVolumeResponseDto;
+import com.sparta.bookflex.domain.sale.dto.*;
 import com.sparta.bookflex.domain.sale.service.SaleService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/sales")
@@ -88,18 +86,6 @@ public class SaleController {
     }
 
 
-//    @PutMapping("/{saleId}/status")
-//    public ResponseEntity<CommonDto<Void>> updateSaleStatus(
-//            @PathVariable Long saleId,
-//            @RequestBody SaleStateReqestDto saleStateReqDto,
-//            @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//
-//        saleService.updateSaleStatus(saleId, saleStateReqDto.getSaleState(), userDetails.getUser());
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(new CommonDto<>(HttpStatus.OK.value(), "판매 상태가 변경되었습니다.", null));
-//    }
-
     @GetMapping("/bybookname")
     public ResponseEntity<CommonDto<SaleVolumeResponseDto>> getSaleVoulmesByBookName(@RequestParam(name = "page", defaultValue = "1") int page,
                                                                                      @RequestParam(name = "size", defaultValue = "5") int size,
@@ -136,6 +122,8 @@ public class SaleController {
                 .status(HttpStatus.OK)
                 .body(new CommonDto<>(HttpStatus.OK.value(), "카테고리별 매출내역 조회가 완료되었습니다.", saleVolumeResponseDto));
     }
+
+
 
 
 }
