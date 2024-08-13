@@ -33,7 +33,7 @@ const BookDetailPage = () => {
                     params: {
                         page: reviewPage,
                         size: 5,
-                        direction: true,
+                        direction: false,
                         sortBy: 'createdAt',
                     },
                 });
@@ -63,6 +63,10 @@ const BookDetailPage = () => {
             setReviewPage(reviewPage + 1);
         }
     };
+
+    function renderStars(rating) {
+        return '★'.repeat(rating) + '☆'.repeat(5 - rating);
+    }
 
     if (error) {
         return <p>{error}</p>;
@@ -129,7 +133,7 @@ const BookDetailPage = () => {
                                 <li key={review.createdAt}>
                                     <h3>{review.title}</h3>
                                     <p>{review.content}</p>
-                                    <p>별점: {review.star}</p>
+                                    <p>별점: <td className="stars">{renderStars(parseInt(review.star, 10))}</td></p>
                                     <p>작성자: {review.username}</p>
                                     <p>작성일: {new Date(review.createdAt).toLocaleString()}</p>
                                     {review.createdAt !== review.modifiedAt && (

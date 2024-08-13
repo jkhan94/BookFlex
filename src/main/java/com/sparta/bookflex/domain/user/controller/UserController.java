@@ -2,7 +2,6 @@ package com.sparta.bookflex.domain.user.controller;
 
 import com.sparta.bookflex.common.security.UserDetailsImpl;
 import com.sparta.bookflex.domain.user.dto.*;
-import com.sparta.bookflex.domain.user.scheduler.UserRoleScheduler;
 import com.sparta.bookflex.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +20,11 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
 
-    private final UserRoleScheduler userRoleScheduler;
 
 
     /**

@@ -3,22 +3,17 @@ package com.sparta.bookflex.domain.book.controller;
 import com.sparta.bookflex.common.dto.CommonDto;
 import com.sparta.bookflex.common.exception.BusinessException;
 import com.sparta.bookflex.common.exception.ErrorCode;
-import com.sparta.bookflex.common.security.UserDetailsImpl;
 import com.sparta.bookflex.domain.book.dto.BookRequestDto;
 import com.sparta.bookflex.domain.book.dto.BookResponseDto;
-import com.sparta.bookflex.domain.book.entity.Book;
 import com.sparta.bookflex.domain.book.entity.BookStatus;
 import com.sparta.bookflex.domain.book.service.BookService;
-import com.sparta.bookflex.domain.category.enums.Category;
-import com.sparta.bookflex.domain.sale.dto.SaleResponseDto;
+import com.sparta.bookflex.domain.book.dto.BestSellerDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,7 +22,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/books")
+@RequestMapping("/api/books")
 public class BookController {
 
     private final BookService bookService;
@@ -111,13 +106,30 @@ public class BookController {
             throw new BusinessException(ErrorCode.BOOK_NOT_FOUND);
         }
 
-
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new CommonDto<>(HttpStatus.OK.value(), "상품 조회에 성공하였습니다.", bookPage));
     }
 
+    @GetMapping("/new")
+    public ResponseEntity<CommonDto<List<BookResponseDto>>> getRecentBooks() {
 
+        List<BookResponseDto> bookResponseDtoList = bookService.getRecentBooks();
 
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new CommonDto<>(HttpStatus.OK.value(), "신규서적 조회가 완료되었습니다.", bookResponseDtoList));
+    }
+
+    @GetMapping("/bestseller")
+    public ResponseEntity<CommonDto<List<BestSellerDto>>> getBestSeller() {
+
+        List<BestSellerDto> bestSellerDtoList =
+                bookService.getBestSeller();
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new CommonDto<>(HttpStatus.OK.value(), "베스트셀러 조회가 완료되었습니다.", bestSellerDtoList));
+    }
 
 }

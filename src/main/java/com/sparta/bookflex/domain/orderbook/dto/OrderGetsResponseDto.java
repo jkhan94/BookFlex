@@ -10,9 +10,10 @@ import java.util.List;
 
 @Getter
 public class OrderGetsResponseDto {
-    private  Long orderId;
+    private Long orderId;
     private String orderNo;
     private String orderName;
+    private String username;
     private int total;
     private LocalDateTime createdAt;
     private OrderState orderState;
@@ -20,14 +21,15 @@ public class OrderGetsResponseDto {
 //    private ShipmentEnum shipment;
 
     @Builder
-    public OrderGetsResponseDto(Long orderId, String orderNo, String orderName, LocalDateTime createdAt, OrderState orderState, ShipmentEnum shipment,int total, List<OrderItemResponseDto> orderItemList) {
+    public OrderGetsResponseDto(Long orderId, String orderNo, String orderName, LocalDateTime createdAt, OrderState orderState, String username, ShipmentEnum shipment, int total, List<OrderItemResponseDto> orderItemList) {
         this.orderItemList = orderItemList;
         this.orderId = orderId;
         this.orderNo = orderNo;
         this.orderName = orderName;
         this.createdAt = createdAt;
         this.orderState = orderState;
-  //      this.shipment = shipment;
+        this.username = username;
+        //      this.shipment = shipment;
         this.total = total;
     }
 
