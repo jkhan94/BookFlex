@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -33,6 +34,7 @@ import static com.sparta.bookflex.domain.user.entity.QUser.user;
 public class SaleQRepositoryImpl implements SaleQRepository {
 
     private final JPAQueryFactory queryFactory;
+    private final JPAQueryFactory jpaQueryFactory;
 
     @Override
     public Page<Sale> findAllSalesByUser(User user, Pageable pageable) {
@@ -250,4 +252,17 @@ public class SaleQRepositoryImpl implements SaleQRepository {
     }
 
 
+    public List<BigDecimal> getTotalAmount(Long userId) {
+        List<BigDecimal> result = new ArrayList<>();
+        result = jpaQueryFactory.select(sale.total.sum())
+                .from(sale)
+                .where(sale.user.id.eq(userId))
+                .groupBy(sale.user.id)
+                .fetch();
+
+        if(result.isEmpty()){
+           result.add(BigDecimal.ZERO);
+        }
+        return result;
+    }
 }
