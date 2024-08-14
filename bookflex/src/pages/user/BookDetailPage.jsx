@@ -11,7 +11,7 @@ const BookDetailPage = () => {
     const [reviews, setReviews] = useState([]);
     const [reviewPage, setReviewPage] = useState(1);
     const [reviewTotalPages, setReviewTotalPages] = useState(10);
-    const navigator = useNavigate();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchBookDetails = async () => {
