@@ -26,10 +26,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -43,19 +40,23 @@ public class ShipmentService {
     @Transactional
     public void createShipment(OrderBook orderBook, User user) {
         List<LocalDateTime> timelist = getShipAndDeliverTime(orderBook.getTrackingNumber(), orderBook.getCarrier());
+        Optional<Shipment> optionalShipment = shipmentRepository.findByOrderBookId(orderBook.getId());
+        Shipment shipment = null;
+        if(optionalShipment.isEmpty()){
+            shipment = Shipment.builder()
+                    .address(user.getAddress())
+                    .orderBook(orderBook)
+                    .carrier(orderBook.getCarrier())
+                    .trackingNumber(orderBook.getTrackingNumber())
+                    .shippedAt(timelist.get(0))
+                    .deliveredAt(timelist.get(1))
+                    .user(user)
+                    .build();
+            shipmentRepository.save(shipment);
+            orderBook.updateShipment(shipment);
+            user.setShipmentInfo(shipment);
+        }
 
-        Shipment shipment = Shipment.builder()
-                .address(user.getAddress())
-                .orderBook(orderBook)
-                .carrier(orderBook.getCarrier())
-                .trackingNumber(orderBook.getTrackingNumber())
-                .shippedAt(timelist.get(0))
-                .deliveredAt(timelist.get(1))
-                .user(user)
-                .build();
-        shipmentRepository.save(shipment);
-        orderBook.updateShipment(shipment);
-        user.setShipmentInfo(shipment);
         orderBookRepository.save(orderBook);
     }
     public TotalShipmentResDto getAllShipmentInfo(int page, int size, boolean isAsc){

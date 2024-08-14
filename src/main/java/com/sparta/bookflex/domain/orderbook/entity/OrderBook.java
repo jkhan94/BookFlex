@@ -135,4 +135,8 @@ public class OrderBook extends Timestamped {
     public void updateUserCoupon(UserCoupon userCoupon) {
         this.userCoupon = userCoupon;
     }
+
+    public void deleteShipment() {
+        this.shipment = null;
+    }
 }
