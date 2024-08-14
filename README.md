@@ -89,15 +89,12 @@ Bookflex는 고객과 관리자의 요구를 모두 만족시키는 온라인 �
 <div id="d">
 
 ## ⚙️ 기술 스택
-### Front-end
-![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) 
-![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white) <br>
-
 ### Back-end
 ![Java](https://img.shields.io/badge/java_(JDK_17)-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white) 
 ![IntelliJ IDEA](https://img.shields.io/badge/IntelliJIDEA-000000.svg?style=for-the-badge&logo=intellij-idea&logoColor=white) <br>
 ![SpringBoot](https://img.shields.io/badge/SpringBoot-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white) 
 ![SpringSecurity](https://img.shields.io/badge/SpringSecurity-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white) <br>
+![SpringBatch](https://img.shields.io/badge/SpringBatch-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white) <br>
 ![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white)
 ![AWS](https://img.shields.io/badge/AWS_(EC2,_S3)-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white) <br>
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white) <br>
@@ -108,6 +105,11 @@ Bookflex는 고객과 관리자의 요구를 모두 만족시키는 온라인 �
 ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white) <br>
 ![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white) 
 ![Notion](https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white) <br>
+
+### Front-end
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white) <br>
+
 
 </div>
 
