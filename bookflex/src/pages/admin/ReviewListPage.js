@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axiosInstance from '../../api/axiosInstance';
 import { useNavigate } from 'react-router-dom';
 import './ReviewListPage.css';
+import { isAdmin } from './tokenCheck';
 
 function renderStars(rating) {
     return '★'.repeat(rating) + '☆'.repeat(5 - rating);
@@ -9,6 +10,11 @@ function renderStars(rating) {
 
 function Review({ review, onDelete }) {
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if(!isAdmin())
+            navigate('/main/dashboard');
+    },[navigate]);
 
     const handleTitleClick = () => {
         navigate(`/admin/reviews/${review.id}`);

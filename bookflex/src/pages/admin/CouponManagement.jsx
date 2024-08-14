@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import axiosInstance from "../../api/axiosInstance";
+import {useNavigate} from "react-router-dom";
 import styles from '../admin/couponmanagement.module.css'; // CSS 파일을 여기에 넣으세요
+import { isAdmin } from './tokenCheck';
 
 const PAGE_SIZE = 5;
 
@@ -27,6 +29,13 @@ const CouponManagement = () => {
     const [couponTypes, setCouponTypes] = useState([]);
     const [discountTypes, setDiscountTypes] = useState([]);
     const [eligibleGrades, setEligibleGrades] = useState([]);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if(!isAdmin())
+            navigate('/main/dashboard');
+    },[navigate]);
 
     useEffect(() => {
         fetchCoupons(currentPage);

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import {useNavigate} from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
 import styles from './ShippingManagement.module.css';
+import { isAdmin } from './tokenCheck';
 
 const ShippingManagement = () => {
     const [shipInfos, setShipInfos] = useState([]);
@@ -10,6 +12,13 @@ const ShippingManagement = () => {
     const [totalCount, setTotalCount] = useState(0);
     const [sortOrder, setSortOrder] = useState(true); // 정렬 순서 상태 추가
     const [newShipInfoPerPage, setNewShipInfoPerPage] = useState(shipInfoPerPage); // 입력된 페이지당 항목 수 상태 추가
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if(!isAdmin())
+            navigate('/main/dashboard');
+    },[navigate]);
 
     const totalPages = Math.ceil(totalCount / shipInfoPerPage);
 
