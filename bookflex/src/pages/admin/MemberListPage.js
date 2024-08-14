@@ -33,7 +33,7 @@ function MemberListPage() {
                 console.error('회원 목록을 가져오는 중 오류가 발생했습니다!', error);
             });
     };
-
+    console.log(members)
     const handleSearch = (event) => {
         setSearchTerm(event.target.value);
         setCurrentPage(1);
