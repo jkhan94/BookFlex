@@ -2,21 +2,21 @@ package com.sparta.bookflex.domain.coupon.service;
 
 import com.sparta.bookflex.common.exception.BusinessException;
 import com.sparta.bookflex.common.utill.LoggingSingleton;
+import com.sparta.bookflex.domain.auth.service.AuthService;
 import com.sparta.bookflex.domain.coupon.dto.*;
 import com.sparta.bookflex.domain.coupon.entity.Coupon;
 import com.sparta.bookflex.domain.coupon.entity.UserCoupon;
 import com.sparta.bookflex.domain.coupon.enums.CouponStatus;
 import com.sparta.bookflex.domain.coupon.repository.CouponRepository;
 import com.sparta.bookflex.domain.coupon.repository.UserCouponRepository;
+import com.sparta.bookflex.domain.systemlog.entity.SystemLog;
 import com.sparta.bookflex.domain.systemlog.enums.ActionType;
 import com.sparta.bookflex.domain.systemlog.repository.SystemLogRepository;
 import com.sparta.bookflex.domain.user.entity.User;
 import com.sparta.bookflex.domain.user.enums.RoleType;
 import com.sparta.bookflex.domain.user.enums.UserGrade;
-import com.sparta.bookflex.domain.auth.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -255,6 +255,10 @@ public class CouponService {
 
                 couponRepository.save(coupon);
                 userCouponRepository.save(userCoupon);
+
+                SystemLog log = LoggingSingleton.Logging(ActionType.COUPON_GET, userCoupon);
+                systemLogRepository.save(log);
+
             }
         }
     }

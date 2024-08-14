@@ -27,6 +27,9 @@ axiosInstance.interceptors.request.use(
         if(config.url === '/auth/login') {
             return config;
         }
+        if(config.url === '/auth/signup') {
+            return config;
+        }
         const access_token = localStorage.getItem('Authorization');
         const refresh_token = localStorage.getItem('refreshToken');
 
