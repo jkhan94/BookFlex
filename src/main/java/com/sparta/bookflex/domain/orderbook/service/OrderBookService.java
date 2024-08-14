@@ -259,15 +259,20 @@ public class OrderBookService {
 
         orderBookRepository.save(orderBook);
 
-        Payment payment = Payment.builder()
-                .user(user)
-                .orderBook(orderBook)
-                .payType(PayType.TOSS)
-                .status(PaymentStatus.PAY_STANDBY)
-                .discount(discount)
-                .total(orderBook.getTotal())
-                .build();
-        paymentRepository.save(payment);
+
+        if(!paymentRepository.existsByOrderBook(orderBook)) {
+            Payment payment = Payment.builder()
+                    .user(user)
+                    .orderBook(orderBook)
+                    .payType(PayType.TOSS)
+                    .status(PaymentStatus.PAY_STANDBY)
+                    .discount(discount)
+                    .total(orderBook.getTotal())
+                    .build();
+            paymentRepository.save(payment);
+        }
+
+
 
 
         String orderName = orderItemList.get(0).getBook().getBookName() + " 외 " + (orderItemList.size() - 1) + "개";
