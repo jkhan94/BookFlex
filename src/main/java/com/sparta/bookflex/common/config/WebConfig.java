@@ -16,7 +16,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000", "http://localhost","http://bookflex-sparta.com","https://bookflex-sparta.com") // React 애플리케이션의 주소
+                .allowedOrigins("http://localhost:3000", "http://bookflex-sparta.com","https://bookflex-sparta.com","https://www.bookflex-sparta.com") // React 애플리케이션의 주소
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);

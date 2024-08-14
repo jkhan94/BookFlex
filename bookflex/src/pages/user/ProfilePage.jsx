@@ -42,6 +42,25 @@ const ProfilePage = () => {
         navigate('/main/profile-modify');
     }
 
+    const witghdrawBtnClick = async (e) => {
+        if (window.confirm("정말로 탈퇴하시겠습니까?")) {
+            try {
+                const response = await axiosInstance.put('/auth/signout');
+                console.log('회원 탈퇴 성공', response.data);
+
+                // 로그아웃 처리
+                localStorage.removeItem('Authorization');
+                localStorage.removeItem('refreshToken');
+
+                alert('회원 탈퇴가 완료되었습니다.');
+                navigate('/login'); // 탈퇴 후 로그인 페이지로 리디렉션
+            } catch (error) {
+                console.error("탈퇴 처리 중 에러 발생", error.response ? error.response.data : error.message);
+                alert('탈퇴 처리에 실패하였습니다. 다시 시도해 주세요.');
+            }
+        }
+    }
+
     return (
         <div className={styles.container}>
             <h1 className={styles.title}>Profile Page</h1>
@@ -81,6 +100,7 @@ const ProfilePage = () => {
                 </div>
             </div>
             <button className="modify-button" onClick={modifyBtnClick}>Profile Modify</button>
+            <button className="modify-button" onClick= {witghdrawBtnClick}>탈퇴</button>
         </div>
     );
 };
