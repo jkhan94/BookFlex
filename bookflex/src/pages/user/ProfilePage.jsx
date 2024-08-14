@@ -99,6 +99,7 @@ const ProfilePage = () => {
                     <span className={styles.value}>{createdAt}</span>
                 </div>
             </div>
+
             <button className="modify-button" onClick={modifyBtnClick}>정보 수정</button>
             <button className="modify-button" onClick= {witghdrawBtnClick}>탈퇴</button>
         </div>
