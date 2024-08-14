@@ -29,7 +29,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        return new JwtAuthenticationFilter(jwtProvider,userDetailsService);
+        return new JwtAuthenticationFilter(jwtProvider, userDetailsService);
     }
 
     @Bean
@@ -43,19 +43,34 @@ public class SecurityConfig {
         http.formLogin(AbstractHttpConfigurer::disable);
 
         http.sessionManagement(
-                (sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            (sessionManagement) -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         );
 
         http.authorizeHttpRequests(
-                (authorizationHttpRequests) -> authorizationHttpRequests
-                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/signup").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
-                        .anyRequest().authenticated()
+            (authorizationHttpRequests) -> authorizationHttpRequests
+                .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/auth/signup").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
+                .requestMatchers(HttpMethod.PUT,"/api/users/{userId}/**").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.GET,"/api/users/all").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.GET,"/api/users/{userId}").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.GET,"/api/sales/admin").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.DELETE,"/api/qnas/admin/{qnaId}").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.POST,"/api/qnas/admin/{qnaId}").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.POST,"/api/coupons").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.PUT,"/api/coupons/{couponId}").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.POST,"/api/coupons/issue/all/{couponId}").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.PUT,"/api/coupons/{couponId}").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.DELETE,"/api/coupons/{couponId}").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.POST,"/api/books").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.PUT,"/api/books/{booksId}").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.DELETE,"/api/books/{booksId}").hasAuthority("ADMIN")
+
+                .anyRequest().authenticated()
         );
 
         http.exceptionHandling((e) ->
-                e.authenticationEntryPoint(authenticationEntryPoint));
+            e.authenticationEntryPoint(authenticationEntryPoint));
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
