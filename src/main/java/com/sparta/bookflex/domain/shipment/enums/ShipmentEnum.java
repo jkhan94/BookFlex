@@ -7,7 +7,7 @@ public enum ShipmentEnum {
     PROCESSING("처리 중"),    // 처리 중
     SHIPPED("배송됨"),       // 배송됨
     IN_TRANSIT("운송 중"),    // 운송 중
-    OUT_FOR_DELIVERY("배달 중"), // 배달 중
+    IN_DELIVERY("배송 중"), // 배송 중
     DELIVERED("배송 완료"),     // 배송 완료
     RETURNED("반품됨"),      // 반품됨
     CANCELED("취소됨");

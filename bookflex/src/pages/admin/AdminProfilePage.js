@@ -2,12 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from '../../api/axiosInstance';
 import styles from './AdminProfilePage.module.css';
+import { isAdmin } from './tokenCheck';
 
 function AdminProfilePage() {
+
   const [profile, setProfile] = useState(null);
   const { userId } = useParams();
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if(!isAdmin())
+      navigate('/main/dashboard');
+  },[navigate]);
 
   useEffect(() => {
     fetchProfile();

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axiosInstance from "../../api/axiosInstance";
 import './SaleReportByBookNamePage.css';
 import styles from "../user/OrdersComponent.module.css";
+import { isAdmin } from './tokenCheck';
 
 const OrderHistory = () => {
     const [orders, setOrders] = useState([]);
@@ -15,6 +16,11 @@ const OrderHistory = () => {
     const [direction, setDirection] = useState(true); // isAsc 파라미터에 대응
     const [sortBy, setSortBy] = useState('createdAt'); // 기본 정렬 기준은 createdAt으로 설정
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if(!isAdmin())
+            navigate('/main/dashboard');
+    },[navigate]);
 
     // 서버에서 데이터를 가져오는 함수
     const fetchOrders = async () => {
