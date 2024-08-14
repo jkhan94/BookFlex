@@ -104,10 +104,11 @@ const CouponPage = () => {
 
     return (
         <div>
-            <h2>Coupon Page</h2>
+            <br />
+            <h1>쿠폰함</h1>
             {error && <p className="error">{error}</p>}
 
-            <h3>My Coupons</h3>
+            <h3>내 쿠폰</h3>
             <table className={styles.table}>
                 <thead>
                 <tr>
@@ -150,7 +151,7 @@ const CouponPage = () => {
                 </button>
             </div>
 
-            <h3>Available Coupons</h3>
+            <h3>발급가능한 쿠폰</h3>
             <table className={styles.table}>
                 <thead>
                 <tr>
