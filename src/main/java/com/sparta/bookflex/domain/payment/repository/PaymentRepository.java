@@ -15,4 +15,6 @@ public interface PaymentRepository extends JpaRepository<Payment,Long> {
 
 
     Payment findByOrderBook(OrderBook orderBook);
+
+    boolean existsByOrderBook(OrderBook orderBook);
 }

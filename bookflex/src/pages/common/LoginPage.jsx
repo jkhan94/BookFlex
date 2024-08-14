@@ -15,7 +15,7 @@ const LoginPage = () => {
             password,
         };
 
-        axiosInstance.post('auth/login', data)
+        axiosInstance.post('/auth/login', data)
             .then(response => {
                 const { accessToken, refreshToken, auth } = response.data;
 

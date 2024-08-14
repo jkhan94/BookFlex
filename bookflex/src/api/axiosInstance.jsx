@@ -24,13 +24,13 @@ const refreshToken = async () => {
 // 요청 인터셉터
 axiosInstance.interceptors.request.use(
     async (config) => {
-        if(config.url === '/api/auth/login') {
+        if(config.url === '/auth/login') {
             return config;
         }
         const access_token = localStorage.getItem('Authorization');
         const refresh_token = localStorage.getItem('refreshToken');
 
-        if (config.url === '/api/auth/refresh') {
+        if (config.url === '/auth/refresh') {
             console.log("리프레쉬 토큰 보내기");
             config.headers.setAuthorization(refresh_token);
         } else {
@@ -50,7 +50,7 @@ axiosInstance.interceptors.response.use(
         const {config, response} = error;
         console.log(config.sent);
         if (
-            config.url === '/api/auth/refresh' ||
+            config.url === '/auth/refresh' ||
             response?.status !== 402 ||
             config.sent) {
             return Promise.reject(error);
