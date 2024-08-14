@@ -69,7 +69,7 @@ public class SaleQRepositoryImpl implements SaleQRepository {
                 .fetch();
 
         List<Tuple> count = queryFactory
-                .select(book.bookName, book.subCategory, book.publisher, book.author, sale.price, sale.quantity.sum(), sale.total.sum())
+                .select(book.bookName, book.subCategory, book.publisher, book.author, book.price, sale.quantity.sum(), sale.total.sum())
                 .from(sale)
                 .join(book).on(sale.book.id.eq(book.id))
                 .where(eqBookName(bookName))
