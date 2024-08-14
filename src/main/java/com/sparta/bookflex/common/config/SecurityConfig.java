@@ -55,6 +55,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET,"/api/users/all").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.GET,"/api/users/{userId}").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.PUT,"/api/users/{userId}/state").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.PUT,"/api/users/{userId}/grade").hasAuthority("ADMIN")
 
                 .requestMatchers(HttpMethod.GET,"/api/sales/admin").hasAuthority("ADMIN")
 
@@ -70,6 +71,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST,"/api/books").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.PUT,"/api/books/{booksId}").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.DELETE,"/api/books/{booksId}").hasAuthority("ADMIN")
+
+                .requestMatchers(HttpMethod.DELETE,"/api/reviews/{reviewId}").hasAuthority("ADMIN")
 
                 .anyRequest().authenticated()
         );
