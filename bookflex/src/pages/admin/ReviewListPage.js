@@ -119,15 +119,9 @@ function ReviewListPage() {
                 >
                     이전 페이지
                 </button>
-                {Array.from({ length: totalPages }, (_, index) => (
-                    <button
-                        key={index}
-                        onClick={() => handlePageChange(index + 1)}
-                        className={currentPage === index + 1 ? 'active' : ''}
-                    >
-                        {index + 1}
-                    </button>
-                ))}
+
+                <span>현재 페이지: {currentPage} / 총 페이지: {totalPages}</span>
+
                 <button
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
