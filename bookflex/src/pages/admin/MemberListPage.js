@@ -3,6 +3,7 @@ import axios from 'axios';
 import styles from './MemberListPage.module.css';
 import {useNavigate} from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
+import { isAdmin } from './tokenCheck';
 
 function MemberListPage() {
     const [members, setMembers] = useState([]);
@@ -12,8 +13,14 @@ function MemberListPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        if(!isAdmin())
+            navigate('/main/dashboard');
+    },[navigate]);
+
+    useEffect(() => {
         fetchMembers(currentPage, searchTerm);
     }, [currentPage, searchTerm]);
+
 
     const fetchMembers = (page = 1, username = '') => {
         axiosInstance.get('/users/all', {

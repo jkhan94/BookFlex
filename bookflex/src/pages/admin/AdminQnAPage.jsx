@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import axiosInstance from "../../api/axiosInstance";
 import styles from "../admin/adminqna.module.css";
+import { isAdmin } from './tokenCheck';
 
 // QnaItem 컴포넌트 정의
 const QnaItem = ({qna, onReplyClick, onDeleteClick}) => (
@@ -34,6 +35,11 @@ const AdminQnAPage = () => {
     const [isReplyModalOpen, setIsReplyModalOpen] = useState(false); // 팝업 열기/닫기 상태
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if(!isAdmin())
+            navigate('/main/dashboard');
+    },[navigate]);
 
     const fetchQnaList = async () => {
         const token = localStorage.getItem('Authorization');

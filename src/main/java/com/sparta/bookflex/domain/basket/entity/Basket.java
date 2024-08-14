@@ -25,7 +25,7 @@ public class Basket extends Timestamped {
     private User user;
 
 
-    @OneToMany(mappedBy = "basket", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "basket", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<BasketItem> basketItems = new ArrayList<>();
 
     @Builder

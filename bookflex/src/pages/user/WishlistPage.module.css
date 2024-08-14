@@ -3,13 +3,16 @@
     margin: 0 auto;
     background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
 }
 
 .wishlist {
     list-style-type: none;
     padding: 0;
+    max-height: 500px; /* 스크롤 영역 높이 */
+    overflow-y: auto; /* 스크롤 추가 */
+    margin-bottom: 20px; /* 버튼과의 간격 추가 */
 }
 
 .wishlistItem {
@@ -17,7 +20,9 @@
     align-items: center;
     border-bottom: 1px solid #eee;
     padding: 15px 0;
-    position: relative; /* 버튼 위치를 조정하기 위해 */
+    position: relative;
+    flex-wrap: nowrap; /* Flexbox wrapping 비활성화 */
+    gap: 15px; /* 간격 추가 */
 }
 
 .wishlistItem:last-child {
@@ -25,24 +30,34 @@
 }
 
 .itemCheckbox {
-    margin-right: 15px;
+    flex-shrink: 0; /* 체크박스 크기 유지 */
 }
 
 .itemImage {
-    width: 80px;
-    height: 80px;
+    max-width: 80px; /* 이미지 크기 제한 */
+    height: auto; /* 비율 유지 */
     object-fit: cover;
-    margin-right: 15px;
     border-radius: 4px;
+    flex-shrink: 0; /* 이미지 크기 유지 */
 }
 
 .itemDetails {
-    flex-grow: 1;
+    flex-grow: 1; /* 남은 공간을 차지하도록 설정 */
+    display: flex;
+    flex-direction: column; /* 텍스트를 세로로 쌓기 */
+    justify-content: center; /* 수직 가운데 정렬 */
+    overflow: hidden; /* 넘치는 내용을 숨기기 */
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    text-overflow: ellipsis; /* 생략 기호 추가 */
+    margin-right: 80px; /* 버튼과의 간격 추가 */
 }
 
 .itemName {
     font-weight: bold;
     margin-bottom: 5px;
+    word-wrap: break-word; /* 긴 텍스트 줄바꿈 */
+    overflow: hidden; /* 넘치는 텍스트 숨기기 */
+    text-overflow: ellipsis; /* 생략 기호 추가 */
 }
 
 .addToCartBtn {
@@ -56,7 +71,6 @@
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s;
-    margin-top: 20px;
 }
 
 .addToCartBtn:hover {
@@ -71,8 +85,11 @@
     padding: 5px 10px;
     cursor: pointer;
     font-size: 14px;
-    position: absolute; /* 버튼을 리스트 항목의 오른쪽에 위치시키기 위해 */
+    position: absolute;
     right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1; /* 버튼이 텍스트 위로 올라오도록 설정 */
 }
 
 .deleteBtn:hover {

@@ -33,13 +33,13 @@ public class ShipmentResDto {
     public void updateStatus(String name){
 
         if(name.equalsIgnoreCase("DELIVERED")) {
-            status = ShipmentEnum.DELIVERED;
+            status = ShipmentEnum.IN_DELIVERY;
         }
         else if(name.equalsIgnoreCase("IN_TRANSIT") || name.equalsIgnoreCase("In Transit")) {
             status = ShipmentEnum.IN_TRANSIT;
         }
         else {
-            status = ShipmentEnum.CANCELED;
+            status = ShipmentEnum.DELIVERED;
         }
     }
 
