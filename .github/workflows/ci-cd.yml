@@ -81,22 +81,20 @@ jobs:
             # Change directory
             cd BookFlex
             
-            # Stop and remove existing containers
-            docker stop bookflex-backend || true
-            docker rm bookflex-backend || true
-            docker stop bookflex-frontend || true
-            docker rm bookflex-frontend || true
-            
-            # Remove old Docker images
-            docker image prune -a -f
-            
             # Pull the latest Docker images
             docker pull ${{ secrets.DOCKER_USERNAME }}/bookflex-backend:latest
             docker pull ${{ secrets.DOCKER_USERNAME }}/bookflex-frontend:latest
 
-            docker-compose build --no-cache
-            
-            docker-compose down
-       
-            # Start the new containers with the latest images
-            docker-compose up -d
+            # Update Backend first, while keeping frontend running
+            # Stop the old backend container and start the new one
+            docker-compose up -d --no-deps --build backend
+
+            # Wait for backend to become healthy (you may need to adjust this wait time or implement a health check)
+            sleep 10
+
+            # Update Frontend
+            # Stop the old frontend container and start the new one
+            docker-compose up -d --no-deps --build frontend
+
+            # Optional: Remove old Docker images
+            docker image prune -f
