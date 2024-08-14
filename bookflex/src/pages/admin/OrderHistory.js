@@ -92,7 +92,7 @@ const OrderHistory = () => {
 
     return (
         <div className="container">
-            <h1>상품별 매출 내역</h1>
+            <h1>주문 내역 조회</h1>
             <form className="search-form" onSubmit={handleSearch}>
                 <div className="form-group">
                     <label htmlFor="username">주문자명</label>
