@@ -51,16 +51,22 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/auth/signup").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
+
                 .requestMatchers(HttpMethod.GET,"/api/users/all").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.GET,"/api/users/{userId}").hasAuthority("ADMIN")
+                .requestMatchers(HttpMethod.PUT,"/api/users/{userId}/state").hasAuthority("ADMIN")
+
                 .requestMatchers(HttpMethod.GET,"/api/sales/admin").hasAuthority("ADMIN")
+
                 .requestMatchers(HttpMethod.DELETE,"/api/qnas/admin/{qnaId}").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.POST,"/api/qnas/admin/{qnaId}").hasAuthority("ADMIN")
+
                 .requestMatchers(HttpMethod.POST,"/api/coupons").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.PUT,"/api/coupons/{couponId}").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.POST,"/api/coupons/issue/all/{couponId}").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.PUT,"/api/coupons/{couponId}").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.DELETE,"/api/coupons/{couponId}").hasAuthority("ADMIN")
+
                 .requestMatchers(HttpMethod.POST,"/api/books").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.PUT,"/api/books/{booksId}").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.DELETE,"/api/books/{booksId}").hasAuthority("ADMIN")
