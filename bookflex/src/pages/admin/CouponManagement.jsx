@@ -269,7 +269,10 @@ const CouponManagement = () => {
                         <h2>새 쿠폰 생성</h2>
                         <p><b>할인 금액(할인 비율) 입력법</b> <br/>
                             &ensp; - 할인 금액: 3000원 할인 시 3000 입력 <br/>
-                            &ensp; - 할인 비율: 25% 할인 시 25 입력</p> <br/>
+                            &ensp; - 할인 비율: 25% 할인 시 25 입력</p>
+                        <p><b>유효기간 입력법</b> <br/>
+                            &ensp; - 0 또는 미`입력: 쿠폰 만료일까지 사용가능 <br/>
+                            &ensp; - 30 입력: 발급일로부터 30일간 사용가능</p> <br/>
                         <form className={styles.createFormContent}>
                             <div className={styles.formGroup}>
                                 <label>쿠폰 유형</label>
