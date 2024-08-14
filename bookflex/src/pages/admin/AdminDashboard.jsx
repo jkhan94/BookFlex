@@ -1,10 +1,19 @@
 // src/pages/admin/AdminDashboard.js
 
-import React from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import React, {useEffect} from 'react';
+import {useNavigate} from "react-router-dom";
+import {Link, Outlet} from 'react-router-dom';
 import styles from './AdminDashboard.module.css'; // CSS 모듈 임포트
+import { isAdmin } from './tokenCheck';
 
 const AdminDashboard = () => {
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if(!isAdmin())
+            navigate('/main/dashboard');
+        },[navigate]);
+
     const handleLogout = () => {
         localStorage.removeItem('Authorization'); // 예시: 토큰 삭제
         window.location.href = '/login'; // 로그인 페이지로 리디렉션
@@ -31,7 +40,7 @@ const AdminDashboard = () => {
             </aside>
             <main className={styles.mainContent}>
                 <h1 className={styles.mainTitle}>관리자 페이지</h1>
-                <Outlet />
+                <Outlet/>
             </main>
         </div>
     );
