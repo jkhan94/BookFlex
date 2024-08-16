@@ -12,6 +12,7 @@ import com.sparta.bookflex.domain.coupon.service.CouponService;
 import com.sparta.bookflex.domain.orderbook.emuns.OrderState;
 import com.sparta.bookflex.domain.orderbook.entity.OrderBook;
 import com.sparta.bookflex.domain.orderbook.entity.OrderItem;
+import com.sparta.bookflex.domain.orderbook.repository.OrderBookRepository;
 import com.sparta.bookflex.domain.orderbook.service.OrderBookService;
 import com.sparta.bookflex.domain.payment.dto.FailPayReqDto;
 import com.sparta.bookflex.domain.payment.dto.SuccessPayReqDto;
@@ -58,7 +59,7 @@ public class PaymentService {
 
     @Value("${payment.toss.fail_url}")
     private String failUrl;
-
+    private final OrderBookRepository orderBookRepository;
 
 
     @Transactional
@@ -114,6 +115,7 @@ public class PaymentService {
         payment.updateIsSuccessYN(false);
         paymentRepository.save(payment);
         orderBook.updateStatus(OrderState.ORDER_CANCELLED);
+        orderBook.deleteShipment();
 
         systemLogRepository.save(
             LoggingSingleton.Logging(ActionType.PAYMENT_CANCEL, orderBook));

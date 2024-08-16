@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String token = jwtProvider.getJwtFromHeader(req, JwtConfig.AUTHORIZATION_HEADER);
         String url = req.getRequestURI();
-        if(url.equals("/auth/login")) {
+        if(url.equals("/api/auth/login")) {
             token = "";
         }
         if (!StringUtils.hasText(token)) {
