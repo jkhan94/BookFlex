@@ -52,6 +52,7 @@ public class Qna extends Timestamped {
                 .inquiry(qna.getInquiry())
                 .createdAt(qna.getCreatedAt())
                 .reply(qna.getReply())
+                .username(qna.getUser().getUsername())
                 .build();
     }
 
