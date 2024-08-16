@@ -9,6 +9,7 @@ const QnaItem = ({qna, onReplyClick, onDeleteClick}) => (
     <tr>
         <td>{qna.qnaType}</td>
         <td>{qna.inquiry}</td>
+        <td>{qna.username}</td>
         <td>{qna.createdAt}</td>
         <td>{qna.reply}</td>
         <td>
@@ -159,6 +160,7 @@ const AdminQnAPage = () => {
                 <tr>
                     <th>문의 유형</th>
                     <th>문의 내용</th>
+                    <th>작성자</th>
                     <th>문의 접수일</th>
                     <th>답변</th>
                     <th>작업</th>
