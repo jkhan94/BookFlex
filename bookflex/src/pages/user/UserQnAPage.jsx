@@ -3,10 +3,11 @@ import axiosInstance from "../../api/axiosInstance";
 import styles from './userqna.module.css';
 
 // QnaItem 컴포넌트 정의
-const QnaItem = ({qna, onDeleteClick}) => (
+const QnaItem = ({ qna, onDeleteClick }) => (
     <tr>
         <td>{qna.qnaType}</td>
         <td>{qna.inquiry}</td>
+        <td>{qna.username}</td> {/* Displaying the username */}
         <td>{qna.createdAt}</td>
         <td>{qna.reply}</td>
         <td>
@@ -16,6 +17,7 @@ const QnaItem = ({qna, onDeleteClick}) => (
         </td>
     </tr>
 );
+
 
 const UserQnaPage = () => {
     const [qnaList, setQnaList] = useState([]);
@@ -171,10 +173,10 @@ const UserQnaPage = () => {
                 <tr>
                     <th>문의 유형</th>
                     <th>문의 내용</th>
+                    <th>작성자</th> {/* Added header for the username */}
                     <th>문의 접수일</th>
                     <th>답변</th>
                     <th>삭제</th>
-                    {/* 삭제 열 추가 */}
                 </tr>
                 </thead>
                 <tbody>
