@@ -98,6 +98,11 @@ const BookDetailPage = () => {
         return <div>Loading...</div>; // 로딩 중 표시
     }
 
+    const formatCurrency = (value) => {
+        return new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(value);
+    };
+
+
     return (
         <div className={styles.bookDetailPage}>
             <h1>{book.bookName}</h1>
@@ -109,7 +114,7 @@ const BookDetailPage = () => {
                     <p><strong>Publisher:</strong> {book.publisher}</p>
                     <p><strong>Main Category:</strong> {book.mainCategoryName}</p>
                     <p><strong>Sub Category:</strong> {book.subCategoryName}</p>
-                    <p><strong>Price:</strong> ${book.price}</p>
+                    <p><strong>Price:</strong> {formatCurrency(book.price)}</p>
                     <p><strong>Status:</strong> {book.status}</p>
                     <p><strong>Stock:</strong> {book.stock}</p>
                     <p><strong>Description:</strong> {book.bookDescription}</p>

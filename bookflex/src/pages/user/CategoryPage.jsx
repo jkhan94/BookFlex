@@ -44,6 +44,10 @@ const CategoryPage = () => {
 
     if (error) return <div className={styles.error}>{error}</div>; // 에러 메시지 표시
 
+    const formatCurrency = (value) => {
+        return new Intl.NumberFormat('ko-KR', { style: 'currency', currency: 'KRW' }).format(value);
+    };
+
     return (
         <div className={styles.categoryPage}>
             <h1>{categoryName} 도서목록</h1>
@@ -59,7 +63,7 @@ const CategoryPage = () => {
                                     <h2 className={styles.CategoryBookTitle}>{book.bookName}</h2>
                                 </Link>
                                 <p className={styles.bookAuthor}>Author: {book.author}</p>
-                                <p className={styles.bookPrice}>Price: ${book.price.toFixed(2)}</p>
+                                <p className={styles.bookPrice}>Price: {formatCurrency(book.price)}</p>
                             </div>
                         </div>
                     ))}
