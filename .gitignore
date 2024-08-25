@@ -38,4 +38,7 @@ out/
 ### VS Code ###
 .vscode/
 
-.env
+*.env
+*.properties
+
+bfg-1.14.0.jar
