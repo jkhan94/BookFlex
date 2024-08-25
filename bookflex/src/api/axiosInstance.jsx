@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-    baseURL: 'https://bookflex-sparta.com/api', // 기본 API URL
-    // baseURL: 'http://localhost:8080/api', // 기본 API URL
+    // baseURL: 'https://bookflex-sparta.com/api', // 기본 API URL
+    baseURL: 'http://localhost:8080/api', // 기본 API URL
     headers: {
         'Content-Type': 'application/json',
     },
