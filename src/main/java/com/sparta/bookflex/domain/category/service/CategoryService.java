@@ -21,7 +21,6 @@ public class CategoryService {
         List<CategoryAllResponseDto> allCategories = new ArrayList<>();
         List<Category> allMain = new ArrayList<>();
         List<String> allSub = new ArrayList<>();
-        List<String> allsubEnglish = new ArrayList<>();
 
         for (Category c : Category.values()) {
             if (c.getMainCategory().equals(Optional.of(Category.ROOT))) {
@@ -32,18 +31,15 @@ public class CategoryService {
             for (Category c : Category.values()) {
                 if (c.getMainCategory().equals(Optional.of(value))) {
                     allSub.add(c.getCategoryName());
-                    allsubEnglish.add(c.name());
                 }
             }
 
             allCategories.add(CategoryAllResponseDto.builder()
                     .mainCategoryName(value.getCategoryName())
                     .subCategoryNames(allSub)
-                    .subCategoryEnglishNames(allsubEnglish)
                     .build());
 
             allSub = new ArrayList<>();
-            allsubEnglish = new ArrayList<>();
         }
 
         return allCategories;

@@ -46,7 +46,7 @@ const CategoryPage = () => {
 
     return (
         <div className={styles.categoryPage}>
-            <h1>{categoryName} Books</h1>
+            <h1>{categoryName} 도서목록</h1>
             {books.length === 0 ? (
                 <p>No books found.</p>
             ) : (
