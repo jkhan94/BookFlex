@@ -51,8 +51,8 @@ public class BookRequestDto {
                 .price(this.price)
                 .stock(this.stock)
                 .bookDescription(this.bookDescription)
-                .mainCategory(Category.of(this.mainCategory))
-                .subCategory(Category.of(this.subCategory))
+                .mainCategory(Category.findCategoryByName(this.mainCategory))
+                .subCategory(Category.findCategoryByName(this.subCategory))
                 .photoImage(photoImage)
                 .build();
     }
