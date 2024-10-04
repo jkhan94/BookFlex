@@ -133,8 +133,8 @@ public class Book extends Timestamped {
         this.stock = bookRequestDto.getStock();
         this.bookDescription = bookRequestDto.getBookDescription();
         this.status = bookRequestDto.getStock() > 1 ? BookStatus.ONSALE : BookStatus.SOLDOUT;
-        this.mainCategory =Category.of(bookRequestDto.getMainCategory());
-        this.subCategory = Category.of(bookRequestDto.getSubCategory());
+        this.mainCategory =Category.findCategoryByName(bookRequestDto.getMainCategory());
+        this.subCategory = Category.findCategoryByName(bookRequestDto.getSubCategory());
 
     }
 

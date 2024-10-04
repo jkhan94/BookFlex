@@ -112,7 +112,7 @@ public class AuthController {
      */
     @PostMapping("/refresh")
     public ResponseEntity<RefreshResDto> refreshToken(@AuthenticationPrincipal UserDetailsImpl userDetails, HttpServletResponse response, HttpServletRequest request) {
-        String accessToken = authService.refreshToken(userDetails.getUser(), request.getHeader(JwtConfig.AUTHORIZATION_HEADER));
+        String accessToken = authService.refreshToken(userDetails.getUser(), request.getHeader(JwtConfig.REFRESH_TOKEN_HEADER));
         RefreshResDto resDto = new RefreshResDto(accessToken);
 
         return ResponseEntity.ok().body(resDto);

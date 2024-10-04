@@ -173,7 +173,7 @@ public class SaleQRepositoryImpl implements SaleQRepository {
         if (categoryName == null || categoryName.isEmpty()) {
             return null;
         }
-        Category category = Category.of(categoryName);
+        Category category = Category.findCategoryByName(categoryName);
         return book.subCategory.eq(category);
     }
 

@@ -12,14 +12,12 @@ import java.util.List;
 public class CategoryAllResponseDto {
     private String mainCategoryName;
     private List<String> subCategoryNames;
-    private List<String> subCategoryEnglishNames;
 
 
     @Builder
-    public CategoryAllResponseDto(String mainCategoryName, List<String> subCategoryNames, List<String> subCategoryEnglishNames) {
+    public CategoryAllResponseDto(String mainCategoryName, List<String> subCategoryNames) {
         this.mainCategoryName = mainCategoryName;
         this.subCategoryNames = subCategoryNames;
-        this.subCategoryEnglishNames = subCategoryEnglishNames;
     }
 }
 
