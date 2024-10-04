@@ -50,8 +50,8 @@ public class CouponServiceTest {
     @DisplayName("쿠폰 발급 동시성 문제")
     void issueCouponConcurrently() throws InterruptedException {
         // given
-        int couponQuantity = 10; // 최대 발급 개수
-        int tryCouponIssue = 15; // 시도할 횟수
+        int couponQuantity = 10000; // 최대 발급 개수
+        int tryCouponIssue = 11000; // 시도할 횟수
         AtomicInteger successCount = new AtomicInteger();
         AtomicInteger failCount = new AtomicInteger();
         List<User> testUsers = new ArrayList<>();
@@ -80,30 +80,36 @@ public class CouponServiceTest {
         Optional<Coupon> savedCoupon = couponRepository.findById(testCouponId);
         assertTrue(savedCoupon.isPresent(), "쿠폰이 데이터베이스에 저장되지 않았습니다.");
 
+        for (int i = 0; i < tryCouponIssue; i++) {
+            User testUser = User.builder()
+                    .username("testUser")
+                    .password("$2a$10$h/HUXk.6qYJYfPxUd/PlCuDBeR98.2DF5cqyFVzfllWpHdHlNGrGe")
+                    .email("test@example.com")
+                    .name("test")
+                    .nickname("test")
+                    .phoneNumber("01012345678")
+                    .address("address")
+                    .birthDay(LocalDate.now())
+                    .grade(UserGrade.NORMAL)
+                    .state(UserState.ACTIVE)
+                    .auth(RoleType.USER)
+                    .build();
+            testUsers.add(userRepository.saveAndFlush(testUser));
+        }
+
         // when
         ExecutorService executorService = Executors.newFixedThreadPool(tryCouponIssue);
         CountDownLatch latch = new CountDownLatch(tryCouponIssue);
+
+        // 쿠폰 발급 작업 시작 시간 측정
+        long startTime = System.currentTimeMillis();
 
         for (int i = 0; i < tryCouponIssue; i++) {
             int finalI = i;
             executorService.execute(() -> {
                 try {
                     System.out.println(finalI + "번째 트랜잭션 시작");
-                    User testUser = User.builder()
-                            .username("testUser")
-                            .password("$2a$10$h/HUXk.6qYJYfPxUd/PlCuDBeR98.2DF5cqyFVzfllWpHdHlNGrGe")
-                            .email("test@example.com")
-                            .name("test")
-                            .nickname("test")
-                            .phoneNumber("01012345678")
-                            .address("address")
-                            .birthDay(LocalDate.now())
-                            .grade(UserGrade.NORMAL)
-                            .state(UserState.ACTIVE)
-                            .auth(RoleType.USER)
-                            .build();
-                    testUsers.add(userRepository.saveAndFlush(testUser));
-                    couponService.issueCoupon(testCouponId, testUser);
+                    couponService.issueCoupon(testCouponId, testUsers.get(finalI));
                     successCount.getAndIncrement();
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
@@ -114,7 +120,12 @@ public class CouponServiceTest {
                 }
             });
         }
-        latch.await();
+        latch.await(); // 모든 스레드가 작업을 완료할 때까지 대기
+
+        // 쿠폰 발급 작업 종료 시간 측정
+        long endTime = System.currentTimeMillis();
+        System.out.println("쿠폰 발급하는데 걸린 시간 : " + (endTime - startTime) + " ms");
+
         executorService.shutdown(); // 스레드 풀 종료
 
         System.out.println("success " + successCount);
@@ -126,12 +137,12 @@ public class CouponServiceTest {
         assertEquals(couponQuantity, result.size() - preset);
 
         // delete test data
-        for(UserCoupon issuedCouopon : result) {
-            userCouponRepository.delete(issuedCouopon);
+        for (UserCoupon issuedCoupon : result) {
+            userCouponRepository.delete(issuedCoupon);
         }
         couponRepository.deleteById(testCouponId);
-        for (User testUser : testUsers) {
-            userRepository.delete(testUser);
+        for (User testUserData : testUsers) {
+            userRepository.delete(testUserData);
         }
 
     }

@@ -21,6 +21,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -142,7 +143,7 @@ public class CouponService {
         }
     }
 
-    @Transactional(isolation = Isolation.READ_COMMITTED)
+    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.READ_COMMITTED)
     public UserCouponResponseDto issueCoupon(long couponId, User user) {
         Coupon coupon = findCouponByIdWithPessimisticLock(couponId);
 
@@ -265,8 +266,6 @@ public class CouponService {
 
     @Transactional
     public List<CouponOrderResponseDto> getMyOrderCoupons(User user, Pageable pageable) {
-
-
         Page<UserCoupon> userCouponPage = userCouponRepository.findAllByUserId(user.getId(), pageable);
 
         Page<CouponOrderResponseDto> couponOrderResponseDtoPage = new PageImpl<>(
